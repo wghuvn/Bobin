@@ -13,7 +13,7 @@ sourceSets {
     main {
         java {
             srcDirs = [new File(bobinRoot, 'src/main/java/com/bobincraft/armament')]
-            exclude 'client/render/fabric/**', 'client/resource/fabric/**', 'client/debug/**', 'client/ArmamentGlbClient.java'
+            exclude 'client/render/fabric/**', 'client/resource/fabric/**', 'client/debug/**', 'client/presentation/fabric/**', 'client/mixin/**', 'client/ArmamentGlbClient.java'
         }
         resources.srcDirs = [new File(bobinRoot, 'src/main/resources')]
     }

@@ -1,0 +1,357 @@
+[
+  {
+    "name": "default profile",
+    "patches": [],
+    "valid": true,
+    "structural_valid": true
+  },
+  {
+    "name": "unknown scale is forbidden",
+    "patches": [
+      {
+        "field": "scale",
+        "value": [
+          1,
+          1,
+          1
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "missing offsets",
+    "patches": [
+      {
+        "field": "camera_offset",
+        "remove": true
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "null offsets",
+    "patches": [
+      {
+        "field": "camera_offset",
+        "value": null
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "wrong vector length",
+    "patches": [
+      {
+        "field": "camera_offset",
+        "value": [
+          0,
+          0
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "string offset",
+    "patches": [
+      {
+        "field": "camera_offset",
+        "value": [
+          "0",
+          0,
+          -1
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "excessive offset",
+    "patches": [
+      {
+        "field": "camera_offset",
+        "value": [
+          0,
+          0,
+          -5
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "nonunit quaternion",
+    "patches": [
+      {
+        "field": "camera_rotation",
+        "value": [
+          0,
+          0,
+          0,
+          0.5
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": true
+  },
+  {
+    "name": "quaternion length",
+    "patches": [
+      {
+        "field": "camera_rotation",
+        "value": [
+          0,
+          0,
+          1
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "near-plane clearance",
+    "patches": [
+      {
+        "field": "camera_clearance",
+        "value": 0.001
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "unsupported version",
+    "patches": [
+      {
+        "field": "schema_version",
+        "value": 2
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "fractional version",
+    "patches": [
+      {
+        "field": "schema_version",
+        "value": 1.2
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "uppercase ID",
+    "patches": [
+      {
+        "field": "id",
+        "value": "Bobin:fp"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "external model",
+    "patches": [
+      {
+        "field": "model",
+        "value": "https://example.com/x.glb"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "gltf unsupported",
+    "patches": [
+      {
+        "field": "model",
+        "value": "bobin_craft:fixture.gltf"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "wrong rig suffix",
+    "patches": [
+      {
+        "field": "rig",
+        "value": "bobin_craft:rig.glb"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "no idle clip",
+    "patches": [
+      {
+        "field": "clips.idle",
+        "remove": true
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "unknown clip key",
+    "patches": [
+      {
+        "field": "clips.fire",
+        "value": "test"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "wrong clip name",
+    "patches": [
+      {
+        "field": "clips.idle",
+        "value": "Bad Name"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "one grip",
+    "patches": [
+      {
+        "field": "grips",
+        "value": [
+          {
+            "name": "primary",
+            "target": "grip_primary",
+            "hand": "hand_primary"
+          }
+        ]
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "duplicate grip role",
+    "patches": [
+      {
+        "field": "grips.1.name",
+        "value": "primary"
+      }
+    ],
+    "valid": false,
+    "structural_valid": true
+  },
+  {
+    "name": "duplicate target",
+    "patches": [
+      {
+        "field": "grips.1.target",
+        "value": "grip_primary"
+      }
+    ],
+    "valid": false,
+    "structural_valid": true
+  },
+  {
+    "name": "self attachment",
+    "patches": [
+      {
+        "field": "grips.0.hand",
+        "value": "grip_primary"
+      }
+    ],
+    "valid": false,
+    "structural_valid": true
+  },
+  {
+    "name": "string boolean",
+    "patches": [
+      {
+        "field": "inertia.enabled",
+        "value": "false"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "unbounded spring",
+    "patches": [
+      {
+        "field": "inertia.frequency_hz",
+        "value": 0
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "unbounded lag",
+    "patches": [
+      {
+        "field": "inertia.lag_seconds",
+        "value": 1
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "large sway",
+    "patches": [
+      {
+        "field": "inertia.max_yaw_degrees",
+        "value": 10
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "large translation",
+    "patches": [
+      {
+        "field": "inertia.metres_per_degree",
+        "value": 0.1
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "string number",
+    "patches": [
+      {
+        "field": "contact_metres",
+        "value": "0.001"
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  },
+  {
+    "name": "missing inertia",
+    "patches": [
+      {
+        "field": "inertia",
+        "remove": true
+      }
+    ],
+    "valid": false,
+    "structural_valid": false
+  }
+]

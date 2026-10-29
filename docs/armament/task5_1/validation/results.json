@@ -1,0 +1,182 @@
+{
+  "baseline_commit": "073f93dbd7505eeb14ff1419dedf5acc8ccca242",
+  "java": "Temurin 17.0.21+9",
+  "blender": "4.3.2",
+  "export_bake_hz": 96,
+  "cpu_tests": {
+    "tests": 436,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_suites": [
+    {
+      "name": "com.bobincraft.armament.ApiBoundaryTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.ApiContractTest",
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.DefinitionValidationTest",
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonBlenderTest",
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonMathTest",
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonProfileTest",
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GlbLoaderTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GlbResourceCacheTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfBlenderTest",
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfImportTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfMathTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfRuntimeTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.StrictJsonTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.VisualContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "api_isolated_tests": 164,
+  "legacy_schema_cases": 83,
+  "first_person_schema_cases": 30,
+  "blender_golden_poses": 45,
+  "blender_bvh_poses_with_intersections": 0,
+  "java_crossfade_and_camera_samples": 480,
+  "java_crossfade_plate_vertex_checks": 120,
+  "benchmarks": [
+    "first_person_cpu_benchmark samples=300 stable_zero_windows=2 best_bytes=0 ns_per_sample=91535",
+    "animation_runtime_benchmark samples=2000 bytes=0 ns_per_sample=10447"
+  ],
+  "model": {
+    "nodes": 51,
+    "skins": 1,
+    "joints": 36,
+    "meshes": 7,
+    "vertices": 1542,
+    "triangles": 2492,
+    "clips": [
+      "idle",
+      "inspect",
+      "lower",
+      "move",
+      "raise"
+    ]
+  },
+  "gltf_validator": {
+    "numErrors": 0,
+    "numWarnings": 2,
+    "numInfos": 7,
+    "numHints": 0
+  },
+  "minecraft_ready_criterion": "NOT MET / UNVERIFIED",
+  "full_mod_build": "BLOCKED before compileJava: HTTP 403 from Fabric Maven resolving fabric-loom 1.7.4",
+  "minecraft_launched": false,
+  "client_mixins_and_glsl_compiled": false,
+  "in_game_hands_contacts_depth_fov_reload_performance": "NOT VERIFIED",
+  "modified_original_files": [
+    "scripts/test_armament_api.sh",
+    "src/main/java/com/bobincraft/armament/client/ArmamentGlbClient.java",
+    "src/main/java/com/bobincraft/armament/client/render/fabric/FabricGlbRenderer.java",
+    "src/main/java/com/bobincraft/armament/client/render/fabric/GlbRenderContext.java",
+    "src/main/java/com/bobincraft/armament/client/resource/fabric/GlbGpuAsset.java",
+    "src/main/resources/assets/bobin_craft/shaders/core/armament_static_glb.json",
+    "src/main/resources/assets/bobin_craft/shaders/core/armament_static_glb.vsh",
+    "src/main/resources/fabric.mod.json",
+    "tools/armament-glb-check/build.gradle"
+  ],
+  "deleted": [],
+  "unchanged_baseline_files": 2520,
+  "build_gradle_unchanged": true,
+  "assets": {
+    "art/armament/first_person_fixture.blend": {
+      "bytes": 1282400,
+      "sha256": "de8e4a2801513c24895e05a200ab4d5b04d88937975262d90c24d422cfc8c6b7"
+    },
+    "art/armament/first_person_fixture.reference.json": {
+      "bytes": 9323575,
+      "sha256": "54afb6561ecda093ed9f64bd436126122d9970e91c184a67712c2811f0c8bd2f"
+    },
+    "art/armament/first_person_fixture.blender-preview.png": {
+      "bytes": 450994,
+      "sha256": "0f02facfb1895e2a26a41c5afb874b906a418efc99c75db9bfaad11447ebde38"
+    },
+    "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.glb": {
+      "bytes": 1431000,
+      "sha256": "45b93df2c73bd1adfa0acd522d8db4ea49406a069ac36146886f8a10e36694c0"
+    }
+  },
+  "working_tree": "uncommitted task 5.1 changes; full source snapshot supplied"
+}

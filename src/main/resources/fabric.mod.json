@@ -18,7 +18,8 @@
     ]
   },
   "mixins": [
-    "bobin_craft.mixins.json"
+    "bobin_craft.mixins.json",
+    {"config": "bobin_craft.armament.client.mixins.json", "environment": "client"}
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",

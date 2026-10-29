@@ -1,0 +1,72 @@
+BASELINE 073f93dbd7505eeb14ff1419dedf5acc8ccca242
+STATUS: source implementation / CPU checks complete; Minecraft readiness criterion NOT MET (Fabric Maven HTTP 403).
+
+MODIFIED (9)
+scripts/test_armament_api.sh
+src/main/java/com/bobincraft/armament/client/ArmamentGlbClient.java
+src/main/java/com/bobincraft/armament/client/render/fabric/FabricGlbRenderer.java
+src/main/java/com/bobincraft/armament/client/render/fabric/GlbRenderContext.java
+src/main/java/com/bobincraft/armament/client/resource/fabric/GlbGpuAsset.java
+src/main/resources/assets/bobin_craft/shaders/core/armament_static_glb.json
+src/main/resources/assets/bobin_craft/shaders/core/armament_static_glb.vsh
+src/main/resources/fabric.mod.json
+tools/armament-glb-check/build.gradle
+
+ADDED (53)
+art/armament/first_person_fixture.blend
+art/armament/first_person_fixture.blender-preview.png
+art/armament/first_person_fixture.reference.json
+docs/armament/TASK5_1_CHANGES.txt
+docs/armament/TASK5_1_REPORT_RU.md
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.ApiBoundaryTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.ApiContractTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.DefinitionValidationTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.FirstPersonBlenderTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.FirstPersonMathTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.FirstPersonProfileTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GlbLoaderTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GlbResourceCacheTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GltfBlenderTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GltfImportTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GltfMathTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.GltfRuntimeTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.StrictJsonTest.xml
+docs/armament/task5_1/validation/TEST-com.bobincraft.armament.VisualContractTest.xml
+docs/armament/task5_1/validation/api-tests.log
+docs/armament/task5_1/validation/blender-export.log
+docs/armament/task5_1/validation/client-launch.log
+docs/armament/task5_1/validation/cpu-tests.log
+docs/armament/task5_1/validation/full-build.log
+docs/armament/task5_1/validation/full-gradle-results.json
+docs/armament/task5_1/validation/gltf-validator-report.json
+docs/armament/task5_1/validation/java-structure.json
+docs/armament/task5_1/validation/resolved-dependencies.json
+docs/armament/task5_1/validation/results.json
+docs/armament/task5_1/validation/schema-validation.log
+schemas/armament/presentation/first-person.schema.json
+scripts/armament/export_first_person_fixture.py
+scripts/verify_first_person_schema.py
+src/main/java/com/bobincraft/armament/client/mixin/FirstPersonHeldItemMixin.java
+src/main/java/com/bobincraft/armament/client/mixin/GameRendererFovAccess.java
+src/main/java/com/bobincraft/armament/client/presentation/DampedViewInertia.java
+src/main/java/com/bobincraft/armament/client/presentation/FirstPersonAsset.java
+src/main/java/com/bobincraft/armament/client/presentation/FirstPersonEligibility.java
+src/main/java/com/bobincraft/armament/client/presentation/FirstPersonProfile.java
+src/main/java/com/bobincraft/armament/client/presentation/FirstPersonWeaponPresenter.java
+src/main/java/com/bobincraft/armament/client/presentation/GripAttachments.java
+src/main/java/com/bobincraft/armament/client/presentation/PresentationMath.java
+src/main/java/com/bobincraft/armament/client/presentation/fabric/FirstPersonDiagnostic.java
+src/main/java/com/bobincraft/armament/client/presentation/fabric/FirstPersonResources.java
+src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.glb
+src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.profile.json
+src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.rig.json
+src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.sockets.json
+src/main/resources/bobin_craft.armament.client.mixins.json
+src/test/java/com/bobincraft/armament/FirstPersonBlenderTest.java
+src/test/java/com/bobincraft/armament/FirstPersonMathTest.java
+src/test/java/com/bobincraft/armament/FirstPersonProfileTest.java
+src/test/resources/armament/first-person-cases.json
+
+DELETED: none
+
+2520 other baseline files unchanged, including build.gradle, existing mixins and all non-armament game systems.

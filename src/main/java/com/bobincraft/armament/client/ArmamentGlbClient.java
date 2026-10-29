@@ -3,6 +3,8 @@ package com.bobincraft.armament.client;
 import com.bobincraft.armament.client.debug.GlbDebugPreview;
 import com.bobincraft.armament.client.render.fabric.FabricGlbRenderer;
 import com.bobincraft.armament.client.resource.fabric.GlbDebugResources;
+import com.bobincraft.armament.client.presentation.fabric.FirstPersonResources;
+import com.bobincraft.armament.client.presentation.fabric.FirstPersonDiagnostic;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -24,5 +26,8 @@ public final class ArmamentGlbClient implements ClientModInitializer {
         });
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(resources);
         new GlbDebugPreview(resources,renderer).register();
+        var firstPerson=new FirstPersonResources();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(firstPerson);
+        new FirstPersonDiagnostic(firstPerson,renderer).register();
     }
 }

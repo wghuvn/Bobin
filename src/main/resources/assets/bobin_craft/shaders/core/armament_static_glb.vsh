@@ -7,6 +7,7 @@ in ivec2 UV2;
 in vec3 Normal;
 
 uniform mat4 GlbViewProjection;
+uniform mat3 GlbNormalMatrix;
 uniform sampler2D Sampler2;
 
 out vec4 vertexColor;
@@ -18,6 +19,6 @@ void main() {
     gl_Position = GlbViewProjection * vec4(Position, 1.0);
     vertexColor = Color;
     texCoord = UV0; // glTF UV0 already matches the top-left image origin; no V flip.
-    worldNormal = Normal;
+    worldNormal = normalize(GlbNormalMatrix * Normal);
     blockLight = texture(Sampler2, clamp(vec2(UV2) / 256.0 + vec2(0.03125), vec2(0.03125), vec2(0.96875))).rgb;
 }

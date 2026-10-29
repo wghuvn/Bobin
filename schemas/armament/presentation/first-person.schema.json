@@ -1,0 +1,207 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:first-person:1",
+  "title": "Metric first-person presentation profile v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "type": "integer"
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "model": {
+      "allOf": [
+        {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+        },
+        {
+          "pattern": "\\.glb$"
+        }
+      ]
+    },
+    "rig": {
+      "allOf": [
+        {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+        },
+        {
+          "pattern": "\\.json$"
+        }
+      ]
+    },
+    "sockets": {
+      "allOf": [
+        {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+        },
+        {
+          "pattern": "\\.json$"
+        }
+      ]
+    },
+    "camera_offset": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": -4,
+        "maximum": 4
+      },
+      "minItems": 3,
+      "maxItems": 3
+    },
+    "camera_rotation": {
+      "type": "array",
+      "items": {
+        "type": "number",
+        "minimum": -1,
+        "maximum": 1
+      },
+      "minItems": 4,
+      "maxItems": 4
+    },
+    "camera_clearance": {
+      "type": "number",
+      "minimum": 0.06,
+      "maximum": 0.25
+    },
+    "transition_seconds": {
+      "type": "number",
+      "minimum": 0.05,
+      "maximum": 1
+    },
+    "movement_threshold": {
+      "type": "number",
+      "minimum": 0.01,
+      "maximum": 1
+    },
+    "contact_metres": {
+      "type": "number",
+      "minimum": 1e-05,
+      "maximum": 0.005
+    },
+    "contact_degrees": {
+      "type": "number",
+      "minimum": 0.001,
+      "maximum": 1
+    },
+    "clips": {
+      "type": "object",
+      "properties": {
+        "idle": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+        },
+        "inspect": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+        },
+        "raise": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+        },
+        "lower": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+        },
+        "move": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+        }
+      },
+      "required": [
+        "idle",
+        "inspect",
+        "raise",
+        "lower",
+        "move"
+      ],
+      "additionalProperties": false
+    },
+    "grips": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "enum": [
+              "primary",
+              "secondary"
+            ]
+          },
+          "target": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          },
+          "hand": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          }
+        },
+        "required": [
+          "name",
+          "target",
+          "hand"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "inertia": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "frequency_hz": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 15
+        },
+        "lag_seconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.05
+        },
+        "max_yaw_degrees": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "max_pitch_degrees": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3
+        },
+        "metres_per_degree": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.005
+        }
+      },
+      "required": [
+        "enabled",
+        "frequency_hz",
+        "lag_seconds",
+        "max_yaw_degrees",
+        "max_pitch_degrees",
+        "metres_per_degree"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "model",
+    "rig",
+    "sockets",
+    "camera_offset",
+    "camera_rotation",
+    "camera_clearance",
+    "transition_seconds",
+    "movement_threshold",
+    "contact_metres",
+    "contact_degrees",
+    "clips",
+    "grips",
+    "inertia"
+  ],
+  "additionalProperties": false,
+  "$comment": "Quaternion norm, unique attachment roles and source/model/clip existence are runtime semantic checks. There is deliberately no scale field."
+}

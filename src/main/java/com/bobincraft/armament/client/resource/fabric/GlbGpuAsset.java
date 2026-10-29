@@ -8,10 +8,12 @@ import org.lwjgl.opengl.*;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /** GPU texture ownership for one cached static scene. Meshes remain in immutable CPU memory. */
 public final class GlbGpuAsset implements AutoCloseable {
     private static final AtomicInteger LIVE_TEXTURES=new AtomicInteger();
+    private static final AtomicLong ALLOCATIONS=new AtomicLong();
     private final TextureManager manager;
     private final Map<Identifier,NativeImageBackedTexture> owned=new LinkedHashMap<>();
     private final List<Identifier> textures=new ArrayList<>();
@@ -23,15 +25,16 @@ public final class GlbGpuAsset implements AutoCloseable {
     public static GlbGpuAsset upload(TextureManager manager,GlbModelAsset asset,long generation)throws IOException{
         RenderSystem.assertOnRenderThread();
         GlbGpuAsset result=new GlbGpuAsset(manager,asset);
+        String allocation=generation+"_"+ALLOCATIONS.incrementAndGet(); // Independent reload listeners must never share texture names.
         int active=GL11.glGetInteger(GL13.GL_ACTIVE_TEXTURE);
         RenderSystem.activeTexture(GL13.GL_TEXTURE0);int bound=GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
         try{
             NativeImage white=new NativeImage(1,1,false);white.setColor(0,0,-1);
-            result.white=result.add(white,new Identifier("bobin_craft","armament/glb/"+generation+"/white"),10497,10497,9728,9728);
+            result.white=result.add(white,new Identifier("bobin_craft","armament/glb/"+allocation+"/white"),10497,10497,9728,9728);
             for(int i=0;i<asset.textures().size();i++){
                 var sampler=asset.textures().get(i);var source=asset.images().get(sampler.image());
                 NativeImage image=NativeImage.read(new ByteArrayInputStream(source.encoded()));
-                Identifier id=new Identifier("bobin_craft","armament/glb/"+generation+"/"+i);
+                Identifier id=new Identifier("bobin_craft","armament/glb/"+allocation+"/"+i);
                 result.textures.add(result.add(image,id,sampler.wrapS(),sampler.wrapT(),sampler.minFilter(),sampler.magFilter()));
             }
             return result;

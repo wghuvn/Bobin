@@ -31,6 +31,7 @@ public final class FabricGlbRenderer implements WeaponRenderer<RigFrame,GlbRende
             // Explicit event projection * view * root placement; never multiply the global
             // RenderSystem model-view again. Static model normals are already in world axes.
             program.getUniformOrDefault("GlbViewProjection").set(context.viewProjection());
+            program.getUniformOrDefault("GlbNormalMatrix").set(context.normalTransform());
             List<GlbModelAsset.Primitive> order=new ArrayList<>(asset.primitives());
             order.sort((a,b)->{
                 boolean ta=asset.materials().get(a.material()).alpha()==GlbModelAsset.Alpha.BLEND;

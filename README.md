@@ -80,6 +80,7 @@ The deployment-map fix is retained: the layout is baked into the JAR and map pre
 
 ## Documentation and previews
 
+- [Static first-person idle: calibrated grips, Blender previews and verification limits](docs/armament/TASK5_1_2_REPORT_RU.md)
 - [Minecraft Steve/Alex first-person GLB hands: redesign, skin binding and verification](docs/armament/HANDS_REDESIGN_RU.md)
 - [Rebuild details, coordinates and validation](docs/WORLD_REWORK_2_2_0.md)
 - [World overview](docs/zone-overview.png)

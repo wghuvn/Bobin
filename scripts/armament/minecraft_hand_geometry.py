@@ -94,7 +94,10 @@ def make_arm(data, arm, variant, material, overlay_material):
 
     def axes(tangent):
         # No round cross-sections: two parallel, flat skin panels and two sides.
-        x = tangent.cross(Vector((0, 0, 1))).normalized()
+        x = data['lateral'] - tangent * data['lateral'].dot(tangent)
+        if x.length < .01:
+            x = tangent.cross(data['dorsal'])
+        x.normalize()
         z = x.cross(tangent).normalized()
         return x, z
 
@@ -126,19 +129,19 @@ def make_arm(data, arm, variant, material, overlay_material):
     s, e, w = data['shoulder'], data['elbow'], data['wrist']
     a, b, c = (e - s).normalized(), (w - e).normalized(), data['forward']
     # A bevel in the longitudinal topology, rather than an anatomical tapered tube.
-    for t in (0, .32, .65, 1):
+    for t in (0, .25, .5, 1):
         blend = .5 if t == 1 else 0
         tangent = (a * (1 - blend) + b * blend).normalized()
-        ring(s.lerp(e, t), tangent, width, 4 * PIXEL, {upper: 1 - blend, lower: blend}, t * 6)
-    for t in (.5, 1):
+        ring(s.lerp(e, t), tangent, width * (.8 if t == 1 else 1), 4 * PIXEL * (.8 if t == 1 else 1), {upper: 1 - blend, lower: blend}, t * 6)
+    for t in (.5, .75, 1):
         joint = .5 if t == 1 else 0
-        influence = {lower: 1 - joint, hand: joint}
-        tangent = (b * (1 - joint) + c * joint).normalized()
-        ring(e.lerp(w, t), tangent, width * (1 - .08 * max(0, (t - .85) / .15)),
-             PIXEL * (4 - .8 * max(0, (t - .85) / .15)), influence, 6 + t * 4)
+        influence = {lower: 1} if t < 1 else {hand: 1}
+        tangent = b if t < 1 else c
+        ring(e.lerp(w, t), tangent, width * (1 - .375 * max(0, (t - .5) / .5)),
+             PIXEL * (4 - 3 * max(0, (t - .5) / .5)), influence, 6 + t * 4)
     # Palm occupies the next skin row. Its width remains unmistakably Minecraft.
-    for t in (.085 / .115, 1):
-        r = ring(w + c * (.115 * t), c, width * .92, PIXEL * (3.2 - 1.4 * t), {hand: 1}, 10 + t)
+    for t in (.035 / .065, 1):
+        r = ring(w + c * (.065 * t), c, width * .625, PIXEL, {hand: 1}, 10 + t)
         if t < 1:
             r['thumb_start'] = True
     first = rings[0]
@@ -163,8 +166,8 @@ def make_arm(data, arm, variant, material, overlay_material):
             # fingertip passes vertical. A world-up cross product would tear it.
             x = (transported_x - tangent * transported_x.dot(tangent)).normalized()
             z = x.cross(tangent).normalized();transported_x = x
-            digit_width = width * .92 * (x1 - x0) * (1 - .08 * j) if not thumb else .045 * (1 - .08 * j)
-            height = .048 * (1 - .09 * j)
+            digit_width = width * .625 * (x1 - x0) * (1 - .08 * j) if not thumb else .028 * (1 - .08 * j)
+            height = .025 * (1 - .09 * j)
             influence = {names[j]: 1}
             if j < 2:
                 influence = {names[j]: .5, names[j + 1]: .5}
@@ -233,7 +236,7 @@ def make_arm(data, arm, variant, material, overlay_material):
     for polygon, coords in zip(faces, uv_faces):
         if any(i >= arm_ring_vertices for i in polygon):
             continue
-        if max(1 - v for _, v in coords) * 64 - arm_uv[1] - 4 > 10 + 1e-4:
+        if max(1 - v for _, v in coords) * 64 - arm_uv[1] - 4 > 9 + 1e-4:
             continue
         out = []
         for i in polygon:

@@ -14,7 +14,8 @@ final class FirstPersonBlenderTest {
     static final Path RESOURCES=Path.of("src/main/resources/assets");
     static final WeaponId PROFILE=WeaponId.parse("bobin_craft:armament/debug/first_person_fixture.profile.json");
     static FirstPersonAsset asset;static JsonObject reference;static int[][] mapping;
-    static int plateMesh;static final List<double[]> platePlanes=new ArrayList<>();
+    private record GaugeCollider(int mesh,List<double[]> planes){}
+    static final List<GaugeCollider> gaugeColliders=new ArrayList<>();
     @BeforeAll static void prepare()throws Exception{
         asset=FirstPersonAsset.load(PROFILE,id->Files.newInputStream(RESOURCES.resolve(id.namespace()).resolve(id.path())));
         reference=JsonParser.parseString(Files.readString(Path.of("art/armament/first_person_fixture.reference.json"))).getAsJsonObject();
@@ -22,24 +23,31 @@ final class FirstPersonBlenderTest {
         var rest=reference.getAsJsonObject("clips").getAsJsonArray("idle").get(0).getAsJsonObject().getAsJsonObject("vertices");
         for(int m=0;m<rig.meshes().size();m++){
             var mesh=rig.meshes().get(m);var points=rest.getAsJsonArray(rig.nodes().get(mesh.node()).name());mapping[m]=new int[mesh.vertexCount()];
-            if(rig.nodes().get(mesh.node()).name().contains("octagonalbase"))plateMesh=m;
             for(int v=0;v<mesh.vertexCount();v++){
                 double best=Double.POSITIVE_INFINITY;int index=-1;
                 for(int p=0;p<points.size();p++){double distance=0;for(int k=0;k<3;k++)distance=Math.max(distance,Math.abs(points.get(p).getAsJsonArray().get(k).getAsDouble()-bind.vertex(m,v,k)));if(distance<best){best=distance;index=p;}}
                 assertTrue(best<4e-5,"bind geometry must match Blender: "+rig.nodes().get(mesh.node()).name()+" error="+best);mapping[m][v]=index;
             }
         }
-        var plate=rig.meshes().get(plateMesh);
-        for(int v=0;v<plate.vertexCount();v++){
-            double nx=plate.vertex(v,3),ny=plate.vertex(v,4),nz=plate.vertex(v,5),d=nx*plate.vertex(v,0)+ny*plate.vertex(v,1)+nz*plate.vertex(v,2);
-            boolean duplicate=false;for(double[] p:platePlanes)if(Math.abs(p[0]-nx)+Math.abs(p[1]-ny)+Math.abs(p[2]-nz)<1e-6)duplicate=true;
-            if(!duplicate)platePlanes.add(new double[]{nx,ny,nz,d});
+        gaugeColliders.clear();
+        for(int m=0;m<rig.meshes().size();m++){
+            var mesh=rig.meshes().get(m);if(mesh.skin()>=0)continue;
+            assertTrue(rig.nodes().get(mesh.node()).name().startsWith("gauge_"));
+            List<double[]> planes=new ArrayList<>();
+            for(int v=0;v<mesh.vertexCount();v++){
+                double nx=mesh.vertex(v,3),ny=mesh.vertex(v,4),nz=mesh.vertex(v,5),d=nx*mesh.vertex(v,0)+ny*mesh.vertex(v,1)+nz*mesh.vertex(v,2);
+                boolean duplicate=false;for(double[] plane:planes)if(Math.abs(plane[0]-nx)+Math.abs(plane[1]-ny)+Math.abs(plane[2]-nz)<1e-6&&Math.abs(plane[3]-d)<1e-6)duplicate=true;
+                if(!duplicate)planes.add(new double[]{nx,ny,nz,d});
+            }
+            assertTrue(planes.size()>=6,"the beveled gauge panel must be a closed convex solid");
+            gaugeColliders.add(new GaugeCollider(m,List.copyOf(planes)));
         }
-        assertEquals(10,platePlanes.size(),"convex octagonal plate: eight sides and two caps");
+        assertEquals(7,gaugeColliders.size());
     }
-    @Test void twoRealArmsAndOriginalTechnicalMeshesArePresent(){
-        assertEquals(9,asset.model().rig().meshes().size());assertEquals(36,asset.model().rig().skins().get(0).size());assertEquals(5,asset.model().rig().clips().size());
+    @Test void twoRealArmsAndNeutralErgonomicGaugeArePresent(){
+        assertEquals(11,asset.model().rig().meshes().size());assertEquals(36,asset.model().rig().skins().get(0).size());assertEquals(5,asset.model().rig().clips().size());
         for(String node:List.of("upper_right","upper_left","forearm_right","forearm_left","hand_right","hand_left","thumb_1_right","little_3_left"))assertTrue(asset.model().rig().node(node)>=0);
+        for(String node:List.of("gauge_long_body","gauge_rear_support","gauge_primary_handle","gauge_handle_neck","gauge_forward_support","gauge_forward_axis","gauge_side_axis"))assertTrue(asset.model().rig().node(node)>=0);
     }
     @TestFactory Stream<DynamicTest> importedPosesMatchBlenderAndBothGripContacts(){
         return reference.getAsJsonObject("clips").entrySet().stream().flatMap(entry->StreamSupport.stream(entry.getValue().getAsJsonArray().spliterator(),false).map(value->DynamicTest.dynamicTest(entry.getKey()+"@"+value.getAsJsonObject().get("seconds"),()->{
@@ -64,17 +72,36 @@ final class FirstPersonBlenderTest {
             presenter.tick(tick,tick<55?tick*2.5:275-tick*2.5,tick<60?tick*0.5:60-tick*0.5,tick>10&&tick<95);
             for(int frame=0;frame<4;frame++){
                 assertTrue(presenter.sample(tick,frame/4f,identity,projection,identity),tick+" "+presenter.rejection()+" "+presenter.contactMetres()+"m / "+presenter.contactDegrees()+"deg, depth="+presenter.minimumDepth());
-                if(frame==0)noPlatePenetration(presenter.pose());
+                if(frame==0)noGaugePenetration(presenter.pose());
             }
         }
     }
-    private static void noPlatePenetration(RigFrame frame){
-        double[] world=new double[16],inverse=new double[16];int node=frame.model().meshes().get(plateMesh).node();for(int i=0;i<16;i++)world[i]=frame.global(node,i);RigMath.inverseAffine(world,0,inverse,0);
-        for(int m=0;m<frame.model().meshes().size();m++)if(frame.model().meshes().get(m).skin()>=0)for(int v=0;v<frame.model().meshes().get(m).vertexCount();v++){
-            double px=frame.vertex(m,v,0),py=frame.vertex(m,v,1),pz=frame.vertex(m,v,2);
-            double x=inverse[0]*px+inverse[4]*py+inverse[8]*pz+inverse[12],y=inverse[1]*px+inverse[5]*py+inverse[9]*pz+inverse[13],z=inverse[2]*px+inverse[6]*py+inverse[10]*pz+inverse[14];
-            boolean inside=true;for(double[] p:platePlanes)if(p[0]*x+p[1]*y+p[2]*z-p[3]>=-0.0002){inside=false;break;}
-            assertFalse(inside,"skinned vertex penetrates the held plate: mesh="+m+", vertex="+v);
+    private static void noGaugePenetration(RigFrame frame){
+        double[] world=new double[16],inverse=new double[16];
+        for(var collider:gaugeColliders){
+            int node=frame.model().meshes().get(collider.mesh()).node();for(int i=0;i<16;i++)world[i]=frame.global(node,i);RigMath.inverseAffine(world,0,inverse,0);
+            for(int m=0;m<frame.model().meshes().size();m++)if(frame.model().meshes().get(m).skin()>=0)for(int v=0;v<frame.model().meshes().get(m).vertexCount();v++){
+                double px=frame.vertex(m,v,0),py=frame.vertex(m,v,1),pz=frame.vertex(m,v,2);
+                double x=inverse[0]*px+inverse[4]*py+inverse[8]*pz+inverse[12],y=inverse[1]*px+inverse[5]*py+inverse[9]*pz+inverse[13],z=inverse[2]*px+inverse[6]*py+inverse[10]*pz+inverse[14];
+                boolean inside=true;for(double[] plane:collider.planes())if(plane[0]*x+plane[1]*y+plane[2]*z-plane[3]>=-0.0002){inside=false;break;}
+                assertFalse(inside,"skinned vertex penetrates the ergonomic gauge: panel="+frame.model().nodes().get(node).name()+", mesh="+m+", vertex="+v);
+            }
+        }
+    }
+    @Test void defaultShowIsAbsolutelyStaticDespiteClockMovementAndInertiaInputs(){
+        var presenter=new FirstPersonWeaponPresenter(asset);presenter.show(0);presenter.inertia(true);
+        double[] identity=FirstPersonMathTest.identity(),projection=new double[16];PresentationMath.perspective(70,16.0/9,.05,100,projection);
+        assertTrue(presenter.sample(0,0,identity,projection,identity));var rig=asset.model().rig();double[][] expected=new double[rig.meshes().size()][];
+        for(int m=0;m<expected.length;m++){expected[m]=new double[rig.meshes().get(m).vertexCount()*3];for(int v=0;v<rig.meshes().get(m).vertexCount();v++)for(int k=0;k<3;k++)expected[m][v*3+k]=presenter.pose().vertex(m,v,k);}
+        float[] before=new float[16],after=new float[16];presenter.copyProjection(before);
+        for(long tick:List.of(1L,20L,51L,2000L)){
+            presenter.tick(tick,tick*2.5,tick%65,true);
+            for(float delta:new float[]{0,.25f,.75f}){
+                assertTrue(presenter.sample(tick,delta,identity,projection,identity));assertEquals("idle",presenter.action());
+                for(int m=0;m<expected.length;m++)for(int v=0;v<rig.meshes().get(m).vertexCount();v++)for(int k=0;k<3;k++)assertEquals(expected[m][v*3+k],presenter.pose().vertex(m,v,k),1e-12);
+                presenter.copyProjection(after);assertArrayEquals(before,after);
+                noGaugePenetration(presenter.pose());
+            }
         }
     }
     @Test void cameraGuardRejectsUnsafeOffsetsInsteadOfMovingIndividualHands(){
@@ -87,20 +114,18 @@ final class FirstPersonBlenderTest {
         double[] identity=FirstPersonMathTest.identity(),projection=new double[16];PresentationMath.perspective(70,1.5,0.05,100,projection);
         assertTrue(a.sample(10,0.5f,identity,projection,identity));assertTrue(b.sample(10,0.5f,identity,projection,identity));assertNotSame(a.pose(),b.pose());assertNotEquals(a.pose().global(a.pose().model().node("presentation_root"),13),b.pose().global(b.pose().model().node("presentation_root"),13));
     }
-    @Test void existingTechnicalGeometryRemainsInMetres()throws Exception{
-        var original=new com.bobincraft.armament.client.model.glb.JgltfModelLoader().load(WeaponId.parse("bobin_craft:armament/debug/technical_fixture.glb"),id->Files.newInputStream(RESOURCES.resolve(id.namespace()).resolve(id.path())));
-        var bind=new RigFrame(asset.model().rig());
-        for(var primitive:original.primitives()){
-            String name="fixture_"+primitive.nodeName().toLowerCase(java.util.Locale.ROOT).replaceAll("[^a-z0-9_]","_");int mesh=-1;
-            for(int m=0;m<bind.model().meshes().size();m++)if(bind.model().nodes().get(bind.model().meshes().get(m).node()).name().equals(name))mesh=m;
-            assertTrue(mesh>=0,name);var data=bind.model().meshes().get(mesh);
-            for(var v:primitive.vertices()){
-                double metres=reference.get("handheld_metres").getAsDouble();
-                double best=Double.POSITIVE_INFINITY;for(int p=0;p<data.vertexCount();p++)best=Math.min(best,Math.max(Math.abs(v.x()*metres-bind.vertex(mesh,p,0)),Math.max(Math.abs(v.y()*metres-bind.vertex(mesh,p,1)),Math.abs(v.z()*metres-bind.vertex(mesh,p,2)))));
-                assertTrue(best<3e-5,name+" differs from the documented Blender handheld calibration: "+best);
+    @Test void ergonomicGaugeDimensionsAreAuthoredInAbsoluteMetres(){
+        var frame=new RigFrame(asset.model().rig());
+        // Dimensions are independently specified here, in glTF X/Y/Z order.
+        Map<String,double[]> dimensions=Map.of("gauge_long_body",new double[]{.10,.09,.69},"gauge_rear_support",new double[]{.16,.10,.16},
+            "gauge_primary_handle",new double[]{.0625,.18,.085},"gauge_handle_neck",new double[]{.04,.053,.02},"gauge_forward_support",new double[]{.10,.035,.19});
+        for(var entry:dimensions.entrySet()){
+            int node=frame.model().node(entry.getKey()),found=0;double[] min={100,100,100},max={-100,-100,-100};
+            for(int m=0;m<frame.model().meshes().size();m++)if(frame.model().meshes().get(m).node()==node){
+                found++;for(int v=0;v<frame.model().meshes().get(m).vertexCount();v++)for(int k=0;k<3;k++){double value=frame.vertex(m,v,k);min[k]=Math.min(min[k],value);max[k]=Math.max(max[k],value);}
             }
+            assertEquals(1,found);for(int k=0;k<3;k++)assertEquals(entry.getValue()[k],max[k]-min[k],3e-5,entry.getKey()+" dimension "+k);
         }
-        assertEquals(1,original.bounds().width(),1e-6);assertEquals(1,original.bounds().height(),1e-6);
     }
     @Test void changingFovAspectAndViewBobKeepsContactsAndUsesNewProjection(){
         var presenter=new FirstPersonWeaponPresenter(asset);presenter.animation("idle",0);presenter.inertia(false);

@@ -5,15 +5,15 @@
   "rig": "bobin_craft:armament/debug/first_person_fixture_slim.rig.json",
   "sockets": "bobin_craft:armament/debug/first_person_fixture_slim.sockets.json",
   "camera_offset": [
-    0.34,
-    -0.07,
-    -0.9
+    0.24,
+    -0.23,
+    -0.78
   ],
   "camera_rotation": [
     0.0,
     0.0,
-    0.13052617013454437,
-    0.9914448857307434
+    0.0,
+    1.0
   ],
   "camera_clearance": 0.075,
   "transition_seconds": 0.2,
@@ -40,7 +40,7 @@
     }
   ],
   "inertia": {
-    "enabled": true,
+    "enabled": false,
     "frequency_hz": 4,
     "lag_seconds": 0.016,
     "max_yaw_degrees": 1.5,

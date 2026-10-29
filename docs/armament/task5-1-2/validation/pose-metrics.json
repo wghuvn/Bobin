@@ -1,0 +1,243 @@
+{
+  "method": "Read-only extraction, bind angles between normalized +Y bone directions. Camera depth = -(GLB bind Z + profile offset Z), no hand animation or Minecraft launch. Framing from Blender export metadata.",
+  "variants": [
+    {
+      "variant": "default",
+      "glb_sha256": "b47d216319ec88796fdfb5d48f2d56dc5e96e93827a7a13f593436f478e54ef5",
+      "source": "Exported GLB bind-pose node matrices; independent Blender golden metadata",
+      "units": "metres",
+      "camera_offset": [
+        0.24,
+        -0.23,
+        -0.78
+      ],
+      "hand_metrics": {
+        "right": {
+          "wrist_bend_degrees": 31.74583943829948,
+          "elbow_bend_degrees": 51.102927062733464,
+          "shoulder_depth_m": 0.41961499929428103,
+          "elbow_depth_m": 0.477402397064099,
+          "wrist_depth_m": 0.6900000035395191,
+          "shoulder_position_gltf_m": [
+            0.32987356185913086,
+            -0.5354732275009155,
+            0.360385000705719
+          ],
+          "elbow_position_gltf_m": [
+            0.156511472400254,
+            -0.20801150202338875,
+            0.30259760293590104
+          ],
+          "wrist_position_gltf_m": [
+            0.06350001282700535,
+            -0.11500006130862704,
+            0.08999999646048096
+          ]
+        },
+        "left": {
+          "wrist_bend_degrees": 28.102227727469547,
+          "elbow_bend_degrees": 25.112969621328727,
+          "shoulder_depth_m": 0.8946164387464524,
+          "elbow_depth_m": 1.009736485545404,
+          "wrist_depth_m": 1.1200000331244546,
+          "shoulder_position_gltf_m": [
+            -0.5583271384239197,
+            -0.29965218901634216,
+            -0.11461643874645233
+          ],
+          "elbow_position_gltf_m": [
+            -0.27052702541269874,
+            -0.08859880784047364,
+            -0.22973648554540396
+          ],
+          "wrist_position_gltf_m": [
+            -0.04999993220255741,
+            -0.04725001644337854,
+            -0.34000003312445454
+          ]
+        }
+      },
+      "framing": {
+        "variant": "default",
+        "vertical_fov_degrees": 70,
+        "aspect": 1.7777777777777777,
+        "camera_offset_metres": [
+          0.24,
+          -0.23,
+          -0.78
+        ],
+        "roll_degrees": 0,
+        "bounds_top_left_normalized": {
+          "technical_object": [
+            0.5579034090042114,
+            0.5589124262332916,
+            0.7723163962364197,
+            0.9347405880689621
+          ],
+          "left_hand_and_sleeve": [
+            0.29880842566490173,
+            0.6026006937026978,
+            0.6272133588790894,
+            1.09159517288208
+          ],
+          "right_hand_and_sleeve": [
+            0.5860818028450012,
+            0.7026535272598267,
+            1.5643559694290161,
+            2.5713610649108887
+          ]
+        },
+        "visible_bounds_top_left_normalized": {
+          "technical_object": [
+            0.5579034090042114,
+            0.5589124262332916,
+            0.7723163962364197,
+            0.9347405880689621
+          ],
+          "left_hand_and_sleeve": [
+            0.29880842566490173,
+            0.6026006937026978,
+            0.6272133588790894,
+            1.0000000074505806
+          ],
+          "right_hand_and_sleeve": [
+            0.5860818028450012,
+            0.7026535272598267,
+            0.9315963983535767,
+            1.0000000149011612
+          ]
+        }
+      },
+      "intersections": {
+        "golden_samples": 45,
+        "cross_mesh_triangle_pairs": 0,
+        "nonadjacent_self_triangle_contacts": 0
+      },
+      "joint_stress": {
+        "samples": 7,
+        "nonadjacent_self_triangle_contacts": 0,
+        "minimum_edge_ratio": 0.7391974607044258,
+        "maximum_edge_ratio": 1.3323223461289868
+      }
+    },
+    {
+      "variant": "slim",
+      "glb_sha256": "6052340e6fbf25033e703a75110aad034c2c236e7d8209de24acc1775792a828",
+      "source": "Exported GLB bind-pose node matrices; independent Blender golden metadata",
+      "units": "metres",
+      "camera_offset": [
+        0.24,
+        -0.23,
+        -0.78
+      ],
+      "hand_metrics": {
+        "right": {
+          "wrist_bend_degrees": 31.74583943829948,
+          "elbow_bend_degrees": 51.102927062733464,
+          "shoulder_depth_m": 0.41961499929428103,
+          "elbow_depth_m": 0.477402397064099,
+          "wrist_depth_m": 0.6900000035395191,
+          "shoulder_position_gltf_m": [
+            0.32987356185913086,
+            -0.5354732275009155,
+            0.360385000705719
+          ],
+          "elbow_position_gltf_m": [
+            0.156511472400254,
+            -0.20801150202338875,
+            0.30259760293590104
+          ],
+          "wrist_position_gltf_m": [
+            0.06350001282700535,
+            -0.11500006130862704,
+            0.08999999646048096
+          ]
+        },
+        "left": {
+          "wrist_bend_degrees": 28.102227727469547,
+          "elbow_bend_degrees": 25.112969621328727,
+          "shoulder_depth_m": 0.8946164387464524,
+          "elbow_depth_m": 1.009736485545404,
+          "wrist_depth_m": 1.1200000331244546,
+          "shoulder_position_gltf_m": [
+            -0.5583271384239197,
+            -0.29965218901634216,
+            -0.11461643874645233
+          ],
+          "elbow_position_gltf_m": [
+            -0.27052702541269874,
+            -0.08859880784047364,
+            -0.22973648554540396
+          ],
+          "wrist_position_gltf_m": [
+            -0.04999993220255741,
+            -0.04725001644337854,
+            -0.34000003312445454
+          ]
+        }
+      },
+      "framing": {
+        "variant": "slim",
+        "vertical_fov_degrees": 70,
+        "aspect": 1.7777777777777777,
+        "camera_offset_metres": [
+          0.24,
+          -0.23,
+          -0.78
+        ],
+        "roll_degrees": 0,
+        "bounds_top_left_normalized": {
+          "technical_object": [
+            0.5579034090042114,
+            0.5589124262332916,
+            0.7723163962364197,
+            0.9347405880689621
+          ],
+          "left_hand_and_sleeve": [
+            0.3024691343307495,
+            0.6035153865814209,
+            0.6249921321868896,
+            1.0743580609560013
+          ],
+          "right_hand_and_sleeve": [
+            0.5860818028450012,
+            0.7044760286808014,
+            1.4871342182159424,
+            2.5437562465667725
+          ]
+        },
+        "visible_bounds_top_left_normalized": {
+          "technical_object": [
+            0.5579034090042114,
+            0.5589124262332916,
+            0.7723163962364197,
+            0.9347405880689621
+          ],
+          "left_hand_and_sleeve": [
+            0.3024691343307495,
+            0.6035153865814209,
+            0.6249921321868896,
+            1.0000000074505806
+          ],
+          "right_hand_and_sleeve": [
+            0.5860818028450012,
+            0.7044760286808014,
+            0.9056272506713867,
+            1.0000000074505806
+          ]
+        }
+      },
+      "intersections": {
+        "golden_samples": 45,
+        "cross_mesh_triangle_pairs": 0,
+        "nonadjacent_self_triangle_contacts": 0
+      },
+      "joint_stress": {
+        "samples": 7,
+        "nonadjacent_self_triangle_contacts": 0,
+        "minimum_edge_ratio": 0.7485584740216943,
+        "maximum_edge_ratio": 1.3060143891168854
+      }
+    }
+  ]
+}

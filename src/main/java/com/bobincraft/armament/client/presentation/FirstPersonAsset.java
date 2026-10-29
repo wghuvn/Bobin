@@ -15,6 +15,11 @@ public record FirstPersonAsset(FirstPersonProfile profile,GlbModelAsset model,Ri
         if(model.rig()==null)throw new IllegalArgumentException("first-person asset requires a skinned/animated rig");
         for(String clip:profile.clips().values())model.rig().clip(clip);
         if(!new GripAttachments(profile,sockets).matches(new RigFrame(model.rig())))throw new IllegalArgumentException("two-hand bind pose does not match object grip sockets");
+        var bind=new RigFrame(model.rig());double[] frame=new double[16];
+        for(var grip:profile.grips()){
+            sockets.sample(grip.target(),bind,frame);GripFrameConvention.validate(frame,"object grip");
+            sockets.sample(grip.hand(),bind,frame);GripFrameConvention.validate(frame,"hand target");
+        }
     }
     public static FirstPersonAsset load(WeaponId profileId,ResourceSource source)throws IOException{
         try{

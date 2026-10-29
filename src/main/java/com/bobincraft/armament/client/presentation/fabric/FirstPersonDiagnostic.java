@@ -43,8 +43,9 @@ public final class FirstPersonDiagnostic {
         active=this;
         ClientCommandRegistrationCallback.EVENT.register((dispatcher,registry)->{
             var fp=literal("fp")
-                .then(literal("show").executes(ctx->{requested=true;if(resources.current().isEmpty())resources.reload(MinecraftClient.getInstance().getResourceManager());update();ctx.getSource().sendFeedback(Text.literal(status()));return presenter==null?0:1;}))
+                .then(literal("show").executes(ctx->{requested=true;if(resources.current().isEmpty())resources.reload(MinecraftClient.getInstance().getResourceManager());update();if(presenter!=null)presenter.calibration();ctx.getSource().sendFeedback(Text.literal(status()));return presenter==null?0:1;}))
                 .then(literal("hide").executes(ctx->{requested=false;drop();reason="hidden";return 1;}))
+                .then(literal("static").executes(ctx->{update();if(presenter==null)return 0;presenter.calibration();return 1;}))
                 .then(literal("status").executes(ctx->{ctx.getSource().sendFeedback(Text.literal(status()));return 1;}));
             var animation=literal("anim");
             for(String label:new String[]{"idle","inspect","raise","lower","move"})animation.then(literal(label).executes(ctx->{
@@ -95,7 +96,8 @@ public final class FirstPersonDiagnostic {
         if(!renderer.hasShader()||Tessellator.getInstance().getBuffer().isBuilding()){reason="shader_or_buffer_unavailable";return false;}
         try{
             var camera=client.gameRenderer.getCamera();
-            fov=((GameRendererFovAccess)client.gameRenderer).bobin$armamentFov(camera,delta,true);
+            // Follow the vanilla hand projection policy, not world zoom/FOV effects.
+            fov=((GameRendererFovAccess)client.gameRenderer).bobin$armamentFov(camera,delta,false);
             matrix(client.gameRenderer.getBasicProjectionMatrix(fov),projection);matrix(matrices.peek().getPositionMatrix(),handView);
             cameraMatrix.identity().rotation(camera.getRotation());matrix(cameraMatrix,cameraToWorld);
             if(!presenter.sample(client.world.getTime(),delta,handView,projection,cameraToWorld)){reason=presenter.rejection();return false;}
@@ -112,6 +114,6 @@ public final class FirstPersonDiagnostic {
     public String status(){
         var client=MinecraftClient.getInstance();String policy=FirstPersonEligibility.reason(observations());
         return "fpRequested="+requested+", policy="+policy+", render="+reason+", fov="+fov+", viewport="+client.getWindow().getFramebufferWidth()+"x"+client.getWindow().getFramebufferHeight()+
-            (presenter==null?"":", skinModel="+client.player.getModel()+", skin="+client.player.getSkinTexture()+", clip="+presenter.action()+", inertia="+presenter.inertiaEnabled()+", contactMetres="+presenter.contactMetres()+", contactDegrees="+presenter.contactDegrees()+", minDepth="+presenter.minimumDepth())+", "+resources.status();
+            (presenter==null?"":", staticIdle="+presenter.staticIdle()+", skinModel="+client.player.getModel()+", skin="+client.player.getSkinTexture()+", clip="+presenter.action()+", inertia="+presenter.inertiaEnabled()+", contactMetres="+presenter.contactMetres()+", contactDegrees="+presenter.contactDegrees()+", minDepth="+presenter.minimumDepth())+", "+resources.status();
     }
 }

@@ -1,0 +1,139 @@
+{
+  "tests": 552,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "java": "17.0.21",
+  "suite_count": 16,
+  "suites": [
+    {
+      "name": "com.bobincraft.armament.ApiBoundaryTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.056"
+    },
+    {
+      "name": "com.bobincraft.armament.ApiContractTest",
+      "tests": "28",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.44"
+    },
+    {
+      "name": "com.bobincraft.armament.DefinitionValidationTest",
+      "tests": "109",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.445"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonBlenderTest",
+      "tests": "55",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.185"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonMathTest",
+      "tests": "38",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.049"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonProfileTest",
+      "tests": "33",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.999"
+    },
+    {
+      "name": "com.bobincraft.armament.GlbLoaderTest",
+      "tests": "25",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "4.601"
+    },
+    {
+      "name": "com.bobincraft.armament.GlbResourceCacheTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.008"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfBlenderTest",
+      "tests": "53",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.0"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfImportTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "5.499"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfMathTest",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.087"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfRuntimeTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.697"
+    },
+    {
+      "name": "com.bobincraft.armament.GripFrameConventionTest",
+      "tests": "55",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.048"
+    },
+    {
+      "name": "com.bobincraft.armament.PlayerHandSkinTest",
+      "tests": "60",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "2.858"
+    },
+    {
+      "name": "com.bobincraft.armament.StrictJsonTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.01"
+    },
+    {
+      "name": "com.bobincraft.armament.VisualContractTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.032"
+    }
+  ],
+  "scope": "Isolated common/API + client CPU assets/math; Minecraft-dependent classes excluded"
+}

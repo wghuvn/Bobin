@@ -1,0 +1,59 @@
+--- a/build.gradle
++++ b/build.gradle
+@@ -103,6 +103,13 @@
+     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+ }
+ 
++// Explicitly include every runtime Java library; Loom include is not transitive.
++// Shared version pins also drive the independent CPU-only loader test harness.
++apply from: 'gradle/armament-libraries.gradle'
++dependencies {
++    armamentLibraryCoordinates.each { include it }
++}
++
+ processResources {
+     inputs.property "version", project.version
+     inputs.property "minecraft_version", project.minecraft_version
+@@ -135,6 +142,12 @@
+ // Explicit, separate integration harness. gradle test does not run Fabric GameTest.
+ loom {
+     runs {
++        glbDebugClient {
++            client()
++            name "Bobin static GLB diagnostic"
++            vmArg "-Dbobin.armament.glbDebug=true"
++            runDir "build/glb-debug-client"
++        }
+         gametest {
+             server()
+             name "Bobin stabilization GameTest"
+--- a/scripts/test_armament_api.sh
++++ b/scripts/test_armament_api.sh
+@@ -19,8 +19,13 @@
+ printf 'Isolated check outputs: %s\n' "$armament_out"
+ mkdir -p "$armament_out/common" "$armament_out/main" "$armament_out/test" "$armament_out/reports"
+ find src/main/java/com/bobincraft/armament -name '*.java' ! -path '*/client/*' | sort > "$armament_out/common-sources.txt"
+-find src/main/java/com/bobincraft/armament -name '*.java' | sort > "$armament_out/main-sources.txt"
+-find src/test/java/com/bobincraft/armament -name '*.java' | sort > "$armament_out/test-sources.txt"
++# This target deliberately remains the dependency-free stage-2 API check.
++# The actual JglTF loader and Minecraft backend have separate validation targets.
++find src/main/java/com/bobincraft/armament -name '*.java' \
++    ! -path '*/client/model/glb/*' ! -path '*/client/render/fabric/*' \
++    ! -path '*/client/resource/fabric/*' ! -path '*/client/debug/*' \
++    ! -name 'ArmamentGlbClient.java' | sort > "$armament_out/main-sources.txt"
++find src/test/java/com/bobincraft/armament -name '*.java' ! -name 'Glb*Test.java' | sort > "$armament_out/test-sources.txt"
+ # Common is compiled separately with no Minecraft/Fabric/client classes available.
+ "$armament_jdk/bin/javac" --release 17 -encoding UTF-8 -cp "$armament_gson" -d "$armament_out/common" @"$armament_out/common-sources.txt"
+ "$armament_jdk/bin/javac" --release 17 -encoding UTF-8 -cp "$armament_gson" -d "$armament_out/main" @"$armament_out/main-sources.txt"
+--- a/src/main/resources/fabric.mod.json
++++ b/src/main/resources/fabric.mod.json
+@@ -10,7 +10,8 @@
+       "com.bobincraft.BobinCraft"
+     ],
+     "client": [
+-      "com.bobincraft.BobinCraftClient"
++      "com.bobincraft.BobinCraftClient",
++      "com.bobincraft.armament.client.ArmamentGlbClient"
+     ],
+     "fabric-gametest": [
+       "com.bobincraft.destruction.DestructionGameTestSuite"

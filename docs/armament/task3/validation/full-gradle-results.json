@@ -1,0 +1,37 @@
+[
+  {
+    "command": [
+      "bash",
+      "gradlew",
+      "build",
+      "-x",
+      "test",
+      "--no-daemon",
+      "--info"
+    ],
+    "exit_code": 1,
+    "log": "full-build.log"
+  },
+  {
+    "command": [
+      "bash",
+      "gradlew",
+      "test",
+      "--no-daemon",
+      "--info"
+    ],
+    "exit_code": 1,
+    "log": "full-test.log"
+  },
+  {
+    "command": [
+      "bash",
+      "gradlew",
+      "runGlbDebugClient",
+      "--no-daemon",
+      "--info"
+    ],
+    "exit_code": 1,
+    "log": "client-launch.log"
+  }
+]

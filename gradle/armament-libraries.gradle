@@ -1,0 +1,13 @@
+// Static GLB reader only. No renderer/native/Forge/animation libraries.
+ext.armamentLibraryCoordinates = [
+    'de.javagl:jgltf-model:3.0.1',
+    'de.javagl:jgltf-impl-v1:3.0.1',
+    'de.javagl:jgltf-impl-v2:3.0.1',
+    'com.fasterxml.jackson.core:jackson-databind:2.22.1',
+    'com.fasterxml.jackson.core:jackson-core:2.22.1',
+    'com.fasterxml.jackson.core:jackson-annotations:2.22'
+]
+dependencies {
+    implementation platform('com.fasterxml.jackson:jackson-bom:2.22.1')
+    armamentLibraryCoordinates.each { implementation it }
+}

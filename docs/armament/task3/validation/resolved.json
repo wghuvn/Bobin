@@ -1,0 +1,26 @@
+[
+    {
+        "coordinate": "de.javagl:jgltf-model:3.0.1",
+        "file": "jgltf-model-3.0.1.jar"
+    },
+    {
+        "coordinate": "com.fasterxml.jackson.core:jackson-databind:2.22.1",
+        "file": "jackson-databind-2.22.1.jar"
+    },
+    {
+        "coordinate": "com.fasterxml.jackson.core:jackson-core:2.22.1",
+        "file": "jackson-core-2.22.1.jar"
+    },
+    {
+        "coordinate": "com.fasterxml.jackson.core:jackson-annotations:2.22",
+        "file": "jackson-annotations-2.22.jar"
+    },
+    {
+        "coordinate": "de.javagl:jgltf-impl-v1:3.0.1",
+        "file": "jgltf-impl-v1-3.0.1.jar"
+    },
+    {
+        "coordinate": "de.javagl:jgltf-impl-v2:3.0.1",
+        "file": "jgltf-impl-v2-3.0.1.jar"
+    }
+]

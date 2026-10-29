@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.ApiContractTest" tests="28" skipped="0" failures="0" errors="0" timestamp="2026-10-29T15:42:46" hostname="e8d722c6862b" time="0.124">
+  <properties/>
+  <testcase name="identifiersAreExplicitCanonicalValues()" classname="com.bobincraft.armament.ApiContractTest" time="0.016"/>
+  <testcase name="definitionIsImmutableAndHasNoRuntimeRegistration()" classname="com.bobincraft.armament.ApiContractTest" time="0.009"/>
+  <testcase name="fixture" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name=":fixture" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="test:a:b" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="Test:a" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:../a" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:a/../b" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="test:a//b" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:/a" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:a/" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="test:a\b" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:a%2fb" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test:a b" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="test:a&#10;" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name=".:fixture" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="..:fixture" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="test..x:a" classname="com.bobincraft.armament.ApiContractTest" time="0.0"/>
+  <testcase name="https://host/a.glb" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="test:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="idleAndActiveSnapshotsRoundTripWithoutLosingLongPrecision()" classname="com.bobincraft.armament.ApiContractTest" time="0.038"/>
+  <testcase name="userViewCanDescribeANonPlayerWithoutMinecraft()" classname="com.bobincraft.armament.ApiContractTest" time="0.001"/>
+  <testcase name="semanticChecksRejectUnknownActionsAndWrongDefinition()" classname="com.bobincraft.armament.ApiContractTest" time="0.003"/>
+  <testcase name="nullsHaveDomainDiagnostics()" classname="com.bobincraft.armament.ApiContractTest" time="0.002"/>
+  <testcase name="snapshotCodecRejectsCoercionOverflowUnknownAndNullFields()" classname="com.bobincraft.armament.ApiContractTest" time="0.006"/>
+  <testcase name="snapshotsRejectImpossibleTimeAndActionCombinations()" classname="com.bobincraft.armament.ApiContractTest" time="0.002"/>
+  <testcase name="actionEventsRoundTripAndRequireSequenceAndIdentity()" classname="com.bobincraft.armament.ApiContractTest" time="0.006"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

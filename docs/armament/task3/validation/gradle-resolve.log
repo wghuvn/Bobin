@@ -1,0 +1,34 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Task :dependencies
+
+------------------------------------------------------------
+Root project 'armament-glb-dependency-check'
+------------------------------------------------------------
+
+runtimeClasspath - Runtime classpath of source set 'main'.
++--- com.fasterxml.jackson:jackson-bom:2.22.1
+|    +--- com.fasterxml.jackson.core:jackson-databind:2.22.1 (c)
+|    +--- com.fasterxml.jackson.core:jackson-core:2.22.1 (c)
+|    \--- com.fasterxml.jackson.core:jackson-annotations:2.22 (c)
+\--- de.javagl:jgltf-model:3.0.1
+     +--- com.fasterxml.jackson.core:jackson-databind:2.22.1
+     |    +--- com.fasterxml.jackson.core:jackson-annotations:2.22
+     |    +--- com.fasterxml.jackson.core:jackson-core:2.22.1
+     |    |    \--- com.fasterxml.jackson:jackson-bom:2.22.1 (*)
+     |    \--- com.fasterxml.jackson:jackson-bom:2.22.1 (*)
+     +--- com.fasterxml.jackson.core:jackson-core:2.18.8 -> 2.22.1 (*)
+     +--- de.javagl:jgltf-impl-v1:3.0.1
+     \--- de.javagl:jgltf-impl-v2:3.0.1
+
+(c) - A dependency constraint, not a dependency. The dependency affected by the constraint occurs elsewhere in the tree.
+(*) - Indicates repeated occurrences of a transitive dependency subtree. Gradle expands transitive dependency subtrees only once per project; repeat occurrences only display the root of the subtree, followed by this annotation.
+
+A web-based, searchable dependency report is available by adding the --scan option.
+
+> Task :collectDependencies
+
+BUILD SUCCESSFUL in 6s
+2 actionable tasks: 2 executed

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "surface": "bobin_craft:block/connected_label_green",
+    "particle": "bobin_craft:block/connected_label_green"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        -0.008
+      ],
+      "to": [
+        16,
+        16,
+        -0.008
+      ],
+      "faces": {
+        "north": {
+          "texture": "#surface",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "id": "substation_equipment",
+  "max_health": 400,
+  "flammable": false,
+  "burn_ticks": 400,
+  "fire_dps": 0.5,
+  "damage_stages": [
+    {
+      "health_fraction": 1.0,
+      "model": "intact"
+    },
+    {
+      "health_fraction": 0.7,
+      "model": "damaged"
+    },
+    {
+      "health_fraction": 0.3,
+      "model": "critical"
+    },
+    {
+      "health_fraction": 0.0,
+      "model": "destroyed"
+    }
+  ],
+  "persistent": true
+}

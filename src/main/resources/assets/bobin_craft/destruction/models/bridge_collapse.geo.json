@@ -1,0 +1,197 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.bobin_craft.bridge_collapse",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 16,
+        "visible_bounds_height": 12,
+        "visible_bounds_offset": [
+          0,
+          2,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "center_deck_slab",
+          "parent": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -48,
+                -12,
+                -48
+              ],
+              "size": [
+                96,
+                14,
+                96
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "material": "cracked_asphalt"
+            }
+          ]
+        },
+        {
+          "name": "left_shear_slab",
+          "parent": "root",
+          "pivot": [
+            -48,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -88,
+                -14,
+                -48
+              ],
+              "size": [
+                40,
+                14,
+                96
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "material": "cracked_concrete"
+            }
+          ]
+        },
+        {
+          "name": "right_shear_slab",
+          "parent": "root",
+          "pivot": [
+            48,
+            0,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                48,
+                -14,
+                -48
+              ],
+              "size": [
+                40,
+                14,
+                96
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "material": "cracked_concrete"
+            }
+          ]
+        },
+        {
+          "name": "north_parapet_rail",
+          "parent": "root",
+          "pivot": [
+            0,
+            4,
+            -56
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -64,
+                0,
+                -62
+              ],
+              "size": [
+                128,
+                16,
+                8
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "material": "mossy_concrete"
+            }
+          ]
+        },
+        {
+          "name": "south_parapet_rail",
+          "parent": "root",
+          "pivot": [
+            0,
+            4,
+            56
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -64,
+                0,
+                54
+              ],
+              "size": [
+                128,
+                16,
+                8
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "material": "mossy_concrete"
+            }
+          ]
+        },
+        {
+          "name": "support_pier_cap",
+          "parent": "root",
+          "pivot": [
+            0,
+            -24,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -20,
+                -48,
+                -52
+              ],
+              "size": [
+                40,
+                28,
+                104
+              ],
+              "uv": [
+                0,
+                32
+              ],
+              "material": "mossy_concrete"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

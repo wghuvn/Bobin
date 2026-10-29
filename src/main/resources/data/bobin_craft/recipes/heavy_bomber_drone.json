@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "IGI",
+    "RDR",
+    "GGG"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "G": {
+      "item": "minecraft:gunpowder"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "D": {
+      "item": "bobin_craft:bomber_drone"
+    }
+  },
+  "result": {
+    "item": "bobin_craft:heavy_bomber_drone",
+    "count": 1
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "bobin_craft:dark_forest_soil",
+    "bobin_craft:pine_needle_ground",
+    "bobin_craft:mossy_forest_soil",
+    "bobin_craft:forest_litter",
+    "bobin_craft:trampled_mud",
+    "bobin_craft:rutted_track",
+    "bobin_craft:river_silt",
+    "bobin_craft:pebble_shoal",
+    "bobin_craft:scorched_grass",
+    "bobin_craft:partially_scorched_grass"
+  ]
+}

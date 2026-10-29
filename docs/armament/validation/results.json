@@ -1,0 +1,31 @@
+{
+  "java": "Temurin 17.0.21+9",
+  "new_package_compile": "passed with javac --release 17",
+  "common_compile_without_client_or_minecraft": "passed",
+  "compiled_class_major_versions": {
+    "61": 30
+  },
+  "junit": {
+    "tests": 164,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "json_schemas": 6,
+  "schema_corpus_cases": 83,
+  "schema_check": "passed",
+  "full_gradle_build": {
+    "exit_code": 1,
+    "status": "blocked before compilation",
+    "reason": "HTTPS CONNECT / HTTP 403 Forbidden for maven.fabricmc.net; cannot resolve fabric-loom 1.7.4"
+  },
+  "full_gradle_test": {
+    "exit_code": 1,
+    "status": "blocked before test execution",
+    "reason": "same Fabric Maven access restriction"
+  },
+  "original_files_verified": 2381,
+  "original_files_modified_or_removed": [],
+  "new_runtime_dependencies": [],
+  "minecraft_runtime_or_regression_tests": "not run"
+}

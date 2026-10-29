@@ -1,0 +1,223 @@
+--- R1/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
++++ R2/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
+@@ -66,6 +66,56 @@
+         context.complete();
+     }
+ 
++    /** Actual generated cells and registry index, not replacement geometry. Requires the Fabric runtime. */
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void stabilizationManagedGeometryTerrainPolicy(TestContext context) throws Exception {
++        var terrain = ensureTerrain();
++        var allowed = com.bobincraft.drone.BlastTerrain.class.getDeclaredMethod("terrainAllowed", String.class, BlockPos.class);
++        allowed.setAccessible(true);
++        int[] cells = {0}, outsideHitZones = {0};
++        java.util.function.Consumer<Blueprint> audit = blueprint -> blueprint.forEachCell((x,y,z,spec,mode) -> {
++            if (spec.isAir()) return;
++            cells[0]++;
++            var pos = new BlockPos(x,y,z);
++            var primary = DestructibleStructureRegistry.spatialIndex().findPrimaryAt(Vec3d.ofCenter(pos));
++            if (primary == null) outsideHitZones[0]++;
++            var state = com.bobincraft.warzone.BlueprintBlitter.state(spec);
++            // Forbidden profiles never enter the KAMIKAZE_BREACH / FP1-only breach or fire branches.
++            // Their remaining possible structural edits are tagged glass/soil/plant writes.
++            boolean mutable = state.isIn(com.bobincraft.drone.BlastTerrain.SHATTERABLE_GLASS)
++                    || state.isIn(com.bobincraft.drone.BlastTerrain.SCORCHABLE_SOIL)
++                    || state.isIn(com.bobincraft.drone.BlastTerrain.SCORCHABLE_PLANTS);
++            for (String source : new String[]{"hand_grenade","drone_payload","heavy_drone_payload"}) {
++                try {
++                    if ((boolean) allowed.invoke(null, source, pos) && mutable)
++                        throw new AssertionError("Unprotected mutable structural cell " + blueprint.name + " " + pos + " " + spec);
++                } catch (ReflectiveOperationException e) { throw new AssertionError(e); }
++            }
++        });
++        for (var target : DestructibleStructureRegistry.all()) {
++            if (target.structureType().category() == DestructibleStructureType.Category.REFINERY_TANK) {
++                audit.accept(StructureGeometrySnapshot.capture(terrain, target));
++                for (var stage : new StructureDamageState[]{StructureDamageState.DAMAGED, StructureDamageState.CRITICAL, StructureDamageState.DESTROYED})
++                    audit.accept(StructureGeometrySnapshot.stage(terrain, target, stage));
++            } else if (target.structureType().category() == DestructibleStructureType.Category.BRIDGE_SECTION) {
++                for (var stage : new StructureDamageState[]{StructureDamageState.INTACT, StructureDamageState.DAMAGED, StructureDamageState.CRITICAL, StructureDamageState.DESTROYED})
++                    audit.accept(StructureCollapseManager.buildBridgeSectionStage(terrain, target, stage));
++            }
++        }
++        for (var crossing : terrain.zonePlan().crossings())
++            audit.accept(com.bobincraft.warzone.ZoneInfrastructure.bridgeBlueprint(terrain, crossing));
++        if (cells[0] == 0) throw new AssertionError("No actual managed geometry audited");
++        // Outside all registered geometry: retain ordinary terrain, even for forbidden structural sources.
++        var ordinary = new BlockPos(1600, 80, 1600);
++        if (DestructibleStructureRegistry.spatialIndex().findPrimaryAt(Vec3d.ofCenter(ordinary)) != null)
++            throw new AssertionError("Ordinary-terrain fixture overlaps a managed structure");
++        for (String source : new String[]{"hand_grenade","drone_payload","heavy_drone_payload"})
++            if (!(boolean) allowed.invoke(null, source, ordinary)) throw new AssertionError("Ordinary terrain blocked");
++        System.out.println("Managed geometry terrain audit: " + cells[0] + " occupied cells; "
++                + outsideHitZones[0] + " outside primary hit zones; all forbidden-source edit gates safe");
++        context.complete();
++    }
++
+     private static WarzoneTerrain cachedTerrain;
+ 
+     private static synchronized WarzoneTerrain ensureTerrain() {
+--- R1/src/main/java/com/bobincraft/destruction/IndustrialSmokeBudget.java
++++ R2/src/main/java/com/bobincraft/destruction/IndustrialSmokeBudget.java
+@@ -0,0 +1,26 @@
++package com.bobincraft.destruction;
++
++/** Shared client smoke eligibility and the existing emission-rate calculation, without Minecraft dependencies. */
++public final class IndustrialSmokeBudget {
++    private IndustrialSmokeBudget() {}
++
++    public static boolean isEmitter(boolean industrial, boolean burning, float intensity,
++                                    boolean chunkLoaded, double distance, double farDistance) {
++        return industrial && burning && intensity > 0.0f && chunkLoaded
++                && Double.isFinite(distance) && distance <= farDistance;
++    }
++
++    public static double particlesPerSecond(double distance, float intensity, int emitters,
++                                            double nearDistance, double mediumDistance, double farDistance,
++                                            int nearRate, int mediumRate, int maximumParticles) {
++        if (!Double.isFinite(distance) || distance > farDistance || intensity <= 0.0f || emitters <= 0) return 0.0;
++        double rate;
++        if (distance <= nearDistance) rate = nearRate * (0.6 + 0.4 * intensity);
++        else if (distance <= mediumDistance) rate = mediumRate * (0.5 + 0.5 * intensity);
++        else rate = 0.65 * intensity;
++        double maximumPerSecond = maximumParticles / 4.0;
++        double total = rate * emitters;
++        if (total > maximumPerSecond && total > 0.0) rate *= maximumPerSecond / total;
++        return rate;
++    }
++}
+--- R1/src/main/java/com/bobincraft/destruction/StructureFireManager.java
++++ R2/src/main/java/com/bobincraft/destruction/StructureFireManager.java
+@@ -161,25 +161,9 @@
+      * scaled by the global budget across all simultaneously burning structures (Section 8.2).
+      */
+     public static double budgetedParticlesPerSecond(double distanceBlocks, float intensity, int activeBurningCount) {
+-        if (!Double.isFinite(distanceBlocks) || distanceBlocks > farLodDistance || intensity <= 0.0f || activeBurningCount <= 0) {
+-            return 0.0;
+-        }
+-        double baseRate;
+-        if (distanceBlocks <= nearLodDistance) {
+-            baseRate = nearSmokeParticlesPerSecond * (0.6 + 0.4 * intensity);
+-        } else if (distanceBlocks <= mediumLodDistance) {
+-            baseRate = mediumSmokeParticlesPerSecond * (0.5 + 0.5 * intensity);
+-        } else {
+-            // 96-192 blocks: minimal single column pulse
+-            baseRate = 0.65 * intensity;
+-        }
+-        // Global budget scaling so N concurrent fires never exceed maxStructureFireParticles
+-        double maxTotalPerSecond = maxStructureFireParticles / 4.0; // assuming ~4s average particle lifetime
+-        double unscaledTotal = baseRate * activeBurningCount;
+-        if (unscaledTotal > maxTotalPerSecond && unscaledTotal > 0.0) {
+-            baseRate *= (maxTotalPerSecond / unscaledTotal);
+-        }
+-        return baseRate;
++        return IndustrialSmokeBudget.particlesPerSecond(distanceBlocks, intensity, activeBurningCount,
++                nearLodDistance, mediumLodDistance, farLodDistance,
++                nearSmokeParticlesPerSecond, mediumSmokeParticlesPerSecond, maxStructureFireParticles);
+     }
+ 
+     public static synchronized void clear() {
+--- R1/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
++++ R2/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
+@@ -5,6 +5,7 @@
+ import com.bobincraft.destruction.RefinerySmokeConfig;
+ import com.bobincraft.destruction.StructureDamageState;
+ import com.bobincraft.destruction.StructureFireManager;
++import com.bobincraft.destruction.IndustrialSmokeBudget;
+ import com.bobincraft.destruction.StructureNetworkSync;
+ import com.bobincraft.drone.client.DroneClient;
+ import com.bobincraft.weapon.grom7.Grom7Content;
+@@ -146,6 +147,17 @@
+         debugRender = enabled;
+     }
+ 
++    private static boolean isSmokeEmitter(StructureNetworkSync.ClientStructureView view,
++                                          ClientWorld world, Vec3d observer) {
++        BlockPos origin = view.origin();
++        Vec3d center = new Vec3d(origin.getX() + 0.5, origin.getY() + view.height() * 0.70, origin.getZ() + 0.5);
++        return IndustrialSmokeBudget.isEmitter(
++                view.category() != DestructibleStructureType.Category.BRIDGE_SECTION,
++                view.isBurning(), view.fireIntensity(),
++                world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4),
++                observer.distanceTo(center), StructureFireManager.farLodDistance);
++    }
++
+     private static void tickClientEffects(MinecraftClient client) {
+         ClientWorld world = client.world;
+         if (world == null || client.isPaused() || CLIENT_STRUCTURES.isEmpty()) return;
+@@ -157,14 +169,11 @@
+                 : (DroneClient.isActive() && DroneClient.getDrone() != null ? DroneClient.getDrone().getPos()
+                 : (client.player != null ? client.player.getEyePos() : Vec3d.ZERO));
+ 
+-        int activeEffectStructures = 0;
++        int activeSmokeEmitters = 0;
+         for (StructureNetworkSync.ClientStructureView v : CLIENT_STRUCTURES.values()) {
+-            if (v.category() == DestructibleStructureType.Category.BRIDGE_SECTION) continue;
+-            if (v.isBurning() || v.stage() == StructureDamageState.DAMAGED || v.stage() == StructureDamageState.CRITICAL) {
+-                activeEffectStructures++;
+-            }
++            if (isSmokeEmitter(v, world, observer)) activeSmokeEmitters++;
+         }
+-        if (activeEffectStructures == 0) return;
++        // Non-burning substations still own electrical arcs; they do not share the smoke allocation.
+ 
+         float hMult = Math.max(1.0f, RefinerySmokeConfig.smokeHeightMultiplier);
+         float densityMult = Math.max(1.0f, RefinerySmokeConfig.columnDensity);
+@@ -201,11 +210,11 @@
+                 }
+             }
+ 
+-            float effectiveIntensity = v.isBurning() ? v.fireIntensity() : 0.0f;
+-            if (effectiveIntensity <= 0.0f) continue;
++            if (!isSmokeEmitter(v, world, observer)) continue;
++            float effectiveIntensity = v.fireIntensity();
+ 
+             boolean isRefineryTank = v.category() == DestructibleStructureType.Category.REFINERY_TANK;
+-            double ratePerSecond = StructureFireManager.budgetedParticlesPerSecond(dist, effectiveIntensity, activeEffectStructures);
++            double ratePerSecond = StructureFireManager.budgetedParticlesPerSecond(dist, effectiveIntensity, activeSmokeEmitters);
+             double pulseMultiplier = (isRefineryTank && v.isBurning()) ? (3.2 * densityMult) : 1.4;
+             double ratePerTick = (ratePerSecond * pulseMultiplier) / 20.0;
+             double acc = PARTICLE_ACCUMULATORS.getOrDefault(v.structureId(), 0.0) + ratePerTick;
+--- R1/src/test/java/com/bobincraft/destruction/StabilizationContract.java
++++ R2/src/test/java/com/bobincraft/destruction/StabilizationContract.java
+@@ -109,9 +109,39 @@
+         l.retarget(Map.of(cell,"rust"));l.protect(cell);l.rebuildScheduling();
+         check(!l.hasReady()&&l.pending.containsKey(cell),"protected target retained outside active queue");
+         check(!l.canApply(cell,"air"),"same-material replacement cannot bypass protection");
++        smokeAllocation();
+         collision();
+-        System.out.println("PASS stabilization production kernels: "+checks+" checks; policy, smoke color, phase schedules, audio clusters, parked ledger, swept cosmetic collision");
++        System.out.println("PASS stabilization production kernels: "+checks+" checks; policy, smoke color/allocation, phase schedules, audio clusters, parked ledger, swept cosmetic collision");
+     }
++    private static void smokeAllocation() {
++        record View(String stage, boolean industrial, boolean burning, float intensity, boolean loaded, double distance) {
++            boolean emits() { return IndustrialSmokeBudget.isEmitter(industrial, burning, intensity, loaded, distance, 192); }
++        }
++        View refinery = new View("CRITICAL", true, true, .9f, true, 16);
++        for (double distance : new double[]{0, 32, 32.01, 96, 96.01, 192}) {
++            double alone = IndustrialSmokeBudget.particlesPerSecond(distance, .9f, 1, 32, 96, 192, 8, 2, 200);
++            var views = new ArrayList<View>(); views.add(refinery);
++            for (int added = 0; added <= 256; added++) {
++                if (added > 0) views.add(new View(added % 2 == 0 ? "DAMAGED" : "CRITICAL", true, false, .9f, true, 16));
++                int emitters = (int) views.stream().filter(View::emits).count();
++                check(emitters == 1, "non-burning damaged/critical structures consume no refinery smoke allocation");
++                check(IndustrialSmokeBudget.particlesPerSecond(distance, .9f, emitters, 32, 96, 192, 8, 2, 200) == alone,
++                        "burning refinery rate unchanged after adding non-burning damaged structures at every LOD");
++            }
++        }
++        for (View excluded : List.of(new View("INTACT",true,false,1,true,16),
++                new View("CRITICAL",true,true,0,true,16), new View("CRITICAL",true,true,1,false,16),
++                new View("CRITICAL",true,true,1,true,192.01), new View("CRITICAL",false,true,1,true,16),
++                new View("CRITICAL",true,true,1,true,Double.NaN)))
++            check(!excluded.emits(), "only eligible active industrial emitters share allocation");
++        check(new View("CRITICAL",true,true,1,true,192).emits(), "existing inclusive far LOD boundary preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(16,1,8,32,96,192,8,2,200)==6.25, "multiple real fires retain global cap scaling");
++        check(IndustrialSmokeBudget.particlesPerSecond(16,1,1,32,96,192,8,2,200)==8, "near appearance rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(64,1,1,32,96,192,8,2,200)==2, "medium LOD rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(128,1,1,32,96,192,8,2,200)==.65, "far LOD rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(193,1,1,32,96,192,8,2,200)==0, "outside far LOD emits nothing");
++    }
++
+     private static void collision() {
+         var floor=new TransientDebrisCollision.Bounds(-10,0,-10,10,.5,10);
+         var wall=new TransientDebrisCollision.Bounds(1,-2,-10,1.1,10,10);

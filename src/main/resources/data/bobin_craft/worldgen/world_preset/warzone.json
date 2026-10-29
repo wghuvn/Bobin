@@ -1,0 +1,50 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "bobin_craft:forest_camp",
+      "generator": {
+        "type": "bobin_craft:hub",
+        "biome_source": {
+          "type": "minecraft:fixed",
+          "biome": "bobin_craft:safe_bunker"
+        }
+      }
+    },
+    "minecraft:the_nether": {
+      "type": "minecraft:the_nether",
+      "generator": {
+        "type": "minecraft:noise",
+        "settings": "minecraft:nether",
+        "biome_source": {
+          "type": "minecraft:multi_noise",
+          "preset": "minecraft:nether"
+        }
+      }
+    },
+    "minecraft:the_end": {
+      "type": "minecraft:the_end",
+      "generator": {
+        "type": "minecraft:noise",
+        "settings": "minecraft:end",
+        "biome_source": {
+          "type": "minecraft:the_end"
+        }
+      }
+    },
+    "bobin_craft:warzone": {
+      "type": "bobin_craft:warzone",
+      "generator": {
+        "type": "bobin_craft:warzone",
+        "size": 2048,
+        "biome_source": {
+          "type": "bobin_craft:warzone",
+          "plains": "bobin_craft:exclusion_forest",
+          "highlands": "bobin_craft:exclusion_ridge",
+          "badlands": "bobin_craft:exclusion_forest",
+          "marsh": "bobin_craft:exclusion_marsh"
+        },
+        "generation_version": 10
+      }
+    }
+  }
+}

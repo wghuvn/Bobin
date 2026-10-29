@@ -1,0 +1,8 @@
+PASS: no deletions; all original-file edits match the stage allowlist.
+MODIFIED
+src/main/java/com/bobincraft/destruction/client/IndustrialSmokeParticle.java
+src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
+ADDED
+src/main/java/com/bobincraft/destruction/IndustrialSmokeMotion.java
+src/test/java/com/bobincraft/destruction/SmokeMotionContract.java
+src/test/java/com/bobincraft/destruction/SmokeMotionTest.java

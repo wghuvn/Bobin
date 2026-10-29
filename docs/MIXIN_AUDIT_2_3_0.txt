@@ -1,0 +1,3 @@
+MIXIN_REMAP_PASS mixins=17 selectors=25 shadows=4 invocationTargets=3 constantTargets=1
+Built /workspace/scratch/688dfa2d6e40/Bobin_craft/build/libs/bobin_craft-2.3.0.jar (4,246,725 bytes)
+SHA256 729363302053d87d01cc01458496ad300afaebb876fc2bdf281a311c395ffb8c

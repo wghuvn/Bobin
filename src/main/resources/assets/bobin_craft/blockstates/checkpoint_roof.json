@@ -1,0 +1,364 @@
+{
+  "multipart": [
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_up"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_up_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_up_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_up_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_up_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_down"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_down_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_down_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_down_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "0",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_down_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "0"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_0_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_up"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_up_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_up_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_up_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_up_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_down"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_down_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_down_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_down_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "1",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_down_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "1"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_1_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_up"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_up_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_up_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_up_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_up_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_down"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_down_west"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_down_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_down_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "2",
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_down_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_north"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_south"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_east"
+      }
+    },
+    {
+      "when": {
+        "variant": "2"
+      },
+      "apply": {
+        "model": "bobin_craft:block/checkpoint_roof_2_west"
+      }
+    }
+  ]
+}

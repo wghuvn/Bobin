@@ -1,0 +1,29 @@
+Validated 37 original 64/128 px textures and 95 forest camp resources.
+Military vehicles verified: 237 bounded cells, 5017 exact model/collision cuboids, twelve 256px materials, four orientations.
+Validated 22-element strike bomb, four 64px materials and seven damage tags.
+Validated 5 original 256px NPC skins and 23 real mono Vorbis audio resources.
+Validated 3 original 32x32 ambient wildlife textures.
+Forest resources valid: 22 blocks, 32 reproducible PNGs, models, drops, tags, 3 locales.
+Validated 1138 JSON files, 309 loot tables and 108 reviewed item IDs.
+All five authored loot families have blueprint consumers; English/Ukrainian keys and placeholders agree.
+Faction loadouts: 10 profiles, all firearm names and 30 texture paths valid
+Validated 7 registered drone items, models, icons and recipes; shared entity atlas is valid.
+All 33 Java translation references and 19 registry names resolve in English, Russian and Ukrainian.
+Checked new resource JSON and all three language files for duplicate keys. Legacy loot data is outside this check.
+Combat resources valid: 17 translation keys in 3 languages, 10 textures, 2 particle atlases, recipe, 3 damage types and terrain tags
+test_body_paint_has_no_regular_64_pixel_dark_grid (__main__.VehicleGeometryTest.test_body_paint_has_no_regular_64_pixel_dark_grid) ... ok
+test_canopy_has_a_matching_arch_at_both_ends (__main__.VehicleGeometryTest.test_canopy_has_a_matching_arch_at_both_ends) ... ok
+test_cargo_floor_has_a_load_path_to_the_chassis (__main__.VehicleGeometryTest.test_cargo_floor_has_a_load_path_to_the_chassis) ... ok
+test_hood_is_solid_up_to_the_windscreen (__main__.VehicleGeometryTest.test_hood_is_solid_up_to_the_windscreen) ... ok
+test_material_scale_is_invariant_across_axes_and_clipping (__main__.VehicleGeometryTest.test_material_scale_is_invariant_across_axes_and_clipping) ... ok
+test_paint_coordinates_do_not_restart_in_the_next_block (__main__.VehicleGeometryTest.test_paint_coordinates_do_not_restart_in_the_next_block) ... ok
+test_reserved_cells_and_collision_are_still_save_compatible (__main__.VehicleGeometryTest.test_reserved_cells_and_collision_are_still_save_compatible) ... ok
+test_windscreen_does_not_project_a_long_wedge_ahead_of_doors (__main__.VehicleGeometryTest.test_windscreen_does_not_project_a_long_wedge_ahead_of_doors) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 2.898s
+
+OK
+/workspace/scratch/688dfa2d6e40/Bobin_craft/tools/check_occupation_assets.py:18: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  image.load();alpha=list(image.getchannel('A').getdata());assert .15<sum(a>0 for a in alpha)/len(alpha)<.5
+OCCUPATION_ASSETS_PASS: 1372 articulated cuboids, three mesh groups, 3 inventory items, 3 locales, cutout net, two-sided flags

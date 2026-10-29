@@ -1,0 +1,1 @@
+{"variants":{"facing=north":{"model":"bobin_craft:block/military_tank_0_2_7"},"facing=east":{"model":"bobin_craft:block/military_tank_0_2_7","y":90},"facing=south":{"model":"bobin_craft:block/military_tank_0_2_7","y":180},"facing=west":{"model":"bobin_craft:block/military_tank_0_2_7","y":270}}}

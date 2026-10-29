@@ -1,0 +1,4 @@
+PASS: 4196 assertions; all 12 categories, protocol rejection, seeded geometry and budgets
+PASS: exact baseline; six permitted modifications; zero deleted files; all other original files unchanged
+PASS: 1512 JSON resources
+PASS: weapon dispatch has no industrial particles; one receiver; old packet emitters removed

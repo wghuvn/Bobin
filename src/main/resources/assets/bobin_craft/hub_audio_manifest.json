@@ -1,0 +1,123 @@
+{
+  "author": "Bobin Craft original procedural audio and original scripted local Windows speech",
+  "sample_rate": 44100,
+  "channels": 1,
+  "format": "Ogg Vorbis",
+  "lines": {
+    "hub.sentry.greeting": {
+      "file": "hub/sentry_greeting.ogg",
+      "seconds": 7.074,
+      "sha256": "fd9df0917cd24988431c5c7affe9d8c723d68b095ff749c6a1f78225c2b4ed84"
+    },
+    "hub.sentry.reply": {
+      "file": "hub/sentry_reply.ogg",
+      "seconds": 6.922,
+      "sha256": "69dcc61d63cc21dd56a361d6967457b24971e79f4ee7e8ba9b4bba387b107352"
+    },
+    "hub.sentry.accept": {
+      "file": "hub/sentry_accept.ogg",
+      "seconds": 6.106,
+      "sha256": "f9a19b6c87686f970944ef14454bf696610f0e24bbc99562b4890e8122736073"
+    },
+    "hub.sentry.goodbye": {
+      "file": "hub/sentry_goodbye.ogg",
+      "seconds": 4.593,
+      "sha256": "cd910770613c097c432230e1a0bb7ea6905671f8dc778088936bb44f14177532"
+    },
+    "hub.quartermaster.greeting": {
+      "file": "hub/quartermaster_greeting.ogg",
+      "seconds": 6.47,
+      "sha256": "0cc4fa0a46007bc543536e25b3cfff152613f8d6a71432b256f1bd1c5de3796e"
+    },
+    "hub.quartermaster.reply": {
+      "file": "hub/quartermaster_reply.ogg",
+      "seconds": 5.452,
+      "sha256": "940700d51122340c014f3344c1add232e4004c053ab58d035ad981dea22d2e39"
+    },
+    "hub.quartermaster.accept": {
+      "file": "hub/quartermaster_accept.ogg",
+      "seconds": 5.664,
+      "sha256": "91f36d232c459d0549c6e98f9a4d42bf071294244fddf20870d96f7240f3c26c"
+    },
+    "hub.quartermaster.goodbye": {
+      "file": "hub/quartermaster_goodbye.ogg",
+      "seconds": 4.582,
+      "sha256": "1322dd0688b25bc2410e0c958108d597e6484edae9f958ec88bf9ec0fb604b86"
+    },
+    "hub.cook.greeting": {
+      "file": "hub/cook_greeting.ogg",
+      "seconds": 5.168,
+      "sha256": "59712056c91b4c9429dbe613dde8c877d2091529428fafed8f759f889429b26f"
+    },
+    "hub.cook.reply": {
+      "file": "hub/cook_reply.ogg",
+      "seconds": 3.791,
+      "sha256": "c27ed558741f23fdc14c085969dcc4f415a7fa9eaad8a5c10cf2fc316bb4378c"
+    },
+    "hub.cook.accept": {
+      "file": "hub/cook_accept.ogg",
+      "seconds": 3.53,
+      "sha256": "c84e8c0a9e978b0fb24c97cc3bcb20f29bbfdabcfad071f6e0d50a68615194e0"
+    },
+    "hub.cook.goodbye": {
+      "file": "hub/cook_goodbye.ogg",
+      "seconds": 5.147,
+      "sha256": "196ee2e4a87aeef1ad17216d670a6697843d7fc1cf6f3abf9b30b788e2e5006b"
+    },
+    "hub.medic.greeting": {
+      "file": "hub/medic_greeting.ogg",
+      "seconds": 5.757,
+      "sha256": "6e97c2d8c153353538e8c19add965caf8124cb0585841610a0dbc887b93a02f7"
+    },
+    "hub.medic.reply": {
+      "file": "hub/medic_reply.ogg",
+      "seconds": 4.174,
+      "sha256": "1cbd30522c19cd5f4f7a8bbb1baf407466489682537d8447320fb3096734ed30"
+    },
+    "hub.medic.accept": {
+      "file": "hub/medic_accept.ogg",
+      "seconds": 4.963,
+      "sha256": "6d188d5ce73ae4bebff7dc641b3688a69c877464222bd2eba5ff2ba6a1322707"
+    },
+    "hub.medic.goodbye": {
+      "file": "hub/medic_goodbye.ogg",
+      "seconds": 4.37,
+      "sha256": "637163064d34a265cc11f1bc68e3b66d8eaa8824321ce19113a5dafda6867e01"
+    },
+    "hub.commander.greeting": {
+      "file": "hub/commander_greeting.ogg",
+      "seconds": 6.093,
+      "sha256": "ccc71f1ce803a29b0e28875051b3fd00e46981964efb62226d82508169d826d8"
+    },
+    "hub.commander.reply": {
+      "file": "hub/commander_reply.ogg",
+      "seconds": 6.963,
+      "sha256": "ea465dfbee6a9fecb6b677f0e1d691e82ef926a136a3a348e92902c87e9e52b9"
+    },
+    "hub.commander.accept": {
+      "file": "hub/commander_accept.ogg",
+      "seconds": 6.545,
+      "sha256": "c5b95abd807e4568cbbab3a32b2be2b2a2a155e24eb334c0824a007199ba0297"
+    },
+    "hub.commander.goodbye": {
+      "file": "hub/commander_goodbye.ogg",
+      "seconds": 6.415,
+      "sha256": "6cd4d4caf8c011d60f5eb1f056a0d19a348f6e4275dcd9d9d2cc2e889dde5032"
+    },
+    "hub.deserter.warning": {
+      "file": "hub/deserter_warning.ogg",
+      "seconds": 7.572,
+      "sha256": "11d012b4ad2ec2da065da2a42d5ed7b621599fdaa44c0ab7d7b304b9866aa852"
+    },
+    "hub.deserter.whistle": {
+      "file": "hub/bomb_whistle.ogg",
+      "seconds": 2.4,
+      "sha256": "d787c81de96396c794580a0843ceac66d113b0e506e5dfe4ba8653e315470623"
+    },
+    "hub.deserter.explosion": {
+      "file": "hub/deserter_explosion.ogg",
+      "seconds": 5.4,
+      "sha256": "93f51c259933165c44c5ee2d5ceafb1a74b5c5ffae1dfdaa053dc8928fba8d6d"
+    }
+  }
+}

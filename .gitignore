@@ -1,0 +1,20 @@
+*.class
+*.log
+.gradle/
+build/
+out/
+.fabric/
+run/
+logs/
+node_modules/
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.blend[0-9]
+*.tmp
+*.swp
+.DS_Store
+Thumbs.db
+
+# Preserve deliberately published verification reports, including stages 2 and 3.
+!docs/**/*.log

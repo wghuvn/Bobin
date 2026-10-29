@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:grass_block",
+    "minecraft:podzol",
+    "minecraft:mycelium",
+    "minecraft:moss_block",
+    "minecraft:rooted_dirt",
+    "bobin_craft:mossy_forest_soil",
+    "bobin_craft:dark_forest_soil",
+    "bobin_craft:pine_needle_ground",
+    "bobin_craft:forest_litter",
+    "bobin_craft:scorched_grass",
+    "bobin_craft:partially_scorched_grass"
+  ]
+}

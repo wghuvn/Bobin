@@ -1,0 +1,15 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "bobin_craft:block/broken_window_glass"
+      },
+      {
+        "model": "bobin_craft:block/broken_window_glass_alt"
+      },
+      {
+        "model": "bobin_craft:block/broken_window_glass_cracked"
+      }
+    ]
+  }
+}

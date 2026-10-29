@@ -1,0 +1,4 @@
+COMMAND: java docs/Stage5/Verify.java
+EXIT: 0
+STATUS: PASS
+PASS Stage 5 production geometry/collision/support kernels: 21955 checks; 172 recognizable source patches, 813 conserved source cells

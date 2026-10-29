@@ -1,0 +1,1 @@
+e8dd2d8ddeac1a9acaed423302c5731fae24d019bc379fb50e03391ff1e77aa8  build/libs/bobin_craft-2.2.0.jar

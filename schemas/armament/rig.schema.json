@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:rig:1",
+  "title": "Bobin Craft armament rig v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          },
+          "node_index": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 65535
+          },
+          "parent": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          }
+        },
+        "required": [
+          "name",
+          "node_index"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1,
+      "maxItems": 512,
+      "uniqueItems": true
+    },
+    "roles": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+      },
+      "minProperties": 1,
+      "maxProperties": 64,
+      "required": [
+        "weapon_root"
+      ],
+      "additionalProperties": {
+        "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+      }
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "nodes",
+    "roles"
+  ],
+  "additionalProperties": false
+}

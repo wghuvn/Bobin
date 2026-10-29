@@ -1,0 +1,3 @@
+MIXIN_REMAP_PASS mixins=23 selectors=37 shadows=4 invocationTargets=3 constantTargets=1
+ARMOR_COLLISION_MIXIN_APPLIED net.minecraft.class_1924 parts=1491
+Probe stops in Fabric preLaunch, before Minecraft main and world initialization.

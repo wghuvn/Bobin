@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "all": "bobin_craft:block/cracked_asphalt",
+    "bottom": "bobin_craft:block/cracked_asphalt",
+    "top": "bobin_craft:block/cracked_asphalt",
+    "side": "bobin_craft:block/cracked_asphalt"
+  }
+}

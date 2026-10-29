@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "II ",
+    "IRI",
+    " GI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "G": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "result": {
+    "item": "bobin_craft:rpg_launcher",
+    "count": 1
+  }
+}

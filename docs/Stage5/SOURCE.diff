@@ -1,0 +1,1971 @@
+--- R2/src/main/java/com/bobincraft/BobinCraftClient.java
++++ Stage5/src/main/java/com/bobincraft/BobinCraftClient.java
+@@ -32,6 +32,7 @@
+         com.bobincraft.vehicle.client.GrenadeClient.register();
+         com.bobincraft.weapon.grom7.client.Grom7Client.register();
+         com.bobincraft.destruction.client.StructureDestructionClient.register();
++        com.bobincraft.destruction.client.StructureDebrisRenderer.register();
+         EntityRendererRegistry.register(com.bobincraft.weapon.heavy.RpgContent.RPG_PROJECTILE, com.bobincraft.weapon.heavy.RpgProjectileRenderer::new);
+         EntityRendererRegistry.register(com.bobincraft.weapon.grom7.Grom7Content.GROM7_CHARGE_ENTITY, com.bobincraft.weapon.grom7.client.Grom7ChargeRenderer::new);
+         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(),
+--- R2/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
++++ Stage5/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
+@@ -116,6 +116,49 @@
+         context.complete();
+     }
+ 
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void debrisNbtPhases(TestContext context) throws Exception {
++        com.bobincraft.destruction.debris.DebrisGameTests.roundTrip(context);
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void debrisDurableDiskAndFutureVersion(TestContext context) throws Exception {
++        com.bobincraft.destruction.debris.DebrisGameTests.disk(context);
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void debrisCommitCrashRecovery(TestContext context) throws Exception {
++        com.bobincraft.destruction.debris.DebrisGameTests.commitAndRecovery(context);
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void debrisProtectedPartialCommit(TestContext context) throws Exception {
++        com.bobincraft.destruction.debris.DebrisGameTests.protectedPartial(context);
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 200)
++    public void debrisActualSlabSupportLoss(TestContext context) throws Exception {
++        com.bobincraft.destruction.debris.DebrisGameTests.actualSlabSupport(context);
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void debrisBridgeNoDuplicateStaticPiles(TestContext context) {
++        var terrain=ensureTerrain();int[] surviving={0};
++        for(var crossing:terrain.zonePlan().crossings()) {
++            var source=com.bobincraft.warzone.ZoneInfrastructure.bridgeBlueprint(terrain,crossing);
++            for(var section:DestructibleStructureRegistry.bridgeSectionsForCrossing(crossing.id()))
++                for(var stage:new StructureDamageState[]{StructureDamageState.DAMAGED,StructureDamageState.CRITICAL,StructureDamageState.DESTROYED}) {
++                    var bp=StructureCollapseManager.getStageBlueprint(terrain,section,stage);
++                    bp.forEachCell((x,y,z,spec,mode)->{if(spec.isAir())return;var original=source.get(x,y,z);
++                        if(original==null||original.isAir())throw new AssertionError("Source-less decorative pile duplicates physical debris: "+x+","+y+","+z);
++                        surviving[0]++;
++                    });
++                }
++        }
++        if(surviving[0]==0)throw new AssertionError("Legitimate surviving structure was hidden");
++        context.complete();
++    }
++
+     private static WarzoneTerrain cachedTerrain;
+ 
+     private static synchronized WarzoneTerrain ensureTerrain() {
+--- R2/src/main/java/com/bobincraft/destruction/RefineryTransitions.java
++++ Stage5/src/main/java/com/bobincraft/destruction/RefineryTransitions.java
+@@ -25,6 +25,7 @@
+     private static final Set<Long> CHUNK_QUEUED=new HashSet<>();
+     private static final ArrayDeque<Long> FALLBACK=new ArrayDeque<>();
+     private static final Set<Long> FALLBACK_KEYS=new HashSet<>();
++    private static final Set<String> DEBRIS_DIRTY=new HashSet<>(),DEBRIS_READY=new HashSet<>();
+     private static RefineryTransitionState active;
+     private static ServerWorld boundWorld;
+     private static int lastApplied,lastChecked,lastMaintenance;
+@@ -32,7 +33,7 @@
+     private RefineryTransitions(){}
+     public static void reset() {
+         generationEpoch++;GENERATED.clear();EXTERNALLY_CHANGED.clear();REQUESTS.clear();READY.clear();QUEUED.clear();
+-        CHUNK_WAKE.clear();CHUNK_QUEUED.clear();FALLBACK.clear();FALLBACK_KEYS.clear();active=null;boundWorld=null;
++        CHUNK_WAKE.clear();CHUNK_QUEUED.clear();FALLBACK.clear();FALLBACK_KEYS.clear();DEBRIS_DIRTY.clear();DEBRIS_READY.clear();active=null;boundWorld=null;
+     }
+     /** Direct mod-owned hooks avoid fragile mixins into package-private generator methods. */
+     public static GenerationScope beginGeneration(boolean refinery) {
+@@ -53,7 +54,7 @@
+             if(!first)text.append(',');text.append(e.getKey()).append('=').append(e.getValue());first=false;}text.append(']');}
+         return text.toString();
+     }
+-    private static BlockState decode(String text) {
++    public static BlockState decode(String text) {
+         int bracket=text.indexOf('[');
+         if(bracket>=0&&(!text.endsWith("]")||bracket+1>=text.length()-1))throw new IllegalArgumentException("Bad properties");
+         String id=bracket<0?text:text.substring(0,bracket);
+@@ -86,7 +87,7 @@
+         CHUNK_WAKE.clear();CHUNK_QUEUED.clear();FALLBACK.clear();FALLBACK_KEYS.clear();
+         if(!active.writable())return;
+         for(var e:active.ledgers.entrySet())if(e.getValue().revision==StructureGeometrySnapshot.REVISION) {
+-            e.getValue().rebuildScheduling();schedule(e.getKey(),e.getValue());
++            e.getValue().rebuildScheduling();schedule(e.getKey(),e.getValue());DEBRIS_DIRTY.add(e.getKey());
+         }
+     }
+     private static void schedule(String id,TransitionLedger ledger) {
+@@ -167,6 +168,23 @@
+             changed.add(e.getKey());schedule(e.getKey(),l);
+         }
+         REQUESTS.clear();lastMaintenance+=wakeChunks(world,64);
++        var debris=com.bobincraft.destruction.debris.StructureDebrisManager.get(world);
++        DEBRIS_DIRTY.addAll(changed);
++        for(var entry:active.ledgers.entrySet()) {
++            if(!DEBRIS_DIRTY.contains(entry.getKey()))continue;
++            DEBRIS_READY.remove(entry.getKey());
++            if(world.getTime()%20!=0&&!changed.contains(entry.getKey()))continue;
++            var ledger=entry.getValue();if(active.frozen(entry.getKey())||ledger.revision!=StructureGeometrySnapshot.REVISION)continue;
++            var source=new ArrayList<com.bobincraft.destruction.debris.DebrisPlan.Source>();
++            for(var cell:ledger.pending.entrySet())if("minecraft:air".equals(cell.getValue())&&ledger.owned.containsKey(cell.getKey())
++                    &&!"minecraft:air".equals(ledger.owned.get(cell.getKey()))&&!ledger.protectedCells.contains(cell.getKey())) {
++                var pos=BlockPos.fromLong(cell.getKey());source.add(new com.bobincraft.destruction.debris.DebrisPlan.Source(pos.getX(),pos.getY(),pos.getZ(),ledger.owned.get(cell.getKey())));
++            }
++            if(debris.reserve(entry.getKey(),"refinery/"+ledger.operation+"/"+ledger.stage,source)) {
++                DEBRIS_READY.add(entry.getKey());DEBRIS_DIRTY.remove(entry.getKey());
++                debris.prearm(entry.getKey(),"refinery/"+ledger.operation+"/"+ledger.stage,source,64);
++            }
++        }
+         while(lastChecked<Math.max(0,budget)&&!READY.isEmpty()) {
+             String id=READY.poll();QUEUED.remove(id);var l=active.ledgers.get(id);
+             if(l==null)continue;Long packed=l.poll();lastChecked++;
+@@ -188,14 +206,24 @@
+                     }
+                     if(l.actionable(packed)&&l.canApply(packed,encode(current))) {
+                         try {
+-                            BlockState next=decode(l.pending.get(packed));boolean previous=WRITING.get();WRITING.set(true);
+-                            try {world.setBlockState(pos,next,Block.NOTIFY_LISTENERS);} finally {WRITING.set(previous);}
+-                            if(world.getBlockState(pos).equals(next)){l.applied(packed);lastApplied++;}
++                            BlockState next=decode(l.pending.get(packed));
++                            String operation="refinery/"+l.operation+"/"+l.stage;
++                            boolean removal=l.stage>0&&next.isAir()&&!current.isAir();
++                            if(removal&&(!DEBRIS_READY.contains(id)||!debris.beforeRemove(id,operation,pos,current))) {
++                                if(debris.conflicted(id,operation,pos))l.protect(packed);else l.retry(packed);
++                                if(before!=l.mutations())changed.add(id);
++                                schedule(id,l);continue;
++                            }
++                            boolean previous=WRITING.get();WRITING.set(true);
++                            try {com.bobincraft.destruction.debris.StructureDebrisManager.writeSource(world,pos,next);} finally {WRITING.set(previous);}
++                            if(world.getBlockState(pos).equals(next)){if(removal)debris.removed(id,operation,pos);l.applied(packed);lastApplied++;}
+                             else l.protect(packed); // A rejected write is a conflict, not a hot retry loop.
+                         } catch(IllegalArgumentException invalid){l.protect(packed);}
+                     }
+                 }
+             }
++            if(l.protectedCells.contains(packed)||!l.pending.containsKey(packed))
++                debris.reject(id,"refinery/"+l.operation+"/"+l.stage,BlockPos.fromLong(packed));
+             if(before!=l.mutations())changed.add(id);
+             schedule(id,l); // Round-robin one candidate per structure.
+         }
+--- R2/src/main/java/com/bobincraft/destruction/StructureCollapseManager.java
++++ Stage5/src/main/java/com/bobincraft/destruction/StructureCollapseManager.java
+@@ -35,11 +35,12 @@
+     private static final ConcurrentHashMap<DiffKey, List<BlockChange>> DIFF_CACHE = new ConcurrentHashMap<>();
+     private static final ConcurrentHashMap<BpSpec, BlockState> STATE_CACHE = new ConcurrentHashMap<>();
+ 
++    private static final Map<String,Blueprint> DEBRIS_SOURCE_BRIDGES=new ConcurrentHashMap<>();
+     private StructureCollapseManager() {}
+ 
+     public static void clearCache() {
+         TEMPLATES.clear();
+-        DIFF_CACHE.clear();
++        DIFF_CACHE.clear();DEBRIS_SOURCE_BRIDGES.clear();
+     }
+ 
+     public static void prewarm(WarzoneTerrain terrain) {
+@@ -394,6 +395,14 @@
+         }
+ 
+         bp.connect((x, z) -> rawHeight(terrain, x, z));
++        if(stage.templateStage()!=StructureDamageState.INTACT) {
++            Blueprint reference=DEBRIS_SOURCE_BRIDGES.computeIfAbsent(terrain.seed+"/"+terrain.generationVersion()+"/"+crossing.id(),
++                    key->com.bobincraft.warzone.ZoneInfrastructure.bridgeBlueprint(terrain,crossing));
++            // Preserve surviving authored blocks; source-less decorative riverbed piles cannot duplicate physical fragments.
++            bp.forEachCell((x,y,z,spec,mode)->{var original=reference.get(x,y,z);
++                if(!spec.isAir()&&(original==null||original.isAir()))bp.clear(x,y,z);
++            });
++        }
+         return bp;
+     }
+ 
+--- R2/src/main/java/com/bobincraft/destruction/StructureDamageManager.java
++++ Stage5/src/main/java/com/bobincraft/destruction/StructureDamageManager.java
+@@ -439,8 +439,11 @@
+         boolean wasOffline = DestructibleStructureRegistry.isSubstationOffline();
+ 
+         DELAYED_COLLAPSES.remove(structure.structureId());
++        if(normalizedTarget!=StructureDamageState.INTACT&&normalizedTarget.index<prevStage.index)
++            com.bobincraft.destruction.debris.StructureDebrisManager.resetStructure(serverWorld,structure.structureId());
+         if (normalizedTarget == StructureDamageState.INTACT) {
+             DestructionScenarioDirector.clearForStructure(structure.structureId());
++            com.bobincraft.destruction.debris.StructureDebrisManager.resetStructure(serverWorld,structure.structureId());
+         }
+         structure.forceStage(normalizedTarget, tick);
+         DestructibleStructureRegistry.updateSnapshot(structure);
+@@ -495,6 +498,7 @@
+         DestructionScenarioDirector.resetAll();
+         for (DestructibleStructure s : DestructibleStructureRegistry.all()) {
+             StructureDamageState prev = s.damageStage().templateStage();
++            com.bobincraft.destruction.debris.StructureDebrisManager.resetStructure(serverWorld,s.structureId());
+             s.reset(tick);
+             DestructibleStructureRegistry.updateSnapshot(s);
+             if (prev != StructureDamageState.INTACT) {
+--- R2/src/main/java/com/bobincraft/destruction/StructureNetworkSync.java
++++ Stage5/src/main/java/com/bobincraft/destruction/StructureNetworkSync.java
+@@ -131,7 +131,7 @@
+         if (registered) return;
+         registered = true;
+ 
+-        ServerLifecycleEvents.SERVER_STARTING.register(server -> RefineryTransitions.reset());
++        ServerLifecycleEvents.SERVER_STARTING.register(server -> {RefineryTransitions.reset();com.bobincraft.destruction.debris.StructureDebrisManager.closeAll();});
+         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+             SOUND_MIXER.clear();
+             ServerWorld warzone = server.getWorld(WarzoneDimension.WORLD);
+@@ -153,6 +153,7 @@
+             ServerWorld targetWorld = warzone != null ? warzone : server.getOverworld();
+             RefineryTransitions.flushProvenance(targetWorld);
+             StructurePersistentState.get(targetWorld).captureFromRegistry();
++            com.bobincraft.destruction.debris.StructureDebrisManager.closeAll();
+         });
+ 
+         net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents.CHUNK_LOAD.register(
+@@ -162,6 +163,7 @@
+             server.execute(() -> sendFullSnapshotToPlayer(handler.player));
+         });
+ 
++        ServerTickEvents.START_WORLD_TICK.register(world -> com.bobincraft.destruction.debris.StructureDebrisManager.get(world).beginTick());
+         ServerTickEvents.END_WORLD_TICK.register(world -> {
+             tickScheduledSounds(world);
+             if (world.getRegistryKey().equals(WarzoneDimension.WORLD) || world.getServer().getWorld(WarzoneDimension.WORLD) == null) {
+@@ -174,6 +176,8 @@
+                     StructureFireManager.tickServer(world, world.getTime());
+                 }
+             }
++            com.bobincraft.destruction.debris.StructureDebrisManager.get(world).tick();
++            com.bobincraft.destruction.debris.DebrisNetworking.tick(world);
+         });
+ 
+         registerCommands();
+@@ -381,6 +385,8 @@
+             dispatcher.register(CommandManager.literal("bobin")
+                     .requires(source -> source.hasPermissionLevel(2))
+                     .then(CommandManager.literal("destruction")
++                            .then(CommandManager.literal("debris")
++                                    .executes(ctx -> {var source=(ServerCommandSource)ctx.getSource();source.sendFeedback(() -> Text.literal(com.bobincraft.destruction.debris.StructureDebrisManager.get(source.getWorld()).diagnostics()),false);return 1;}))
+                             .then(CommandManager.literal("inspect")
+                                     .executes(ctx -> executeInspect(((ServerCommandSource) ctx.getSource()))))
+                             .then(CommandManager.literal("list")
+--- R2/src/main/java/com/bobincraft/destruction/StructureUpdateQueue.java
++++ Stage5/src/main/java/com/bobincraft/destruction/StructureUpdateQueue.java
+@@ -56,7 +56,7 @@
+             this.structureId = Objects.requireNonNull(structureId);
+             this.fromStage = Objects.requireNonNull(fromStage);
+             this.targetStage = Objects.requireNonNull(targetStage);
+-            this.orderedChanges = changes;
++            this.orderedChanges = new ArrayList<>(changes);
+             this.cursor = Math.max(0, Math.min(startCursor, changes.size()));
+             this.crackPhaseTicksRemaining = Math.max(0, crackPhaseTicks);
+             this.crackPhaseRateCap = Math.max(1, crackPhaseRateCap);
+@@ -195,16 +195,33 @@
+                 continue;
+             }
+             activeStructuresProcessed++;
++            com.bobincraft.destruction.debris.StructureDebrisManager debris=world==null?null:com.bobincraft.destruction.debris.StructureDebrisManager.get(world);
++            String debrisOperation="stage/"+task.targetStage.templateStage().index;
++            boolean physical=task.targetStage.templateStage()!=StructureDamageState.INTACT&&task.targetStage.templateStage().index>=task.fromStage.templateStage().index;
++            if(debris!=null&&physical) {
++                var source=new ArrayList<com.bobincraft.destruction.debris.DebrisPlan.Source>();
++                for(var change:task.orderedChanges)if(change.spec().isAir()&&change.prevSpec()!=null&&!change.prevSpec().isAir()) {
++                    var pos=change.pos();
++                    if(world.isChunkLoaded(pos.getX()>>4,pos.getZ()>>4)) {
++                        var actual=world.getBlockState(pos);
++                        if(!actual.isAir()&&StructureTemplateAdapter.shouldApplyBlockChange(actual,change.prevSpec(),change.spec()))
++                            source.add(new com.bobincraft.destruction.debris.DebrisPlan.Source(pos.getX(),pos.getY(),pos.getZ(),RefineryTransitions.encode(actual)));
++                    }
++                }
++                if(!debris.reserve(task.structureId,debrisOperation,source))continue;
++                debris.prearm(task.structureId,debrisOperation,source,64);
++            }
+             int baseShare = Math.max(1, budget / Math.max(1, maxConcurrent - activeStructuresProcessed + 1));
+             int stageCap = task.crackPhaseTicksRemaining > 0 ? task.crackPhaseRateCap : task.mainCollapseRateCap;
+             if (task.crackPhaseTicksRemaining > 0) {
+                 task.crackPhaseTicksRemaining--;
+             }
+             int perStructureBudget = Math.min(baseShare, stageCap);
+-            int appliedForThis = 0;
++            int appliedForThis = 0,checkedForThis=0;
+             boolean deferredUnloaded = false;
+ 
+-            while (task.cursor < task.orderedChanges.size() && appliedForThis < perStructureBudget && budget > 0) {
++            while (task.cursor < task.orderedChanges.size() && checkedForThis < perStructureBudget && budget > 0) {
++                checkedForThis++;budget--;
+                 StructureCollapseManager.BlockChange change = task.orderedChanges.get(task.cursor);
+                 BlockPos pos = change.pos();
+                 int cx = pos.getX() >> 4;
+@@ -214,20 +231,38 @@
+                     deferredUnloaded = true;
+                     break;
+                 }
+-                task.cursor++;
+                 if (world != null && world.isInBuildLimit(pos)) {
+                     BlockState currentState = world.getBlockState(pos);
++                    // New decorative ruin blocks have no detached source owner. Physical source fragments replace that path.
++                    if(physical&&!change.spec().isAir()&&(change.prevSpec()==null||change.prevSpec().isAir())){task.cursor++;continue;}
++                    boolean removal=change.spec().isAir()&&!currentState.isAir();
++                    if(removal&&physical) {
++                        boolean emptyOriginalHopper=currentState.isOf(net.minecraft.block.Blocks.HOPPER)
++                                &&world.getBlockEntity(pos) instanceof net.minecraft.inventory.Inventory inventory&&inventory.isEmpty();
++                        if(!StructureTemplateAdapter.shouldApplyBlockChange(currentState,change.prevSpec(),change.spec())
++                                ||currentState.hasBlockEntity()&&!emptyOriginalHopper) {
++                            debris.reject(task.structureId,debrisOperation,pos);task.cursor++;continue;
++                        }
++                        if(!debris.beforeRemove(task.structureId,debrisOperation,pos,currentState)) {
++                            if(debris.conflicted(task.structureId,debrisOperation,pos)){task.cursor++;continue;}
++                            // Capacity/barrier waits must not block later cells of already reserved connected pieces.
++                            task.orderedChanges.add(task.orderedChanges.remove(task.cursor));continue;
++                        }
++                    }
++                    task.cursor++;
+                     if (StructureTemplateAdapter.shouldApplyBlockChange(currentState, change.prevSpec(), change.spec())) {
+                         BlockState nextState = StructureCollapseManager.resolveBlockState(change.spec());
+-                        world.setBlockState(pos, nextState, Block.NOTIFY_LISTENERS);
++                        com.bobincraft.destruction.debris.StructureDebrisManager.writeSource(world,pos,nextState);
++                        if(!world.getBlockState(pos).equals(nextState)){debris.reject(task.structureId,debrisOperation,pos);continue;}
++                        if(removal&&physical)debris.removed(task.structureId,debrisOperation,pos);
+                         appliedForThis++;
+                         totalApplied++;
+-                        budget--;
+                     }
++                    else if(physical)debris.reject(task.structureId,debrisOperation,pos);
+                 } else {
++                    task.cursor++;
+                     appliedForThis++;
+                     totalApplied++;
+-                    budget--;
+                 }
+             }
+ 
+--- R2/src/main/java/com/bobincraft/destruction/client/DestructionKeyframeAnimator.java
++++ Stage5/src/main/java/com/bobincraft/destruction/client/DestructionKeyframeAnimator.java
+@@ -31,21 +31,8 @@
+ import java.util.*;
+ import java.util.concurrent.ConcurrentHashMap;
+ 
+-/**
+- * Layer D (Visual Effects) keyframe animation player and persistent non-collidable visual wreckage manager
+- * for Blockbench low-poly structural collapse models (Sections 2, 3, 4 Level D, 6, 7, 9).
+- *
+- * <p>Key architectural behaviors:
+- * <ul>
+- *   <li><b>Surface-Resolved Gravity</b>: Falling structural bones resolve the actual terrain/riverbed surface below
+- *       each bone (`resolveGroundSurfaceY`) so falling bridge slabs and structural pieces fall all the way onto
+- *       the ground or riverbed below without stopping in mid-air or shrinking to zero scale before impact.</li>
+- *   <li><b>Persistent Visual Wreckage Aftermath (`SETTLED_WRECKAGE`)</b>: When a collapse animation finishes, its
+- *       settled structural fragments remain on the ground as lightweight, non-collidable client-side visual wreckage
+- *       (zero physics cost, zero movement obstruction for players/NPCs, dynamic lightmap sampling) instead of
+- *       vanishing abruptly.</li>
+- * </ul>
+- */
++/** Stage 5 lifecycle adapter: legacy assets remain parsed for the later Stage 7 redesign;
++ * cracks remain transient. Source-derived persistent meshes belong solely to StructureDebrisRenderer. */
+ @Environment(EnvType.CLIENT)
+ public final class DestructionKeyframeAnimator {
+     public static int maxConcurrentActiveAnimations = 6;
+@@ -86,67 +73,12 @@
+ 
+     public record AnimationClip(String name, float lengthSec, Map<String, BoneChannel> boneChannels) {}
+ 
+-    public static final class ActiveSequence {
+-        public final StructureNetworkSync.TransitionScenarioPacket packet;
+-        public final List<GeoBone> bones;
+-        public final AnimationClip clip;
+-        public final long clientStartTick;
+-        public int lastValidLight = -1;
+-        public boolean bakedToAftermath = false;
+-
+-        ActiveSequence(StructureNetworkSync.TransitionScenarioPacket packet,
+-                       List<GeoBone> bones,
+-                       AnimationClip clip,
+-                       long clientStartTick) {
+-            this.packet = packet;
+-            this.bones = bones;
+-            this.clip = clip;
+-            this.clientStartTick = clientStartTick;
+-        }
+-    }
+-
+-    /**
+-     * Lightweight, non-collidable visual wreckage piece resting on the ground/riverbed after structural collapse.
+-     * Requires zero per-tick physics simulation and never blocks player or vehicle movement.
+-     */
+-    public static final class SettledWreckagePiece {
+-        public final String structureId;
+-        public final BlockState state;
+-        public double x, y, z;
+-        public final float sx, sy, sz;
+-        public final float rotX, rotY, rotZ;
+-        public final long settledTick;
+-        public int cachedLight = -1;
+-
+-        public SettledWreckagePiece(String structureId, BlockState state,
+-                                    double x, double y, double z,
+-                                    float sx, float sy, float sz,
+-                                    float rotX, float rotY, float rotZ,
+-                                    long settledTick, int initialLight) {
+-            this.structureId = structureId;
+-            this.state = state;
+-            this.x = x;
+-            this.y = y;
+-            this.z = z;
+-            this.sx = sx;
+-            this.sy = sy;
+-            this.sz = sz;
+-            this.rotX = rotX;
+-            this.rotY = rotY;
+-            this.rotZ = rotZ;
+-            this.settledTick = settledTick;
+-            this.cachedLight = initialLight;
+-        }
+-    }
+-
+-    public record ActiveCrackDecal(Vec3d position, long startTick, int durationTicks) {}
++    public record ActiveCrackDecal(Vec3d position,long startTick,int durationTicks) {}
+ 
+     private static final Map<String, List<GeoBone>> MODEL_CACHE = new ConcurrentHashMap<>();
+     private static final Map<String, AnimationClip> CLIP_CACHE = new ConcurrentHashMap<>();
+-    private static final Map<String, ActiveSequence> ACTIVE = new ConcurrentHashMap<>();
+     private static final Map<String, ActiveCrackDecal> HIT_CRACK_DECALS = new ConcurrentHashMap<>();
+-    private static final Deque<SettledWreckagePiece> SETTLED_WRECKAGE = new ArrayDeque<>();
+-    private static final Set<Long> SEEN_SEQUENCE_IDS = ConcurrentHashMap.newKeySet();
++
+ 
+     static {
+         loadResources();
+@@ -262,276 +194,24 @@
+         HIT_CRACK_DECALS.put(structureId, new ActiveCrackDecal(impactPoint, world.getTime(), 120));
+     }
+ 
++    /** Stage 5: stage packets own crack feedback only. Geometry ownership transfers on real server commits. */
+     public static synchronized void startScenario(ClientWorld world, StructureNetworkSync.TransitionScenarioPacket packet) {
+-        if (world == null || packet == null) return;
+-        if (!packet.newStage().isTerminalOrDestroying()) {
+-            addHitCrackDecal(world, packet.structureId(), packet.impactPoint());
+-            return;
+-        }
+-        if (!SEEN_SEQUENCE_IDS.add(packet.sequenceId())) {
+-            return;
+-        }
+-        if (ACTIVE.size() >= maxConcurrentActiveAnimations) {
+-            String oldestKey = null;
+-            long oldestTick = Long.MAX_VALUE;
+-            for (Map.Entry<String, ActiveSequence> e : ACTIVE.entrySet()) {
+-                if (e.getValue().clientStartTick < oldestTick) {
+-                    oldestTick = e.getValue().clientStartTick;
+-                    oldestKey = e.getKey();
+-                }
+-            }
+-            if (oldestKey != null) {
+-                ActiveSequence evicted = ACTIVE.remove(oldestKey);
+-                if (evicted != null && !evicted.bakedToAftermath) {
+-                    bakeSequenceToAftermath(world, evicted, world.getTime());
+-                }
+-            }
+-        }
+-
+-        String modelId = packet.profile().modelId;
+-        List<GeoBone> bones = MODEL_CACHE.getOrDefault(modelId, List.of());
+-        String clipPrefix = switch (packet.profile()) {
+-            case BRIDGE_SPAN_COLLAPSE, BRIDGE_PIER_SHEAR -> "animation.bobin_craft.bridge.";
+-            case REFINERY_TANK_RUPTURE -> "animation.bobin_craft.tank.";
+-            default -> "animation.bobin_craft.substation.";
+-        };
+-        String clipKey = clipPrefix + packet.newStage().templateStage().modelName;
+-        AnimationClip clip = CLIP_CACHE.get(clipKey);
+-        if (bones.isEmpty() || clip == null) return;
+-
+-        ACTIVE.put(packet.structureId(), new ActiveSequence(packet, bones, clip, world.getTime()));
+-    }
+-
+-    /**
+-     * Resolves the highest solid supporting surface Y below {@code (worldX, startY, worldZ)} so falling
+-     * bridge slabs and structural fragments land directly on the riverbed or ground below rather than floating.
+-     */
+-    public static double resolveGroundSurfaceY(ClientWorld world, double worldX, double startY, double worldZ, double fallbackY) {
+-        if (world == null) return fallbackY;
+-        int bx = MathHelper.floor(worldX);
+-        int bz = MathHelper.floor(worldZ);
+-        if (!world.isChunkLoaded(bx >> 4, bz >> 4)) return fallbackY;
+-        int topStart = MathHelper.floor(startY - 1.5);
+-        int minSearchY = Math.max(world.getBottomY(), topStart - 28);
+-        BlockPos.Mutable mpos = new BlockPos.Mutable(bx, topStart, bz);
+-        for (int y = topStart; y >= minSearchY; y--) {
+-            mpos.setY(y);
+-            BlockState st = world.getBlockState(mpos);
+-            if (st.isAir()) continue;
+-            var shape = st.getCollisionShape(world, mpos);
+-            if (!shape.isEmpty()) {
+-                return y + shape.getMax(Direction.Axis.Y);
+-            }
+-        }
+-        return fallbackY;
+-    }
+-
+-    /**
+-     * Bakes the final resting pose of a completed collapse sequence into persistent, non-collidable
+-     * visual wreckage fragments on the ground/riverbed so collapse pieces never vanish abruptly!
+-     */
+-    private static synchronized void bakeSequenceToAftermath(ClientWorld world, ActiveSequence seq, long now) {
+-        if (seq == null || seq.bakedToAftermath) return;
+-        seq.bakedToAftermath = true;
+-        BlockPos origin = seq.packet.origin();
+-        boolean rot90 = (seq.packet.orientation() & 1) == 1;
+-        float finalSec = seq.clip.lengthSec;
+-
+-        // Remove any older wreckage for the same structureId first
+-        SETTLED_WRECKAGE.removeIf(w -> w.structureId.equals(seq.packet.structureId()));
+-
+-        int boneIdx = 0;
+-        for (GeoBone bone : seq.bones) {
+-            BoneChannel ch = seq.clip.boneChannels.get(bone.name);
+-            float[] pos = ch != null ? ch.samplePos(finalSec) : new float[]{0f, -6f, 0f};
+-            float[] rot = ch != null ? ch.sampleRot(finalSec) : new float[]{18f, 0f, -14f};
+-
+-            double localX = bone.px + pos[0];
+-            double localZ = bone.pz + pos[2];
+-            double worldX = origin.getX() + 0.5 + (rot90 ? localZ : localX);
+-            double worldZ = origin.getZ() + 0.5 + (rot90 ? -localX : localZ);
+-            double fallbackGroundY = origin.getY() - 9.0;
+-            double surfaceY = resolveGroundSurfaceY(world, worldX, origin.getY() + bone.py, worldZ, fallbackGroundY);
+-
+-            int light = ImpactDebrisClient.sampleFragmentLight(world, worldX, surfaceY + 0.65, worldZ, seq.lastValidLight);
+-            float yawOffset = (rot90 ? 90.0f : 0.0f) + rot[1] + ((boneIdx * 23) % 19 - 9);
+-
+-            for (BoneCube cube : bone.cubes) {
+-                BlockState state = resolveMaterialState(cube.material);
+-                // Break large structural slabs into 2-3 believable resting wreckage fragments on the surface
+-                int subFragments = cube.sx >= 3.0f || cube.sz >= 3.0f ? 2 : 1;
+-                for (int i = 0; i < subFragments; i++) {
+-                    while (SETTLED_WRECKAGE.size() >= maxSettledWreckagePieces) {
+-                        SETTLED_WRECKAGE.pollFirst();
+-                    }
+-                    double spread = (i == 0 ? -0.35 : 0.35) * Math.min(2.2, cube.sx * 0.45);
+-                    double fx = worldX + (rot90 ? 0.0 : spread);
+-                    double fz = worldZ + (rot90 ? spread : 0.0);
+-                    double fragSurfaceY = resolveGroundSurfaceY(world, fx, origin.getY() + bone.py, fz, surfaceY);
+-                    float wsx = Math.min(1.65f, Math.max(0.55f, cube.sx * (subFragments > 1 ? 0.46f : 0.72f)));
+-                    float wsy = Math.min(0.75f, Math.max(0.32f, cube.sy * 0.75f));
+-                    float wsz = Math.min(1.65f, Math.max(0.55f, cube.sz * (subFragments > 1 ? 0.52f : 0.72f)));
+-                    float pitch = MathHelper.clamp(rot[0] * 0.45f + (i == 0 ? 9.0f : -11.0f), -28.0f, 28.0f);
+-                    float roll = MathHelper.clamp(rot[2] * 0.45f + (i == 0 ? -8.0f : 10.0f), -28.0f, 28.0f);
+-
+-                    SETTLED_WRECKAGE.addLast(new SettledWreckagePiece(
+-                            seq.packet.structureId(),
+-                            state,
+-                            fx,
+-                            fragSurfaceY + wsy * 0.38,
+-                            fz,
+-                            wsx, wsy, wsz,
+-                            pitch, yawOffset + i * 28.0f, roll,
+-                            now,
+-                            light
+-                    ));
+-                }
+-            }
+-            boneIdx++;
+-        }
+-    }
+-
+-    public static void renderActive(MatrixStack matrices,
+-                                    VertexConsumerProvider consumers,
+-                                    Vec3d cameraPos,
+-                                    float tickDelta) {
+-        MinecraftClient client = MinecraftClient.getInstance();
+-        if (client == null || client.world == null || consumers == null) return;
+-        long now = client.world.getTime();
+-
+-        HIT_CRACK_DECALS.values().removeIf(decal -> (now - decal.startTick) > decal.durationTicks);
+-        for (ActiveCrackDecal decal : HIT_CRACKDecalsSnapshot()) {
+-            if (cameraPos.squaredDistanceTo(decal.position) > 128.0 * 128.0) continue;
+-            float age = (now - decal.startTick) + tickDelta;
+-            float progress = MathHelper.clamp(age / (float) decal.durationTicks, 0.0f, 1.0f);
+-            int decalLight = ImpactDebrisClient.sampleFragmentLight(
+-                    client.world, decal.position.x, decal.position.y + 0.35, decal.position.z, -1);
+-            renderCrackOverlay(matrices, consumers, cameraPos, decal.position, decalLight, 1.0f - progress * 0.75f);
+-        }
+-
+-        // Transition completed active collapse sequences into persistent settled wreckage on the ground!
+-        Iterator<Map.Entry<String, ActiveSequence>> it = ACTIVE.entrySet().iterator();
+-        while (it.hasNext()) {
+-            ActiveSequence seq = it.next().getValue();
+-            if ((now - seq.clientStartTick) > seq.packet.durationTicks()) {
+-                bakeSequenceToAftermath(client.world, seq, now);
+-                it.remove();
+-            }
+-        }
+-
+-        var brm = client.getBlockRenderManager();
+-
+-        // 1. Render active falling collapse animations with surface-resolved ground landing (zero mid-air shrinking!)
+-        for (ActiveSequence seq : ACTIVE.values()) {
+-            BlockPos origin = seq.packet.origin();
+-            if (!client.world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4)) continue;
+-            if (cameraPos.squaredDistanceTo(Vec3d.ofCenter(origin)) > 160.0 * 160.0) continue;
+-
+-            float elapsedTicks = (now - seq.clientStartTick) + tickDelta;
+-            float progress = MathHelper.clamp(elapsedTicks / Math.max(1.0f, seq.packet.durationTicks()), 0.0f, 1.0f);
+-            // Scale elapsed time to match clip length so keyframe motion spans the full staged duration
+-            float clipSec = progress * seq.clip.lengthSec;
+-
+-            int baseLight = ImpactDebrisClient.sampleFragmentLight(
+-                    client.world, origin.getX() + 0.5, origin.getY() + 2.5, origin.getZ() + 0.5, seq.lastValidLight);
+-            seq.lastValidLight = baseLight;
+-
+-            if (progress < 0.75f) {
+-                renderCrackOverlay(matrices, consumers, cameraPos, seq.packet.impactPoint(), baseLight, 1.0f - progress * 0.8f);
+-            }
+-
+-            matrices.push();
+-            matrices.translate(origin.getX() + 0.5 - cameraPos.x,
+-                    origin.getY() - cameraPos.y,
+-                    origin.getZ() + 0.5 - cameraPos.z);
+-            boolean rot90 = (seq.packet.orientation() & 1) == 1;
+-            if (rot90) {
+-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0f));
+-            }
+-
+-            for (GeoBone bone : seq.bones) {
+-                BoneChannel ch = seq.clip.boneChannels.get(bone.name);
+-                float[] pos = ch != null ? ch.samplePos(clipSec) : new float[]{0f, 0f, 0f};
+-                float[] rot = ch != null ? ch.sampleRot(clipSec) : new float[]{0f, 0f, 0f};
+-
+-                double localX = bone.px + pos[0];
+-                double localZ = bone.pz + pos[2];
+-                double worldX = origin.getX() + 0.5 + (rot90 ? localZ : localX);
+-                double worldZ = origin.getZ() + 0.5 + (rot90 ? -localX : localZ);
+-
+-                // Resolve the real terrain/riverbed surface below this falling bone so it falls all the way to the ground
+-                double surfaceY = resolveGroundSurfaceY(
+-                        client.world, worldX, origin.getY() + bone.py, worldZ, origin.getY() - 10.0);
+-                double maxDropToGround = Math.min(-1.0, surfaceY - (origin.getY() + bone.py) + 0.45);
+-                float finalKeyY = ch != null ? ch.samplePos(seq.clip.lengthSec)[1] : -6.0f;
+-                float dropScale = (finalKeyY < -0.5f && maxDropToGround < finalKeyY)
+-                        ? (float) (maxDropToGround / finalKeyY)
+-                        : 1.0f;
+-                float resolvedPosY = Math.max((float) maxDropToGround, pos[1] * dropScale);
+-                boolean landedOnSurface = resolvedPosY <= maxDropToGround + 0.08f;
+-
+-                // Dampen rotation slightly once the slab impacts the ground surface so it settles naturally
+-                float rotDamp = landedOnSurface ? 0.65f : 1.0f;
+-                double worldY = origin.getY() + bone.py + resolvedPosY + 0.6;
+-                int boneLight = ImpactDebrisClient.sampleFragmentLight(client.world, worldX, worldY, worldZ, baseLight);
+-
+-                matrices.push();
+-                matrices.translate(bone.px + pos[0], bone.py + resolvedPosY, bone.pz + pos[2]);
+-                if (Math.abs(rot[1]) > 0.01f) matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot[1]));
+-                if (Math.abs(rot[0]) > 0.01f) matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot[0] * rotDamp));
+-                if (Math.abs(rot[2]) > 0.01f) matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rot[2] * rotDamp));
+-                matrices.translate(-bone.px, -bone.py, -bone.pz);
+-
+-                for (BoneCube cube : bone.cubes) {
+-                    BlockState state = resolveMaterialState(cube.material);
+-                    matrices.push();
+-                    matrices.translate(cube.ox, cube.oy, cube.oz);
+-                    // Maintain physical scale (no mid-air shrink-to-zero!)
+-                    matrices.scale(cube.sx, cube.sy, cube.sz);
+-                    brm.renderBlockAsEntity(state, matrices, consumers, boneLight, OverlayTexture.DEFAULT_UV);
+-                    matrices.pop();
+-                }
+-                matrices.pop();
+-            }
+-            matrices.pop();
+-        }
+-
+-        // 2. Render persistent non-collidable visual wreckage remains resting on the ground/riverbed
+-        if (!SETTLED_WRECKAGE.isEmpty()) {
+-            renderSettledWreckage(client.world, brm, matrices, consumers, cameraPos, now);
+-        }
+-    }
+-
+-    private static synchronized void renderSettledWreckage(ClientWorld world,
+-                                                           net.minecraft.client.render.block.BlockRenderManager brm,
+-                                                           MatrixStack matrices,
+-                                                           VertexConsumerProvider consumers,
+-                                                           Vec3d cameraPos,
+-                                                           long now) {
+-        for (SettledWreckagePiece piece : SETTLED_WRECKAGE) {
+-            double distSq = cameraPos.squaredDistanceTo(piece.x, piece.y, piece.z);
+-            if (distSq > 144.0 * 144.0) continue;
+-            int cx = MathHelper.floor(piece.x) >> 4;
+-            int cz = MathHelper.floor(piece.z) >> 4;
+-            if (!world.isChunkLoaded(cx, cz)) continue;
+-
+-            // Every 32 ticks, verify ground support and refresh dynamic lightmap
+-            if (((now + piece.hashCode()) & 31L) == 0L || piece.cachedLight <= 0) {
+-                double surfY = resolveGroundSurfaceY(world, piece.x, piece.y + 2.0, piece.z, piece.y - piece.sy * 0.38);
+-                piece.y = surfY + piece.sy * 0.38;
+-                piece.cachedLight = ImpactDebrisClient.sampleFragmentLight(
+-                        world, piece.x, piece.y + 0.45, piece.z, piece.cachedLight);
+-            }
+-
+-            matrices.push();
+-            matrices.translate(piece.x - cameraPos.x, piece.y - cameraPos.y, piece.z - cameraPos.z);
+-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(piece.rotY));
+-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(piece.rotX));
+-            matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(piece.rotZ));
+-            matrices.scale(piece.sx, piece.sy, piece.sz);
+-            matrices.translate(-0.5f, -0.5f, -0.5f);
+-            brm.renderBlockAsEntity(piece.state, matrices, consumers, piece.cachedLight, OverlayTexture.DEFAULT_UV);
+-            matrices.pop();
++        if(world!=null&&packet!=null)addHitCrackDecal(world,packet.structureId(),packet.impactPoint());
++    }
++
++    /** Maintenance runs on client ticks; rendering cannot create, move or settle wreckage. */
++    public static void tick(ClientWorld world) {
++        if(world!=null)HIT_CRACK_DECALS.values().removeIf(d->world.getTime()-d.startTick>d.durationTicks);
++    }
++
++    public static void renderActive(MatrixStack matrices, VertexConsumerProvider consumers, Vec3d cameraPos, float tickDelta) {
++        var client=MinecraftClient.getInstance();if(client.world==null||consumers==null)return;
++        long now=client.world.getTime();
++        for(var decal:HIT_CRACKDecalsSnapshot()) {
++            if(cameraPos.squaredDistanceTo(decal.position)>128*128)continue;
++            float progress=MathHelper.clamp(((now-decal.startTick)+tickDelta)/decal.durationTicks,0,1);
++            int light=ImpactDebrisClient.sampleFragmentLight(client.world,decal.position.x,decal.position.y+.35,decal.position.z,-1);
++            renderCrackOverlay(matrices,consumers,cameraPos,decal.position,light,1-progress*.75f);
+         }
+     }
+ 
+@@ -570,14 +250,11 @@
+     }
+ 
+     public static synchronized void clear() {
+-        ACTIVE.clear();
+         HIT_CRACK_DECALS.clear();
+-        SETTLED_WRECKAGE.clear();
+-        SEEN_SEQUENCE_IDS.clear();
+     }
+ 
+     public static synchronized int settledWreckageCount() {
+-        return SETTLED_WRECKAGE.size();
++        return 0;
+     }
+ 
+     public static Map<String, List<GeoBone>> loadedModels() {
+@@ -589,6 +266,6 @@
+     }
+ 
+     public static int activeSequenceCount() {
+-        return ACTIVE.size();
++        return 0;
+     }
+ }
+--- R2/src/main/java/com/bobincraft/destruction/client/StructureDebrisRenderer.java
++++ Stage5/src/main/java/com/bobincraft/destruction/client/StructureDebrisRenderer.java
+@@ -0,0 +1,75 @@
++package com.bobincraft.destruction.client;
++
++import com.bobincraft.destruction.RefineryTransitions;
++import com.bobincraft.destruction.debris.*;
++import com.bobincraft.combat.client.ImpactDebrisClient;
++import net.fabricmc.api.*;
++import net.fabricmc.fabric.api.client.networking.v1.*;
++import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
++import net.minecraft.block.BlockState;
++import net.minecraft.client.MinecraftClient;
++import net.minecraft.client.render.OverlayTexture;
++import net.minecraft.util.math.BlockPos;
++import org.joml.Quaternionf;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Read-only interpolated source-block meshes. Client never performs physics, finds a floor or bakes aftermath. */
++@Environment(EnvType.CLIENT)
++public final class StructureDebrisRenderer {
++    public static int maxVisibleFragments=512,maxBlockModelsPerFrame=2048;
++    private record Mesh(DebrisFragment now,V previous,Q previousRotation,long received,List<BlockState> materials){}
++    private static final Map<UUID,Mesh> MESHES=new HashMap<>();
++    private static final DebrisRevisionWindow WINDOW=new DebrisRevisionWindow();
++    private StructureDebrisRenderer(){}
++    public static void register() {
++        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->clear());
++        ClientPlayNetworking.registerGlobalReceiver(DebrisNetworking.CHANNEL,(client,handler,buf,sender)->{
++            if(buf.readableBytes()>DebrisNetworking.MAX_PACKET_BYTES)return;
++            try {
++                int version=buf.readVarInt();if(version!=DebrisNetworking.PROTOCOL)return;
++                String dim=buf.readString(128);UUID session=buf.readUuid();long seq=buf.readLong();int type=buf.readUnsignedByte();
++                DebrisFragment fragment=type==1?DebrisPersistentState.decode(Objects.requireNonNull(buf.readNbt())):null;
++                UUID removed=type==2?buf.readUuid():null;
++                if(type<0||type>2||buf.isReadable()||fragment!=null&&!fragment.dimension.equals(dim))return;
++                client.execute(()->{try{apply(dim,session,seq,type,fragment,removed);}catch(IllegalArgumentException invalid){/* unresolved registry state: no invented substitute */}});
++            }catch(RuntimeException invalid){/* bounded malformed cosmetic payload cannot mutate world state */}
++        });
++        WorldRenderEvents.AFTER_TRANSLUCENT.register(context->{
++            var client=MinecraftClient.getInstance();var world=client.world;
++            if(world==null||context.matrixStack()==null||context.consumers()==null||!world.getRegistryKey().getValue().toString().equals(WINDOW.dimension()))return;
++            var camera=context.camera().getPos();var matrices=context.matrixStack();var consumers=context.consumers();
++            var ordered=new ArrayList<>(MESHES.values());ordered.sort(Comparator.comparingDouble(m->camera.squaredDistanceTo(m.now.position.x(),m.now.position.y(),m.now.position.z())));
++            int models=0,fragments=0;
++            for(var mesh:ordered){var f=mesh.now;
++                if(fragments>=maxVisibleFragments||models+mesh.materials.size()>maxBlockModelsPerFrame)break;
++                if(camera.squaredDistanceTo(f.position.x(),f.position.y(),f.position.z())>192*192)continue;
++                B bounds=f.bounds();if(bounds==null)continue;boolean loaded=true;
++                for(int x=(int)Math.floor(bounds.x0())>>4;x<=(int)Math.floor(bounds.x1())>>4;x++)for(int z=(int)Math.floor(bounds.z0())>>4;z<=(int)Math.floor(bounds.z1())>>4;z++)if(!world.isChunkLoaded(x,z))loaded=false;
++                if(!loaded)continue;
++                double blend=f.phase==Phase.PAUSED_UNLOADED?1:Math.min(1,Math.max(0,(world.getTime()-mesh.received+context.tickDelta())/4.0));
++                V p=mesh.previous.mul(1-blend).add(f.position.mul(blend));
++                var q0=new Quaternionf((float)mesh.previousRotation.x(),(float)mesh.previousRotation.y(),(float)mesh.previousRotation.z(),(float)mesh.previousRotation.w());
++                var q1=new Quaternionf((float)f.rotation.x(),(float)f.rotation.y(),(float)f.rotation.z(),(float)f.rotation.w());q0.slerp(q1,(float)blend);
++                int light=ImpactDebrisClient.sampleFragmentLight(world,p.x(),p.y(),p.z(),-1);
++                matrices.push();matrices.translate(p.x()-camera.x,p.y()-camera.y,p.z()-camera.z);matrices.multiply(q0);
++                for(int i=0;i<f.cells.size();i++){var c=f.cells.get(i);if(c.commit!=Commit.REMOVED)continue;
++                    matrices.push();matrices.translate(c.local.x(),c.local.y(),c.local.z());
++                    client.getBlockRenderManager().renderBlockAsEntity(mesh.materials.get(i),matrices,consumers,light,OverlayTexture.DEFAULT_UV);matrices.pop();models++;}
++                matrices.pop();fragments++;
++            }
++        });
++    }
++    private static void apply(String dim,UUID session,long seq,int type,DebrisFragment f,UUID removed) {
++        if(type==0){if(WINDOW.reset(dim,session,seq))MESHES.clear();return;}
++        if(!WINDOW.accept(dim,session,seq,type==2?removed:f.id,type==2?0:f.revision,type==2))return;
++        if(type==2){MESHES.remove(removed);return;}
++        Mesh old=MESHES.get(f.id);if(old!=null&&f.revision<old.now.revision)return;
++        if(old==null&&MESHES.size()>=DebrisPersistentState.MAX_RECORDS)return;
++        var states=new ArrayList<BlockState>();for(var c:f.cells)states.add(RefineryTransitions.decode(c.state));
++        long now=MinecraftClient.getInstance().world==null?0:MinecraftClient.getInstance().world.getTime();
++        boolean same=old!=null&&f.geometryRevision==old.now.geometryRevision;
++        MESHES.put(f.id,new Mesh(f,same?old.now.position:f.position,same?old.now.rotation:f.rotation,now,List.copyOf(states)));
++    }
++    public static void clear(){MESHES.clear();WINDOW.clear();}
++}
+--- R2/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
++++ Stage5/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
+@@ -160,6 +160,7 @@
+ 
+     private static void tickClientEffects(MinecraftClient client) {
+         ClientWorld world = client.world;
++        DestructionKeyframeAnimator.tick(world);
+         if (world == null || client.isPaused() || CLIENT_STRUCTURES.isEmpty()) return;
+ 
+         activeClientParticlesEstimate = IndustrialSmokeParticle.activeCount(world);
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisCollision.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisCollision.java
+@@ -0,0 +1,138 @@
++package com.bobincraft.destruction.debris;
++
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Deterministic rigid voxel-patch solver. Conservative rotated subshape bounds, swept axis clipping and bounded angular sweeps. */
++public final class DebrisCollision {
++    public record Obstacle(B box,long source) {}
++    public interface Environment { List<Obstacle> query(B swept); }
++    public static final int MAX_SUBSTEPS=16,MAX_OBSTACLES=4096;
++    private DebrisCollision(){}
++    public static void tick(DebrisFragment f,Environment environment) {
++        if(!f.visible()||!f.complete())return;
++        B bounds=f.bounds();if(bounds==null)return;
++        double radius=0;for(var b:f.volumes(Q.IDENTITY,V.ZERO))radius=Math.max(radius,Math.max(new V(b.x0(),b.y0(),b.z0()).length(),new V(b.x1(),b.y1(),b.z1()).length()));
++        V v=f.velocity.add(new V(0,-.04,0)).limit(1.5),omega=f.angularVelocity.limit(.12);
++        double arc=Math.max(omega.length(),.12)*radius*3;
++        B sweep=bounds.union(bounds.offset(v)).expand(arc+.08);
++        List<Obstacle> obstacles=environment.query(sweep);
++        if(obstacles==null||obstacles.size()>MAX_OBSTACLES){f.pause();return;}
++        if(f.phase==Phase.PAUSED_UNLOADED){f.phase=f.resume;f.changed(false);}
++        if(f.phase==Phase.SLEEPING) {
++            Set<Long> support=contacts(f.volumes(f.rotation,f.position),obstacles);
++            if(!support.isEmpty()&&stable(f,obstacles)){f.supports=support;return;}
++            f.wake();
++        }
++        if(f.phase==Phase.ANIMATING){if(++f.age<2)return;f.phase=Phase.FALLING;}
++        V contactPivot=null;
++        if(!contacts(f.volumes(f.rotation,f.position),obstacles).isEmpty()&&!stable(f,obstacles)) {
++            var hull=supportHull(f,obstacles);V mass=massCenter(f);double nearest=Double.POSITIVE_INFINITY;
++            for(int i=0;i<hull.size();i++){V a=hull.get(i),b=hull.get((i+1)%hull.size());
++                double dx=b.x()-a.x(),dz=b.z()-a.z(),length=dx*dx+dz*dz;
++                double t=length<1e-10?0:Math.max(0,Math.min(1,((mass.x()-a.x())*dx+(mass.z()-a.z())*dz)/length));
++                V point=new V(a.x()+t*dx,a.y(),a.z()+t*dz);double d=Math.hypot(mass.x()-point.x(),mass.z()-point.z());
++                if(d<nearest){nearest=d;contactPivot=point;}}
++            if(contactPivot!=null){V arm=mass.add(contactPivot.mul(-1));omega=omega.add(new V(arm.z()*.008,0,-arm.x()*.008)).limit(.12);}
++        }
++        arc=omega.length()*(radius+(contactPivot==null?0:f.position.add(contactPivot.mul(-1)).length()));
++        int steps=Math.max(1,(int)Math.ceil(Math.max(v.length()/.20,arc/.10)));
++        if(steps>MAX_SUBSTEPS){f.pause();return;}
++        boolean floor=false,blockedRotation=false;
++        for(int step=0;step<steps;step++) {
++            Q delta=Q.turn(omega,1.0/steps),next=delta.mul(f.rotation);
++            V nextPosition=contactPivot==null?f.position:contactPivot.add(delta.rotate(f.position.add(contactPivot.mul(-1))));
++            List<B> old=f.volumes(f.rotation,f.position), rotated=f.volumes(next,nextPosition);
++            V pivot=contactPivot==null?f.position:contactPivot;
++            boolean rotationClear=rotationClear(f,pivot,omega,1.0/steps,obstacles);
++            if(rotationClear){f.rotation=next;f.position=nextPosition;}
++            else {
++                // Bounded rotational time-of-impact search: reach contact rather than freezing a visibly tilted plate.
++                double low=0,high=1.0/steps;
++                for(int search=0;search<10;search++){double mid=(low+high)/2;if(rotationClear(f,pivot,omega,mid,obstacles))low=mid;else high=mid;}
++                Q partial=Q.turn(omega,low);f.position=pivot.add(partial.rotate(f.position.add(pivot.mul(-1))));f.rotation=partial.mul(f.rotation);
++                omega=V.ZERO;blockedRotation=true;
++            }
++            List<B> volumes=f.volumes(f.rotation,f.position);
++            // Starting overlap is never "fixed" by teleporting onto the highest surface.
++            boolean embedded=false;for(var b:volumes)for(var o:obstacles)if(b.intersects(o.box)){embedded=true;break;}
++            if(embedded){f.velocity=V.ZERO;f.angularVelocity=V.ZERO;f.stableTicks=0;f.changed(false);return;}
++            double wantedY=v.y()/steps,dy=clip(volumes,obstacles,wantedY,1);
++            volumes=offset(volumes,new V(0,dy,0));double dx=clip(volumes,obstacles,v.x()/steps,0);
++            volumes=offset(volumes,new V(dx,0,0));double dz=clip(volumes,obstacles,v.z()/steps,2);
++            f.position=f.position.add(new V(dx,dy,dz));
++            floor|=wantedY<0&&dy>wantedY+1e-8;
++            if(Math.abs(dx-v.x()/steps)>1e-8)v=new V(0,v.y(),v.z());
++            if(Math.abs(dy-wantedY)>1e-8)v=new V(v.x(),0,v.z());
++            if(Math.abs(dz-v.z()/steps)>1e-8)v=new V(v.x(),v.y(),0);
++        }
++        f.supports=contacts(f.volumes(f.rotation,f.position),obstacles);
++        if(floor&&!f.supports.isEmpty()) {
++            v=new V(v.x()*.55,0,v.z()*.55);omega=omega.mul(.55);
++            if(stable(f,obstacles)&&v.length()<.025&&(omega.length()<.01||blockedRotation))f.stableTicks++;else f.stableTicks=0;
++            if(f.stableTicks>=12){f.phase=Phase.SLEEPING;v=omega=V.ZERO;}
++        } else f.stableTicks=0;
++        f.velocity=v.mul(.995);f.angularVelocity=omega;f.age++;f.changed(false);
++    }
++    private static boolean rotationClear(DebrisFragment f,V pivot,V angular,double dt,List<Obstacle> obstacles) {
++        for(var local:f.localVolumes()){B sweep=sweptRotation(local,f.rotation,f.position,pivot,angular,dt);
++            for(var o:obstacles)if(sweep.intersects(o.box))return false;}
++        return true;
++    }
++    /** Exact extrema of every rotating corner, including intermediate arc extrema, not just endpoint boxes. */
++    public static B sweptRotation(B local,Q orientation,V position,V pivot,V angular,double dt) {
++        double speed=angular.length(),angle=speed*dt;if(speed<1e-12||angle<1e-12)return local.transformed(orientation,position);
++        V axis=angular.mul(1/speed);B result=null;
++        for(int x=0;x<2;x++)for(int y=0;y<2;y++)for(int z=0;z<2;z++) {
++            V start=orientation.rotate(new V(x==0?local.x0():local.x1(),y==0?local.y0():local.y1(),z==0?local.z0():local.z1())).add(position).add(pivot.mul(-1));
++            double dot=axis.x()*start.x()+axis.y()*start.y()+axis.z()*start.z();V parallel=axis.mul(dot),perp=start.add(parallel.mul(-1));
++            V cross=new V(axis.y()*start.z()-axis.z()*start.y(),axis.z()*start.x()-axis.x()*start.z(),axis.x()*start.y()-axis.y()*start.x());
++            double[] base={pivot.x()+parallel.x(),pivot.y()+parallel.y(),pivot.z()+parallel.z()},b={perp.x(),perp.y(),perp.z()},c={cross.x(),cross.y(),cross.z()},lo=new double[3],hi=new double[3];
++            for(int k=0;k<3;k++){double v0=base[k]+b[k],v1=base[k]+b[k]*Math.cos(angle)+c[k]*Math.sin(angle);lo[k]=Math.min(v0,v1);hi[k]=Math.max(v0,v1);
++                double extremum=Math.atan2(c[k],b[k]);for(int n=-2;n<=2;n++){double t=extremum+n*Math.PI;if(t>=0&&t<=angle){double v=base[k]+b[k]*Math.cos(t)+c[k]*Math.sin(t);lo[k]=Math.min(lo[k],v);hi[k]=Math.max(hi[k],v);}}}
++            var bounds=new B(lo[0],lo[1],lo[2],hi[0],hi[1],hi[2]);result=result==null?bounds:result.union(bounds);
++        }return result;
++    }
++    public static double clip(List<B> bodies,List<Obstacle> obstacles,double amount,int axis) {
++        for(var a:bodies)for(var o:obstacles) {
++            B b=o.box;boolean overlap=switch(axis){case 0->a.y1()>b.y0()+1e-8&&a.y0()<b.y1()-1e-8&&a.z1()>b.z0()+1e-8&&a.z0()<b.z1()-1e-8;
++                case 1->a.x1()>b.x0()+1e-8&&a.x0()<b.x1()-1e-8&&a.z1()>b.z0()+1e-8&&a.z0()<b.z1()-1e-8;
++                default->a.x1()>b.x0()+1e-8&&a.x0()<b.x1()-1e-8&&a.y1()>b.y0()+1e-8&&a.y0()<b.y1()-1e-8;};
++            if(!overlap)continue;
++            double low=axis==0?a.x0():axis==1?a.y0():a.z0(),high=axis==0?a.x1():axis==1?a.y1():a.z1();
++            double otherLow=axis==0?b.x0():axis==1?b.y0():b.z0(),otherHigh=axis==0?b.x1():axis==1?b.y1():b.z1();
++            if(amount>0&&high<=otherLow+1e-8)amount=Math.min(amount,Math.max(0,otherLow-high));
++            if(amount<0&&low>=otherHigh-1e-8)amount=Math.max(amount,Math.min(0,otherHigh-low));
++        }return amount;
++    }
++    private static List<B> offset(List<B> list,V v){return list.stream().map(b->b.offset(v)).toList();}
++    public static Set<Long> contacts(List<B> bodies,List<Obstacle> obstacles) {
++        Set<Long> result=new LinkedHashSet<>();for(var a:bodies)for(var o:obstacles){var b=o.box;
++            if(a.x1()>b.x0()+1e-6&&a.x0()<b.x1()-1e-6&&a.z1()>b.z0()+1e-6&&a.z0()<b.z1()-1e-6
++                    &&a.y0()>=b.y1()-1e-6&&a.y0()-b.y1()<.015&&result.size()<64)result.add(o.source);}
++        return result;
++    }
++    private static V massCenter(DebrisFragment f) {
++        V sum=V.ZERO;int cells=0;for(var c:f.cells)if(c.commit==Commit.REMOVED){sum=sum.add(c.local.add(new V(.5,.5,.5)));cells++;}
++        return f.position.add(f.rotation.rotate(sum.mul(1.0/Math.max(1,cells))));
++    }
++    private static List<V> supportHull(DebrisFragment f,List<Obstacle> obstacles) {
++        var points=new ArrayList<V>();
++        for(var a:f.volumes(f.rotation,f.position))for(var o:obstacles){var b=o.box;
++            if(a.y0()>=b.y1()-1e-6&&a.y0()-b.y1()<.015&&a.x1()>b.x0()&&a.x0()<b.x1()&&a.z1()>b.z0()&&a.z0()<b.z1()) {
++                double x0=Math.max(a.x0(),b.x0()),x1=Math.min(a.x1(),b.x1()),z0=Math.max(a.z0(),b.z0()),z1=Math.min(a.z1(),b.z1());
++                points.add(new V(x0,b.y1(),z0));points.add(new V(x0,b.y1(),z1));points.add(new V(x1,b.y1(),z0));points.add(new V(x1,b.y1(),z1));
++            }}
++        points.sort(Comparator.comparingDouble(V::x).thenComparingDouble(V::z));
++        var unique=new ArrayList<V>();for(var p:points)if(unique.isEmpty()||p.x()!=unique.get(unique.size()-1).x()||p.z()!=unique.get(unique.size()-1).z())unique.add(p);
++        if(unique.size()<3)return unique;
++        var hull=new ArrayList<V>();for(var p:unique){while(hull.size()>=2&&cross(hull.get(hull.size()-2),hull.get(hull.size()-1),p)<=0)hull.remove(hull.size()-1);hull.add(p);}
++        int lower=hull.size();for(int i=unique.size()-2;i>=0;i--){var p=unique.get(i);while(hull.size()>lower&&cross(hull.get(hull.size()-2),hull.get(hull.size()-1),p)<=0)hull.remove(hull.size()-1);hull.add(p);}hull.remove(hull.size()-1);return hull;
++    }
++    private static double cross(V a,V b,V c){return (b.x()-a.x())*(c.z()-a.z())-(b.z()-a.z())*(c.x()-a.x());}
++    private static boolean stable(DebrisFragment f,List<Obstacle> obstacles) {
++        var hull=supportHull(f,obstacles);if(hull.size()<3)return false;V mass=massCenter(f);
++        for(int i=0;i<hull.size();i++)if(cross(hull.get(i),hull.get((i+1)%hull.size()),mass)<-1e-5)return false;
++        return true;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisFragment.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisFragment.java
+@@ -0,0 +1,71 @@
++package com.bobincraft.destruction.debris;
++
++import java.util.*;
++
++/** Server-owned rigid fragment. Units: blocks and ticks. Geometry is unscaled source block geometry. */
++public final class DebrisFragment {
++    public static final int MAX_CELLS=16, MAX_SHAPES_PER_CELL=8;
++    public enum Phase { ANIMATING, FALLING, SLEEPING, PAUSED_UNLOADED }
++    public enum Commit { RESERVED, ARMED, REMOVED, CONFLICT }
++    public record V(double x,double y,double z) {
++        public static final V ZERO=new V(0,0,0);
++        public V { if(!Double.isFinite(x+y+z))throw new IllegalArgumentException("Non-finite vector"); }
++        public V add(V b){return new V(x+b.x,y+b.y,z+b.z);}
++        public V mul(double s){return new V(x*s,y*s,z*s);}
++        public double length(){return Math.sqrt(x*x+y*y+z*z);}
++        public V limit(double maximum){double n=length();return n>maximum?mul(maximum/n):this;}
++    }
++    public record Q(double x,double y,double z,double w) {
++        public static final Q IDENTITY=new Q(0,0,0,1);
++        public Q {if(!Double.isFinite(x+y+z+w))throw new IllegalArgumentException("Non-finite rotation");}
++        public Q normalized(){double n=Math.sqrt(x*x+y*y+z*z+w*w);if(!Double.isFinite(n)||n<1e-9)throw new IllegalArgumentException("Zero quaternion");return new Q(x/n,y/n,z/n,w/n);}
++        public Q mul(Q b){return new Q(w*b.x+x*b.w+y*b.z-z*b.y,w*b.y-x*b.z+y*b.w+z*b.x,w*b.z+x*b.y-y*b.x+z*b.w,w*b.w-x*b.x-y*b.y-z*b.z).normalized();}
++        public V rotate(V p){double tx=2*(y*p.z-z*p.y),ty=2*(z*p.x-x*p.z),tz=2*(x*p.y-y*p.x);return new V(p.x+w*tx+y*tz-z*ty,p.y+w*ty+z*tx-x*tz,p.z+w*tz+x*ty-y*tx);}
++        public static Q turn(V angular,double dt){double n=angular.length();if(n<1e-10)return IDENTITY;double s=Math.sin(n*dt/2)/n;return new Q(angular.x*s,angular.y*s,angular.z*s,Math.cos(n*dt/2));}
++    }
++    public record B(double x0,double y0,double z0,double x1,double y1,double z1) {
++        public B {if(!Double.isFinite(x0+y0+z0+x1+y1+z1)||x1<x0||y1<y0||z1<z0)throw new IllegalArgumentException("Invalid bounds");}
++        public B offset(V p){return new B(x0+p.x,y0+p.y,z0+p.z,x1+p.x,y1+p.y,z1+p.z);}
++        public B expand(double d){return new B(x0-d,y0-d,z0-d,x1+d,y1+d,z1+d);}
++        public B union(B b){return new B(Math.min(x0,b.x0),Math.min(y0,b.y0),Math.min(z0,b.z0),Math.max(x1,b.x1),Math.max(y1,b.y1),Math.max(z1,b.z1));}
++        public boolean intersects(B b){return x1>b.x0+1e-7&&x0<b.x1-1e-7&&y1>b.y0+1e-7&&y0<b.y1-1e-7&&z1>b.z0+1e-7&&z0<b.z1-1e-7;}
++        public B transformed(Q q,V p){B result=null;for(int x=0;x<2;x++)for(int y=0;y<2;y++)for(int z=0;z<2;z++){
++            V v=q.rotate(new V(x==0?x0:x1,y==0?y0:y1,z==0?z0:z1)).add(p);
++            B point=new B(v.x,v.y,v.z,v.x,v.y,v.z);result=result==null?point:result.union(point);}return result;}
++    }
++    public static final class Cell {
++        public final long source;
++        public final V local;
++        public final String state;
++        public List<B> shapes=List.of();
++        public Commit commit=Commit.RESERVED;
++        public boolean durable,protectedSource;
++        public Cell(long source,V local,String state){if(state==null||state.length()>512)throw new IllegalArgumentException("Material state");this.source=source;this.local=local;this.state=state;}
++    }
++    public final UUID id,operation;
++    public final String dimension,structure;
++    public final int index;
++    public final List<Cell> cells;
++    public final V sourcePose;
++    public V position,velocity=V.ZERO,angularVelocity=V.ZERO;
++    public Q rotation=Q.IDENTITY;
++    public Phase phase=Phase.ANIMATING,resume=Phase.ANIMATING;
++    public long revision=1,geometryRevision=1,supportToken;
++    public int stableTicks,age;
++    public boolean reconciled;
++    public String pauseReason="";
++    public Set<Long> supports=new LinkedHashSet<>(),dependencies=new LinkedHashSet<>();
++    public DebrisFragment(UUID id,UUID operation,String dimension,String structure,int index,List<Cell> cells,V origin) {
++        if(cells.isEmpty()||cells.size()>MAX_CELLS||dimension.length()>128||structure.length()>128||index<0)throw new IllegalArgumentException("Fragment bounds");
++        this.id=id;this.operation=operation;this.dimension=dimension;this.structure=structure;this.index=index;this.cells=List.copyOf(cells);this.sourcePose=origin;position=origin;
++    }
++    public boolean visible(){return cells.stream().anyMatch(c->c.commit==Commit.REMOVED);}
++    public boolean complete(){return cells.stream().allMatch(c->c.commit==Commit.REMOVED||c.commit==Commit.CONFLICT);}
++    public List<B> localVolumes(){var boxes=new ArrayList<B>();for(var c:cells)if(c.commit==Commit.REMOVED)boxes.addAll(c.shapes);return boxes;}
++    public List<B> volumes(Q q,V p){return localVolumes().stream().map(b->b.transformed(q,p)).toList();}
++    public B bounds(){B b=null;for(var a:volumes(rotation,position))b=b==null?a:b.union(a);return b;}
++    public void changed(boolean geometry){revision++;if(geometry)geometryRevision++;}
++    public void pause(){if(phase!=Phase.PAUSED_UNLOADED)pause("COLLISION_CONTEXT_UNAVAILABLE");}
++    public void pause(String reason){if(phase!=Phase.PAUSED_UNLOADED){resume=phase;phase=Phase.PAUSED_UNLOADED;changed(false);}if(!pauseReason.equals(reason)){pauseReason=reason;changed(false);}}
++    public void wake(){pauseReason="";phase=Phase.FALLING;stableTicks=0;supports.clear();changed(false);}
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisGameTests.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisGameTests.java
+@@ -0,0 +1,89 @@
++package com.bobincraft.destruction.debris;
++
++import com.bobincraft.destruction.RefineryTransitions;
++import net.minecraft.block.Blocks;
++import net.minecraft.nbt.*;
++import net.minecraft.test.TestContext;
++import net.minecraft.util.math.BlockPos;
++import java.nio.file.*;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Actual NBT/filesystem/block/VoxelShape adapters. Called only by the registered Fabric GameTest suite. */
++public final class DebrisGameTests {
++    private DebrisGameTests(){}
++    private static DebrisFragment fixture() {
++        var f=DebrisPlan.create("test:dimension","refinery",UUID.fromString("12345678-1234-1234-1234-123456789012"),
++                List.of(new DebrisPlan.Source(-17,79,-33,"minecraft:stone"),new DebrisPlan.Source(-18,79,-33,"minecraft:iron_block"))).get(0);
++        for(var c:f.cells){c.commit=Commit.REMOVED;c.shapes=List.of(new B(c.local.x(),c.local.y(),c.local.z(),c.local.x()+1,c.local.y()+1,c.local.z()+1));}
++        f.supportToken=Long.MIN_VALUE+1;f.position=new V(-4,52,7);f.rotation=Q.turn(new V(.1,.2,.3),1);f.velocity=new V(.1,-.2,.3);f.angularVelocity=new V(.02,.03,.04);
++        f.supports.add(123L);f.dependencies.add(321L);f.revision=77;f.geometryRevision=9;return f;
++    }
++    public static void roundTrip(TestContext context) {
++        var f=fixture();for(var phase:Phase.values()){f.phase=phase;f.resume=Phase.FALLING;var encoded=DebrisPersistentState.encode(f);
++            if(!encoded.equals(DebrisPersistentState.encode(DebrisPersistentState.decode(encoded))))throw new AssertionError("NBT changed phase/pose/source/support/identity: "+phase);}
++        var packet=net.fabricmc.fabric.api.networking.v1.PacketByteBufs.create();
++        try{packet.writeNbt(DebrisPersistentState.encode(f));if(packet.readableBytes()>DebrisNetworking.MAX_PACKET_BYTES)throw new AssertionError("Fragment exceeds network page");
++            if(!DebrisPersistentState.decode(Objects.requireNonNull(packet.readNbt())).id.equals(f.id))throw new AssertionError("Network NBT changed identity");}
++        finally{packet.release();}
++        context.complete();
++    }
++    public static void disk(TestContext context)throws Exception {
++        Path directory=Files.createTempDirectory("bobin-debris-gametest-");
++        try {
++            Path path=directory.resolve("journal.dat");var state=DebrisPersistentState.load(path,"test:dimension");var f=fixture();state.fragments.put(f.id,f);state.operations.put("refinery/stage/3",f.operation);state.dirty=true;
++            if(!state.flush())throw new AssertionError("Durable intent/pose barrier failed");
++            var loaded=DebrisPersistentState.load(path,"test:dimension");if(!loaded.encode().equals(state.encode()))throw new AssertionError("Real journal reload changed records");
++            var future=state.encode();future.putInt("Version",99);future.putString("UnknownFutureData","retain");NbtIo.writeCompressed(future,path.toFile());byte[] before=Files.readAllBytes(path);
++            var frozen=DebrisPersistentState.load(path,"test:dimension");frozen.dirty=true;
++            if(frozen.writable()||frozen.flush()||!Arrays.equals(before,Files.readAllBytes(path))||!future.equals(frozen.encode()))throw new AssertionError("Future journal not read-only/preserved");
++            Path badParent=directory.resolve("not_a_directory");Files.writeString(badParent,"fixture");var broken=DebrisPersistentState.load(badParent.resolve("journal.dat"),"test:dimension");broken.dirty=true;
++            if(broken.flush()||broken.writable())throw new AssertionError("Failed disk barrier allowed removal");
++        } finally {try(var paths=Files.walk(directory)){for(var path:paths.sorted(Comparator.reverseOrder()).toList())Files.deleteIfExists(path);}}
++        context.complete();
++    }
++    public static void commitAndRecovery(TestContext context)throws Exception {
++        var world=context.getWorld();var manager=StructureDebrisManager.get(world);String structure="gametest_commit_"+UUID.randomUUID(),op="operation";
++        var p=context.getAbsolutePos(new BlockPos(2,5,2));world.setBlockState(p,Blocks.STONE.getDefaultState(),3);
++        var src=List.of(new DebrisPlan.Source(p.getX(),p.getY(),p.getZ(),RefineryTransitions.encode(world.getBlockState(p))));
++        if(!manager.reserve(structure,op,src))throw new AssertionError("Source reservation failed");
++        if(manager.beforeRemove(structure,op,p,world.getBlockState(p))||world.getBlockState(p).isAir())throw new AssertionError("Removal preceded durable intent");
++        manager.beginTick();if(!manager.beforeRemove(structure,op,p,world.getBlockState(p)))throw new AssertionError("Durable reservation not released");
++        StructureDebrisManager.writeSource(world,p,Blocks.AIR.getDefaultState());manager.removed(structure,op,p);
++        var f=manager.state.fragments.values().stream().filter(a->a.structure.equals(structure)).findFirst().orElseThrow();UUID identity=f.id;long revision=f.revision;
++        manager.removed(structure,op,p);if(f.revision!=revision)throw new AssertionError("Duplicate commit was not idempotent");
++        // Simulate chunk saved before removal, while the durable fragment journal already contains its commit.
++        StructureDebrisManager.writeSource(world,p,Blocks.STONE.getDefaultState());f.reconciled=false;V savedPose=f.position;
++        var reconcile=StructureDebrisManager.class.getDeclaredMethod("reconcile",DebrisFragment.class);reconcile.setAccessible(true);
++        if(!(boolean)reconcile.invoke(manager,f)||!world.getBlockState(p).isAir()||!f.position.equals(savedPose)||!f.id.equals(identity))throw new AssertionError("Rolled-back source did not recover same fragment once");
++        if(!(boolean)reconcile.invoke(manager,f)||manager.state.fragments.values().stream().filter(a->a.structure.equals(structure)).count()!=1)throw new AssertionError("Repeated recovery duplicated fragment");
++        StructureDebrisManager.resetStructure(world,structure);context.complete();
++    }
++    public static void protectedPartial(TestContext context) {
++        var world=context.getWorld();var manager=StructureDebrisManager.get(world);String structure="gametest_partial_"+UUID.randomUUID(),op="operation";
++        var p=context.getAbsolutePos(new BlockPos(1,5,1));var q=p.east();world.setBlockState(p,Blocks.IRON_BLOCK.getDefaultState(),3);world.setBlockState(q,Blocks.IRON_BLOCK.getDefaultState(),3);
++        var source=new ArrayList<DebrisPlan.Source>();for(var cell:List.of(p,q))source.add(new DebrisPlan.Source(cell.getX(),cell.getY(),cell.getZ(),RefineryTransitions.encode(world.getBlockState(cell))));
++        if(!manager.reserve(structure,op,source))throw new AssertionError("Plan failed");manager.prearm(structure,op,source,16);manager.beginTick();
++        if(!manager.beforeRemove(structure,op,p,world.getBlockState(p)))throw new AssertionError("Commit not armed");StructureDebrisManager.writeSource(world,p,Blocks.AIR.getDefaultState());manager.removed(structure,op,p);
++        world.setBlockState(q,Blocks.AIR.getDefaultState(),3);world.setBlockState(q,Blocks.IRON_BLOCK.getDefaultState(),3);
++        if(!manager.conflicted(structure,op,q)||manager.beforeRemove(structure,op,q,world.getBlockState(q)))throw new AssertionError("Real remove/place observation did not protect same-material replacement");
++        long rendered=manager.state.fragments.values().stream().filter(f->f.structure.equals(structure)).flatMap(f->f.cells.stream()).filter(c->c.commit==Commit.REMOVED).count();
++        if(rendered!=1||world.getBlockState(q).isAir())throw new AssertionError("Protected cell duplicated in mesh or deleted");
++        StructureDebrisManager.resetStructure(world,structure);context.complete();
++    }
++    public static void actualSlabSupport(TestContext context) {
++        var world=context.getWorld();String structure="gametest_physics_"+UUID.randomUUID(),op="operation";var manager=StructureDebrisManager.get(world);
++        var floor=context.getAbsolutePos(new BlockPos(3,1,3));var source=floor.up(5);
++        for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++)world.setBlockState(floor.add(dx,0,dz),Blocks.STONE_SLAB.getDefaultState(),3);
++        world.setBlockState(source,Blocks.IRON_BLOCK.getDefaultState(),3);
++        var plan=List.of(new DebrisPlan.Source(source.getX(),source.getY(),source.getZ(),RefineryTransitions.encode(world.getBlockState(source))));
++        if(!manager.reserve(structure,op,plan))throw new AssertionError("Reserve");manager.prearm(structure,op,plan,1);manager.beginTick();
++        if(!manager.beforeRemove(structure,op,source,world.getBlockState(source)))throw new AssertionError("Durable source");StructureDebrisManager.writeSource(world,source,Blocks.AIR.getDefaultState());manager.removed(structure,op,source);
++        var fragment=manager.state.fragments.values().stream().filter(f->f.structure.equals(structure)).findFirst().orElseThrow();
++        context.runAtTick(140,()->{
++            if(fragment.phase!=Phase.SLEEPING||fragment.supports.isEmpty())throw new AssertionError("Actual VoxelShape slab did not settle fragment");
++            double y=fragment.position.y();for(int dx=-2;dx<=2;dx++)for(int dz=-2;dz<=2;dz++)world.setBlockState(floor.add(dx,0,dz),Blocks.AIR.getDefaultState(),3);
++            context.runAtTick(150,()->{if(fragment.phase==Phase.SLEEPING||fragment.position.y()>=y)throw new AssertionError("Actual block observer failed support-loss wake");StructureDebrisManager.resetStructure(world,structure);context.complete();});
++        });
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisJournal.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisJournal.java
+@@ -0,0 +1,53 @@
++package com.bobincraft.destruction.debris;
++
++import java.io.*;
++import java.nio.ByteBuffer;
++import java.nio.channels.FileChannel;
++import java.nio.file.*;
++import java.util.*;
++import java.util.zip.CRC32;
++
++/** Actual durable byte-journal layer, independent of Minecraft's NBT codec. */
++public final class DebrisJournal {
++    public static final int MAGIC=0x42444231,MAX_FRAME=32*1024*1024;
++    public static final long MAX_BYTES=128L*1024*1024;
++    public record Frame(long sequence,byte[] payload){}
++    public record Read(List<Frame> frames,long validBytes){}
++    private DebrisJournal(){}
++    public static Read read(Path path)throws IOException {
++        if(!Files.exists(path))return new Read(List.of(),0);
++        if(Files.size(path)>MAX_BYTES)throw new IOException("Debris WAL size limit");
++        var frames=new ArrayList<Frame>();long sequence=0,valid=0;
++        try(var input=new DataInputStream(new BufferedInputStream(Files.newInputStream(path)))) {
++            while(true) {
++                int magic,length;long crc,serial;
++                try{magic=input.readInt();length=input.readInt();crc=input.readLong();serial=input.readLong();}catch(EOFException partialTail){break;}
++                if(magic!=MAGIC||length<0||length>MAX_FRAME||serial<=sequence)throw new IOException("Invalid debris WAL header");
++                byte[] bytes=input.readNBytes(length);if(bytes.length!=length)break;
++                CRC32 checksum=new CRC32();checksum.update(bytes);if(checksum.getValue()!=crc)throw new IOException("Debris WAL checksum mismatch");
++                frames.add(new Frame(serial,bytes));sequence=serial;valid+=24L+length;
++            }
++        }return new Read(List.copyOf(frames),valid);
++    }
++    public static long append(Path path,long validBytes,long sequence,byte[] payload)throws IOException {
++        if(payload.length>MAX_FRAME||validBytes<0||sequence<=0||validBytes+24L+payload.length>MAX_BYTES)throw new IOException("Debris WAL bounds");
++        Files.createDirectories(path.getParent());
++        if(validBytes>0&&(!Files.exists(path)||Files.size(path)<validBytes))throw new IOException("Debris WAL changed outside writer");
++        CRC32 checksum=new CRC32();checksum.update(payload);
++        ByteBuffer header=ByteBuffer.allocate(24).putInt(MAGIC).putInt(payload.length).putLong(checksum.getValue()).putLong(sequence);header.flip();
++        try(var channel=FileChannel.open(path,StandardOpenOption.CREATE,StandardOpenOption.WRITE)) {
++            channel.truncate(validBytes);channel.position(validBytes);while(header.hasRemaining())channel.write(header);
++            ByteBuffer body=ByteBuffer.wrap(payload);while(body.hasRemaining())channel.write(body);channel.force(true);
++        }
++        forceDirectory(path.getParent());return validBytes+24L+payload.length;
++    }
++    public static void atomicSnapshot(Path path,byte[] bytes)throws IOException {
++        Files.createDirectories(path.getParent());Path tmp=path.resolveSibling(path.getFileName()+".tmp");
++        try(var file=FileChannel.open(tmp,StandardOpenOption.CREATE,StandardOpenOption.TRUNCATE_EXISTING,StandardOpenOption.WRITE)) {
++            ByteBuffer body=ByteBuffer.wrap(bytes);while(body.hasRemaining())file.write(body);file.force(true);
++        }
++        Files.move(tmp,path,StandardCopyOption.ATOMIC_MOVE,StandardCopyOption.REPLACE_EXISTING);forceDirectory(path.getParent());
++    }
++    public static void truncate(Path path)throws IOException {try(var file=FileChannel.open(path,StandardOpenOption.WRITE)){file.truncate(0);file.force(true);}}
++    private static void forceDirectory(Path path){try(var directory=FileChannel.open(path,StandardOpenOption.READ)){directory.force(true);}catch(IOException|UnsupportedOperationException unsupported){}}
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisLifecycle.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisLifecycle.java
+@@ -0,0 +1,17 @@
++package com.bobincraft.destruction.debris;
++
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Conservative crash reconciliation rules. A material match alone cannot create a fragment without a durable intent. */
++public final class DebrisLifecycle {
++    public enum Recovery { IGNORE, CONFIRM_REMOVAL, REMOVE_EXPECTED, KEEP_COMMITTED, CONFLICT }
++    private DebrisLifecycle(){}
++    public static boolean preventsNewClaim(Cell c,boolean sameStructure){return c.protectedSource||c.commit==Commit.REMOVED||!sameStructure&&c.commit!=Commit.CONFLICT;}
++    public static boolean mayRemove(Cell c,String actual){return c.commit==Commit.ARMED&&c.durable&&c.state.equals(actual);}
++    public static Recovery recover(Cell c,String actual,boolean targetAir,boolean protectedCell,boolean hasBlockEntity) {
++        if(c.commit==Commit.RESERVED||c.commit==Commit.CONFLICT)return Recovery.IGNORE;
++        if(targetAir)return c.commit==Commit.REMOVED||!protectedCell?Recovery.CONFIRM_REMOVAL:Recovery.CONFLICT;
++        if(!protectedCell&&!c.protectedSource&&!hasBlockEntity&&c.state.equals(actual))return Recovery.REMOVE_EXPECTED;
++        return c.commit==Commit.REMOVED?Recovery.KEEP_COMMITTED:Recovery.CONFLICT;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisNetworking.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisNetworking.java
+@@ -0,0 +1,64 @@
++package com.bobincraft.destruction.debris;
++
++import com.bobincraft.drone.DroneNetworking;
++import net.fabricmc.fabric.api.networking.v1.*;
++import net.minecraft.server.network.ServerPlayerEntity;
++import net.minecraft.server.world.ServerWorld;
++import net.minecraft.util.Identifier;
++import java.util.*;
++
++/** Paged current-state snapshots and revisioned visibility tombstones, including the existing remote drone observer. */
++public final class DebrisNetworking {
++    public static final Identifier CHANNEL=new Identifier("bobin_craft","structure_debris_v1");
++    public static final int PROTOCOL=1,MAX_PACKET_BYTES=24576,MAX_BYTES_PER_PLAYER_TICK=32768,MAX_MESSAGES_PER_TICK=16;
++    private static final Map<UUID,Stream> STREAMS=new HashMap<>();
++    private static final class Stream {
++        final UUID epoch=UUID.randomUUID();final String dimension;
++        final Map<UUID,Long> known=new LinkedHashMap<>();final ArrayDeque<UUID> visibility=new ArrayDeque<>();
++        final Map<UUID,Long> sentAt=new HashMap<>();
++        int cursor,motionCursor;long sequence;boolean reset=true;
++        Stream(String dimension){this.dimension=dimension;}
++    }
++    private DebrisNetworking(){}
++    public static void tick(ServerWorld world) {
++        var manager=StructureDebrisManager.get(world);String dimension=world.getRegistryKey().getValue().toString();
++        var all=new ArrayList<>(manager.state.fragments.values());
++        for(var player:world.getPlayers()) {
++            if(!ServerPlayNetworking.canSend(player,CHANNEL))continue;
++            Stream stream=STREAMS.compute(player.getUuid(),(k,old)->old==null||!old.dimension.equals(dimension)?new Stream(dimension):old);
++            int bytes=0,messages=0;
++            if(stream.reset){var b=PacketByteBufs.create();b.writeVarInt(PROTOCOL);b.writeString(dimension,128);b.writeUuid(stream.epoch);b.writeLong(++stream.sequence);b.writeByte(0);
++                bytes+=b.readableBytes();ServerPlayNetworking.send(player,CHANNEL,b);stream.reset=false;messages++;}
++            var observer=DroneNetworking.viewOrigin(player);
++            int checks=Math.min(128,stream.visibility.size());
++            while(checks-->0&&messages<MAX_MESSAGES_PER_TICK) {
++                UUID id=stream.visibility.remove();var f=manager.state.fragments.get(id);
++                if(f==null||!f.visible()||!f.reconciled||observer.squaredDistanceTo(f.position.x(),f.position.y(),f.position.z())>224*224) {
++                    var b=PacketByteBufs.create();header(b,stream,2);b.writeUuid(id);bytes+=b.readableBytes();ServerPlayNetworking.send(player,CHANNEL,b);stream.known.remove(id);stream.sentAt.remove(id);messages++;
++                } else stream.visibility.add(id);
++            }
++            var moving=all.stream().filter(f->f.visible()&&f.reconciled&&f.phase!=DebrisFragment.Phase.SLEEPING).toList();
++            for(int pass=0;pass<2;pass++) {
++                boolean motion=(world.getTime()%5==0)?pass==1:pass==0;
++                var candidates=motion?moving:all;int scan=Math.min(motion?32:128,candidates.size());
++                while(scan-->0&&messages<MAX_MESSAGES_PER_TICK&&bytes<MAX_BYTES_PER_PLAYER_TICK) {
++                    if(candidates.isEmpty())break;
++                    int cursor=motion?stream.motionCursor:stream.cursor;var f=candidates.get(Math.floorMod(cursor,candidates.size()));
++                    if(motion)stream.motionCursor++;else stream.cursor++;
++                    if(!f.visible()||!f.reconciled||observer.squaredDistanceTo(f.position.x(),f.position.y(),f.position.z())>208*208)continue;
++                    Long seen=stream.known.get(f.id),last=stream.sentAt.get(f.id);
++                    if(seen!=null&&(seen==f.revision||last!=null&&world.getTime()>=last&&world.getTime()-last<4))continue;
++                    var b=PacketByteBufs.create();header(b,stream,1);b.writeNbt(DebrisPersistentState.encode(f));int size=b.readableBytes();
++                    if(size>MAX_PACKET_BYTES){b.release();continue;}
++                    if(bytes+size>MAX_BYTES_PER_PLAYER_TICK){b.release();if(motion)stream.motionCursor--;else stream.cursor--;break;}
++                    ServerPlayNetworking.send(player,CHANNEL,b);bytes+=size;messages++;stream.sentAt.put(f.id,world.getTime());
++                    if(stream.known.put(f.id,f.revision)==null)stream.visibility.add(f.id);
++                }
++            }
++
++        }
++        Set<UUID> connected=new HashSet<>();for(var p:world.getServer().getPlayerManager().getPlayerList())connected.add(p.getUuid());STREAMS.keySet().removeIf(id->!connected.contains(id));
++    }
++    private static void header(net.minecraft.network.PacketByteBuf b,Stream s,int type){b.writeVarInt(PROTOCOL);b.writeString(s.dimension,128);b.writeUuid(s.epoch);b.writeLong(++s.sequence);b.writeByte(type);}
++    public static void clear(){STREAMS.clear();}
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisPersistentState.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisPersistentState.java
+@@ -0,0 +1,154 @@
++package com.bobincraft.destruction.debris;
++
++import net.minecraft.nbt.*;
++import net.minecraft.server.world.ServerWorld;
++import net.minecraft.util.WorldSavePath;
++import java.nio.channels.FileChannel;
++import java.nio.file.*;
++import java.io.*;
++import java.nio.ByteBuffer;
++import java.util.zip.CRC32;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Separate versioned write-ahead journal. Atomic/fsynced replacement must succeed before a reserved cell can be removed. */
++public final class DebrisPersistentState {
++    public static final int VERSION=1,MAX_RECORDS=8192,MAX_STORED_CELLS=65536;
++    public final Map<UUID,DebrisFragment> fragments=new LinkedHashMap<>();
++    public final Map<String,UUID> operations=new LinkedHashMap<>();
++    public final Map<String,NbtCompound> structureSnapshots=new LinkedHashMap<>();
++    private final Map<UUID,Long> durableRevisions=new HashMap<>();
++    private final Map<String,UUID> durableOperations=new HashMap<>();
++    private final Map<String,NbtCompound> durableStructures=new HashMap<>();
++    private static final int FRAME_MAGIC=0x42444231,MAX_FRAME=32*1024*1024;
++    private final Path path;
++    private long sequence,validWalLength;
++    public long lastFlushNanos,lastFlushBytes;
++    private Path wal(){return path.resolveSibling(path.getFileName()+".wal");}
++    private NbtCompound opaque;
++    public boolean dirty,ioFailed;
++    private DebrisPersistentState(Path path){this.path=path;}
++    public static DebrisPersistentState open(ServerWorld world) {
++        String dimension=world.getRegistryKey().getValue().toString();
++        UUID key=UUID.nameUUIDFromBytes(dimension.getBytes(java.nio.charset.StandardCharsets.UTF_8));
++        Path path=world.getServer().getSavePath(WorldSavePath.ROOT).resolve("data/bobin_craft_debris/"+key+".dat");
++        return load(path,dimension);
++    }
++    public static DebrisPersistentState load(Path path,String dimension) {
++        var state=new DebrisPersistentState(path);
++        try {
++            if(Files.exists(path))state.read(NbtIo.readCompressed(path.toFile()),dimension);
++            if(state.opaque==null)state.replay(dimension);
++            if(state.opaque==null)state.validate();
++            state.rememberDurable();
++        }catch(Exception e){state.ioFailed=true;System.err.println("[Bobin debris] journal read blocked: "+e);}
++        return state;
++    }
++    private void validate()throws IOException {
++        Set<Long> tokens=new HashSet<>();Set<String> sources=new HashSet<>();
++        for(var f:fragments.values()) {
++            UUID expected=UUID.nameUUIDFromBytes((f.dimension+"/"+f.structure+"/"+f.operation+"/"+f.index).getBytes(java.nio.charset.StandardCharsets.UTF_8));
++            if(!expected.equals(f.id)||f.supportToken!=0&&!tokens.add(f.supportToken))throw new IOException("Debris identity/support-token conflict");
++            for(var c:f.cells)if(!sources.add(f.operation+"/"+c.source))throw new IOException("Debris source committed by two fragments");
++        }
++    }
++    public boolean writable(){return opaque==null&&!ioFailed;}
++    private void read(NbtCompound n,String dimension) {
++        if(n.getInt("Version")!=VERSION){opaque=n.copy();return;}
++        sequence=n.getLong("Sequence");
++        var snapshots=n.getList("StructureSnapshots",NbtElement.COMPOUND_TYPE);
++        if(snapshots.size()>16384)throw new IllegalArgumentException("Structure proof limit");
++        for(int i=0;i<snapshots.size();i++){var proof=snapshots.getCompound(i);structureSnapshots.put(proof.getString("Id"),proof.copy());}
++        var list=n.getList("Fragments",NbtElement.COMPOUND_TYPE);
++        if(list.size()>MAX_RECORDS)throw new IllegalArgumentException("Stored fragment limit");
++        int count=0;
++        for(int i=0;i<list.size();i++) {
++            var f=decode(list.getCompound(i));if(!dimension.equals(f.dimension)||fragments.put(f.id,f)!=null)throw new IllegalArgumentException("Journal identity conflict");
++            count+=f.cells.size();if(count>MAX_STORED_CELLS)throw new IllegalArgumentException("Stored cell limit");
++        }
++        var ops=n.getList("Operations",NbtElement.COMPOUND_TYPE);if(ops.size()>16384)throw new IllegalArgumentException("Operation limit");
++        for(int i=0;i<ops.size();i++){var o=ops.getCompound(i);operations.put(o.getString("Key"),o.getUuid("Id"));}
++    }
++    public NbtCompound encode() {
++        if(opaque!=null)return opaque.copy();var n=new NbtCompound();n.putInt("Version",VERSION);n.putLong("Sequence",sequence);
++        var proofs=new NbtList();for(var proof:structureSnapshots.values())proofs.add(proof.copy());n.put("StructureSnapshots",proofs);
++        var list=new NbtList();for(var f:fragments.values())list.add(encode(f));n.put("Fragments",list);
++        var ops=new NbtList();for(var e:operations.entrySet()){var o=new NbtCompound();o.putString("Key",e.getKey());o.putUuid("Id",e.getValue());ops.add(o);}n.put("Operations",ops);return n;
++    }
++    private void rememberDurable() {
++        durableRevisions.clear();for(var f:fragments.values())durableRevisions.put(f.id,f.revision);
++        durableOperations.clear();durableOperations.putAll(operations);durableStructures.clear();for(var e:structureSnapshots.entrySet())durableStructures.put(e.getKey(),e.getValue().copy());
++    }
++    private void replay(String dimension)throws IOException {
++        var journal=DebrisJournal.read(wal());validWalLength=journal.validBytes();
++        for(var entry:journal.frames()) {
++                long serial=entry.sequence();if(serial<=sequence)continue;
++                var bytes=entry.payload();
++                var n=NbtIo.readCompressed(new ByteArrayInputStream(bytes));
++                if(n.getInt("Version")!=VERSION)throw new IOException("Unsupported debris WAL version");
++                var upserts=n.getList("Upserts",NbtElement.COMPOUND_TYPE);if(upserts.size()>MAX_RECORDS)throw new IOException("Debris WAL count");
++                for(int i=0;i<upserts.size();i++){var f=decode(upserts.getCompound(i));if(!dimension.equals(f.dimension))throw new IOException("Debris WAL dimension");fragments.put(f.id,f);}
++                var removed=n.getList("Removed",NbtElement.COMPOUND_TYPE);for(int i=0;i<removed.size();i++)fragments.remove(removed.getCompound(i).getUuid("Id"));
++                var ops=n.getList("Operations",NbtElement.COMPOUND_TYPE);for(int i=0;i<ops.size();i++){var op=ops.getCompound(i);operations.put(op.getString("Key"),op.getUuid("Id"));}
++                var deletedOps=n.getList("DeletedOps",NbtElement.STRING_TYPE);for(int i=0;i<deletedOps.size();i++)operations.remove(deletedOps.getString(i));
++                var proofs=n.getList("Structures",NbtElement.COMPOUND_TYPE);for(int i=0;i<proofs.size();i++){var proof=proofs.getCompound(i);structureSnapshots.put(proof.getString("Id"),proof.copy());}
++                var deletedProofs=n.getList("DeletedStructures",NbtElement.STRING_TYPE);for(int i=0;i<deletedProofs.size();i++)structureSnapshots.remove(deletedProofs.getString(i));
++                if(fragments.size()>MAX_RECORDS||fragments.values().stream().mapToInt(f->f.cells.size()).sum()>MAX_STORED_CELLS||operations.size()>16384||structureSnapshots.size()>16384)throw new IOException("Debris WAL storage bounds");
++                sequence=serial;
++        }
++    }
++    public boolean flush() {
++        if(!writable())return false;if(!dirty)return true;long started=System.nanoTime();
++        try {
++            Files.createDirectories(path.getParent());
++            var frame=new NbtCompound();frame.putInt("Version",VERSION);var changed=new NbtList();
++            for(var f:fragments.values())if(!Objects.equals(durableRevisions.get(f.id),f.revision))changed.add(encode(f));frame.put("Upserts",changed);
++            var removed=new NbtList();for(var id:durableRevisions.keySet())if(!fragments.containsKey(id)){var e=new NbtCompound();e.putUuid("Id",id);removed.add(e);}frame.put("Removed",removed);
++            var ops=new NbtList();for(var e:operations.entrySet())if(!Objects.equals(durableOperations.get(e.getKey()),e.getValue())){var op=new NbtCompound();op.putString("Key",e.getKey());op.putUuid("Id",e.getValue());ops.add(op);}frame.put("Operations",ops);
++            var deletedOps=new NbtList();for(var k:durableOperations.keySet())if(!operations.containsKey(k))deletedOps.add(NbtString.of(k));frame.put("DeletedOps",deletedOps);
++            var proofs=new NbtList();for(var e:structureSnapshots.entrySet())if(!e.getValue().equals(durableStructures.get(e.getKey())))proofs.add(e.getValue().copy());frame.put("Structures",proofs);
++            var deletedProofs=new NbtList();for(var k:durableStructures.keySet())if(!structureSnapshots.containsKey(k))deletedProofs.add(NbtString.of(k));frame.put("DeletedStructures",deletedProofs);
++            var bytes=new ByteArrayOutputStream();NbtIo.writeCompressed(frame,bytes);byte[] payload=bytes.toByteArray();
++            validWalLength=DebrisJournal.append(wal(),validWalLength,sequence+1,payload);
++            sequence++;rememberDurable();dirty=false;
++            lastFlushBytes=payload.length+24;lastFlushNanos=System.nanoTime()-started;
++            if(validWalLength>8L*1024*1024)try{checkpoint();}catch(IOException deferred){System.err.println("[Bobin debris] checkpoint deferred; durable WAL retained: "+deferred);}
++            return true;
++        }catch(IOException e){ioFailed=true;System.err.println("[Bobin debris] detachment disabled: journal write failed: "+e);return false;}
++    }
++    private void checkpoint()throws IOException {
++        var output=new ByteArrayOutputStream();NbtIo.writeCompressed(encode(),output);
++        DebrisJournal.atomicSnapshot(path,output.toByteArray());
++        // Snapshot Sequence makes a crash between snapshot replacement and WAL truncation idempotent.
++        DebrisJournal.truncate(wal());validWalLength=0;
++    }
++    private static void vector(NbtCompound n,String key,V v){n.putDouble(key+"X",v.x());n.putDouble(key+"Y",v.y());n.putDouble(key+"Z",v.z());}
++    private static V vector(NbtCompound n,String key){return new V(n.getDouble(key+"X"),n.getDouble(key+"Y"),n.getDouble(key+"Z"));}
++    public static NbtCompound encode(DebrisFragment f) {
++        var n=new NbtCompound();n.putUuid("Id",f.id);n.putUuid("Operation",f.operation);n.putString("Dimension",f.dimension);n.putString("Structure",f.structure);n.putInt("Index",f.index);n.putLong("SupportToken",f.supportToken);
++        vector(n,"Source",f.sourcePose);vector(n,"Position",f.position);vector(n,"Velocity",f.velocity);vector(n,"Angular",f.angularVelocity);
++        n.putDouble("Qx",f.rotation.x());n.putDouble("Qy",f.rotation.y());n.putDouble("Qz",f.rotation.z());n.putDouble("Qw",f.rotation.w());
++        n.putString("PauseReason",f.pauseReason);n.putString("Phase",f.phase.name());n.putString("Resume",f.resume.name());n.putLong("Revision",f.revision);n.putLong("GeometryRevision",f.geometryRevision);n.putInt("Stable",f.stableTicks);n.putInt("Age",f.age);
++        n.putLongArray("Supports",f.supports.stream().mapToLong(Long::longValue).toArray());n.putLongArray("Dependencies",f.dependencies.stream().mapToLong(Long::longValue).toArray());
++        var cells=new NbtList();for(var c:f.cells){var e=new NbtCompound();e.putLong("Source",c.source);vector(e,"Local",c.local);e.putString("State",c.state);e.putString("Commit",c.commit.name());e.putBoolean("ProtectedSource",c.protectedSource);
++            var boxes=new NbtList();for(var b:c.shapes){var a=new NbtCompound();a.putDouble("x0",b.x0());a.putDouble("y0",b.y0());a.putDouble("z0",b.z0());a.putDouble("x1",b.x1());a.putDouble("y1",b.y1());a.putDouble("z1",b.z1());boxes.add(a);}e.put("Shapes",boxes);cells.add(e);}n.put("Cells",cells);return n;
++    }
++    public static DebrisFragment decode(NbtCompound n) {
++        var raw=n.getList("Cells",NbtElement.COMPOUND_TYPE);if(raw.isEmpty()||raw.size()>MAX_CELLS)throw new IllegalArgumentException("Geometry cell count");
++        List<Cell> cells=new ArrayList<>();Set<Long> sources=new HashSet<>();
++        for(int i=0;i<raw.size();i++){var e=raw.getCompound(i);var c=new Cell(e.getLong("Source"),vector(e,"Local"),e.getString("State"));
++            if(c.local.length()>8||!sources.add(c.source))throw new IllegalArgumentException("Invalid local geometry");
++            c.protectedSource=e.getBoolean("ProtectedSource");c.commit=Commit.valueOf(e.getString("Commit"));c.durable=c.commit==Commit.ARMED;
++            var boxes=e.getList("Shapes",NbtElement.COMPOUND_TYPE);if(boxes.size()>MAX_SHAPES_PER_CELL)throw new IllegalArgumentException("Subshape count");
++            var shapes=new ArrayList<B>();for(int j=0;j<boxes.size();j++){var a=boxes.getCompound(j);var b=new B(a.getDouble("x0"),a.getDouble("y0"),a.getDouble("z0"),a.getDouble("x1"),a.getDouble("y1"),a.getDouble("z1"));
++                if(Math.max(new V(b.x0(),b.y0(),b.z0()).length(),new V(b.x1(),b.y1(),b.z1()).length())>12)throw new IllegalArgumentException("Subshape extent");shapes.add(b);}c.shapes=List.copyOf(shapes);if((c.commit==Commit.REMOVED||c.commit==Commit.ARMED)&&c.shapes.isEmpty())throw new IllegalArgumentException("Committed geometry without shape");cells.add(c);}
++        var f=new DebrisFragment(n.getUuid("Id"),n.getUuid("Operation"),n.getString("Dimension"),n.getString("Structure"),n.getInt("Index"),cells,vector(n,"Source"));
++        f.supportToken=n.getLong("SupportToken");if(f.supportToken!=0&&(f.supportToken<Long.MIN_VALUE||f.supportToken>Long.MIN_VALUE+0x1ffffffffL))throw new IllegalArgumentException("Support token");f.position=vector(n,"Position");if(Math.abs(f.position.x())>30000000||Math.abs(f.position.z())>30000000||Math.abs(f.position.y())>4096)throw new IllegalArgumentException("World pose");
++        f.velocity=vector(n,"Velocity").limit(1.5);f.angularVelocity=vector(n,"Angular").limit(.12);
++        f.rotation=new Q(n.getDouble("Qx"),n.getDouble("Qy"),n.getDouble("Qz"),n.getDouble("Qw")).normalized();
++        f.pauseReason=n.getString("PauseReason");if(f.pauseReason.length()>64)throw new IllegalArgumentException("Pause reason");f.phase=Phase.valueOf(n.getString("Phase"));f.resume=Phase.valueOf(n.getString("Resume"));if(f.resume==Phase.PAUSED_UNLOADED)throw new IllegalArgumentException("Recursive resume phase");f.revision=Math.max(1,n.getLong("Revision"));f.geometryRevision=Math.max(1,n.getLong("GeometryRevision"));
++        f.stableTicks=Math.max(0,Math.min(12,n.getInt("Stable")));f.age=Math.max(0,n.getInt("Age"));
++        long[] support=n.getLongArray("Supports"),deps=n.getLongArray("Dependencies");if(support.length>64||deps.length>64)throw new IllegalArgumentException("Contact/dependency limit");
++        for(long p:support)f.supports.add(p);for(long p:deps)f.dependencies.add(p);return f;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisPlan.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisPlan.java
+@@ -0,0 +1,34 @@
++package com.bobincraft.destruction.debris;
++
++import java.nio.charset.StandardCharsets;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Finite connected source patches: roof plates up to 4x4, shell/attachment strips at most two blocks high. */
++public final class DebrisPlan {
++    public record Source(int x,int y,int z,String state) {
++        public long packed(){return ((long)x&0x3ffffffL)<<38|((long)z&0x3ffffffL)<<12|((long)y&0xfffL);}
++    }
++    private DebrisPlan(){}
++    public static List<DebrisFragment> create(String dimension,String structure,UUID operation,Collection<Source> source) {
++        if(source.size()>65536)throw new IllegalArgumentException("Operation source-cell limit");
++        var remaining=new TreeMap<Long,Source>();for(var c:source)if(remaining.put(c.packed(),c)!=null)throw new IllegalArgumentException("Duplicate source cell");
++        var result=new ArrayList<DebrisFragment>();
++        while(!remaining.isEmpty()) {
++            Source seed=remaining.firstEntry().getValue();var queue=new ArrayDeque<Source>();queue.add(seed);var group=new ArrayList<Source>();var scheduled=new HashSet<Long>();scheduled.add(seed.packed());
++            while(!queue.isEmpty()&&group.size()<MAX_CELLS) {
++                Source c=queue.remove();if(!remaining.containsKey(c.packed()))continue;remaining.remove(c.packed());group.add(c);
++                for(int[] d:new int[][]{{1,0,0},{-1,0,0},{0,1,0},{0,-1,0},{0,0,1},{0,0,-1}}) {
++                    Source probe=new Source(c.x+d[0],c.y+d[1],c.z+d[2],"");Source next=remaining.get(probe.packed());
++                    if(next!=null&&Math.floorDiv(next.x,4)==Math.floorDiv(seed.x,4)&&Math.floorDiv(next.y,2)==Math.floorDiv(seed.y,2)
++                            &&Math.floorDiv(next.z,4)==Math.floorDiv(seed.z,4)&&scheduled.add(next.packed()))queue.add(next);
++                }
++            }
++            double x=group.stream().mapToDouble(c->c.x+.5).average().orElseThrow(),y=group.stream().mapToDouble(c->c.y+.5).average().orElseThrow(),z=group.stream().mapToDouble(c->c.z+.5).average().orElseThrow();
++            V pivot=new V(x,y,z);var cells=new ArrayList<Cell>();for(var c:group)cells.add(new Cell(c.packed(),new V(c.x-x,c.y-y,c.z-z),c.state));
++            int index=result.size();UUID id=UUID.nameUUIDFromBytes((dimension+"/"+structure+"/"+operation+"/"+index).getBytes(StandardCharsets.UTF_8));
++            result.add(new DebrisFragment(id,operation,dimension,structure,index,cells,pivot));
++        }
++        return result;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisRevisionWindow.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisRevisionWindow.java
+@@ -0,0 +1,24 @@
++package com.bobincraft.destruction.debris;
++
++import java.util.*;
++
++/** Per-connection visibility generation and sequence ordering, separate from persistent fragment revisions. */
++public final class DebrisRevisionWindow {
++    private UUID epoch;
++    private String dimension="";
++    private long sequence;
++    private final Map<UUID,Long> revisions=new HashMap<>();
++    public void clear(){epoch=null;dimension="";sequence=0;revisions.clear();}
++    public boolean reset(String dimension,UUID epoch,long sequence) {
++        if(dimension==null||dimension.length()>128||epoch==null||sequence<=0)return false;
++        this.epoch=epoch;this.dimension=dimension;this.sequence=sequence;revisions.clear();return true;
++    }
++    public String dimension(){return dimension;}
++    public boolean accept(String dimension,UUID epoch,long sequence,UUID id,long revision,boolean removed) {
++        if(!Objects.equals(this.epoch,epoch)||!this.dimension.equals(dimension)||sequence<=this.sequence||id==null)return false;
++        this.sequence=sequence;
++        if(removed){revisions.remove(id);return true;}
++        if(revision<1||revision<revisions.getOrDefault(id,0L)||!revisions.containsKey(id)&&revisions.size()>=8192)return false;
++        revisions.put(id,revision);return true;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/DebrisSupportIndex.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/DebrisSupportIndex.java
+@@ -0,0 +1,27 @@
++package com.bobincraft.destruction.debris;
++
++import java.util.*;
++
++/** Exact support-cell reverse index. Both notifications and incremental per-fragment rechecks are bounded. */
++public final class DebrisSupportIndex {
++    private final Map<Long,NavigableSet<UUID>> byPosition=new HashMap<>();
++    private final Map<UUID,Set<Long>> byFragment=new HashMap<>();
++    private final ArrayDeque<Long> changed=new ArrayDeque<>();
++    private final Set<Long> queued=new HashSet<>(),repeat=new HashSet<>();
++    private final Map<Long,UUID> cursors=new HashMap<>();
++    public void update(UUID id,Set<Long> positions) {
++        if(positions.equals(byFragment.getOrDefault(id,Set.of())))return;
++        Set<Long> old=byFragment.remove(id);if(old!=null)for(long p:old){var ids=byPosition.get(p);if(ids!=null){ids.remove(id);if(ids.isEmpty())byPosition.remove(p);}}
++        if(!positions.isEmpty()){byFragment.put(id,Set.copyOf(positions));for(long p:positions)byPosition.computeIfAbsent(p,k->new TreeSet<>()).add(id);}
++    }
++    public boolean tracks(long pos){return byPosition.containsKey(pos);}
++    public void changed(long pos){if(!byPosition.containsKey(pos))return;if(queued.add(pos))changed.add(pos);else if(cursors.containsKey(pos))repeat.add(pos);}
++    public Set<UUID> drain(int maximum) {
++        Set<UUID> result=new LinkedHashSet<>();
++        while(maximum-->0&&!changed.isEmpty()) {
++            long p=changed.peek();var ids=byPosition.get(p);UUID cursor=cursors.get(p),next=ids==null||ids.isEmpty()?null:cursor==null?ids.first():ids.higher(cursor);
++            if(next!=null){cursors.put(p,next);result.add(next);}
++            else {changed.remove();queued.remove(p);cursors.remove(p);if(repeat.remove(p)&&byPosition.containsKey(p)){queued.add(p);changed.add(p);}}
++        }return result;
++    }
++}
+--- R2/src/main/java/com/bobincraft/destruction/debris/StructureDebrisManager.java
++++ Stage5/src/main/java/com/bobincraft/destruction/debris/StructureDebrisManager.java
+@@ -0,0 +1,272 @@
++package com.bobincraft.destruction.debris;
++
++import com.bobincraft.destruction.*;
++import net.minecraft.block.*;
++import net.minecraft.server.world.ServerWorld;
++import net.minecraft.util.math.BlockPos;
++import java.nio.charset.StandardCharsets;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Dimension-local record simulation and source-removal WAL. No entities, item drops, damage or debris world blocks. */
++public final class StructureDebrisManager {
++    public static int maxActiveFragments=32,maxSimulationsPerTick=32,maxBlockQueriesPerTick=16384;
++    private static final Map<ServerWorld,StructureDebrisManager> WORLDS=new java.util.concurrent.ConcurrentHashMap<>();
++    private static final ThreadLocal<Boolean> WRITING=ThreadLocal.withInitial(()->false);
++    public final DebrisPersistentState state;
++    private final ServerWorld world;
++    private final Map<String,Map<Long,DebrisFragment>> sources=new HashMap<>();
++    private final Map<Long,Set<DebrisFragment>> bySource=new java.util.concurrent.ConcurrentHashMap<>();
++    private final Set<Long> observedChunks=java.util.concurrent.ConcurrentHashMap.newKeySet();
++    private final Map<Long,Boolean> asynchronousChanges=new java.util.concurrent.ConcurrentHashMap<>();
++    private volatile boolean observerOverflow;
++    private final Set<UUID> partial=new LinkedHashSet<>();
++    private final Set<UUID> activeQueued=new HashSet<>(),sleepQueued=new HashSet<>();
++    private final ArrayDeque<UUID> sleepers=new ArrayDeque<>();
++    private final Map<Long,Set<UUID>> bodyChunks=new HashMap<>();
++    private final Map<UUID,Set<Long>> bodyDependencies=new HashMap<>();
++    private final Set<Long> bodyTokens=new HashSet<>();
++    private final DebrisSupportIndex supportIndex=new DebrisSupportIndex();
++    private final ArrayDeque<UUID> roundRobin=new ArrayDeque<>(),recovery=new ArrayDeque<>();
++    private int queries,capacityDeferrals,recoveryWrites,activeReservations;
++    private boolean needsBarrier;
++    private StructureDebrisManager(ServerWorld world){this.world=world;state=DebrisPersistentState.open(world);
++        if(!state.writable())return;
++        restoreStructureProofs();
++        for(var f:state.fragments.values()){index(f);indexBody(f);recovery.add(f.id);supportIndex.update(f.id,f.supports);}}
++    private void restoreStructureProofs() {
++        if(!state.writable()||!StructurePersistentState.get(world).supportsTransitions())return;
++        for(var proof:state.structureSnapshots.values()) {
++            if(proof.getInt("DebrisSnapshotSchema")!=2)continue;
++            var structure=DestructibleStructureRegistry.get(proof.getString("Id"));if(structure==null)continue;
++            int stage=StructureDamageState.byIndex(proof.getByte("St")).templateStage().index;
++            if(structure.lastUpdateTick()<proof.getLong("Tick")||structure.lastUpdateTick()==proof.getLong("Tick")&&structure.damageStage().templateStage().index<stage) {
++                structure.fromCompactNbt(proof);DestructionScenarioDirector.markLoadedStateWithoutReplay(structure);
++                StructurePersistentState.get(world).recordStructure(structure);
++                StructureUpdateQueue.enqueueTransition(StructureDamageManager.resolveTerrain(world),structure,StructureDamageState.INTACT,structure.targetStage(),0);
++            }
++        }
++    }
++    public static StructureDebrisManager get(ServerWorld world){return WORLDS.computeIfAbsent(world,StructureDebrisManager::new);}
++    public static boolean isSourceWrite(){return WRITING.get();}
++    public static boolean writeSource(ServerWorld world,BlockPos pos,BlockState next) {
++        boolean previous=WRITING.get();WRITING.set(true);try{return world.setBlockState(pos,next,Block.NOTIFY_LISTENERS);}finally{WRITING.set(previous);}
++    }
++    private String opKey(String structure,String operation){return structure+"/"+operation;}
++    private void index(DebrisFragment f){
++        if(f.supportToken==0){long token=Long.MIN_VALUE+(f.id.getLeastSignificantBits()&0xffffffffL);while(bodyTokens.contains(token))token++;f.supportToken=token;f.changed(false);state.dirty=true;}
++        if(!bodyTokens.add(f.supportToken))throw new IllegalArgumentException("Duplicate support token");
++        var map=sources.computeIfAbsent(f.operation.toString(),k->new HashMap<>());for(var c:f.cells){
++        if(map.put(c.source,f)!=null)throw new IllegalArgumentException("Duplicate operation source");bySource.computeIfAbsent(c.source,k->java.util.concurrent.ConcurrentHashMap.newKeySet()).add(f);
++        var p=BlockPos.fromLong(c.source);observedChunks.add(((long)(p.getX()>>4)&0xffffffffL)|((long)(p.getZ()>>4)<<32));}}
++    private void indexBody(DebrisFragment f) {
++        var old=bodyDependencies.remove(f.id);if(old!=null)for(long key:old){var ids=bodyChunks.get(key);if(ids!=null){ids.remove(f.id);if(ids.isEmpty())bodyChunks.remove(key);}}
++        if(!f.visible())return;B box=f.bounds();if(box==null)return;var chunks=new HashSet<Long>();
++        for(int x=(int)Math.floor(box.x0())>>4;x<=(int)Math.floor(box.x1())>>4;x++)for(int z=(int)Math.floor(box.z0())>>4;z<=(int)Math.floor(box.z1())>>4;z++){
++            long key=((long)x&0xffffffffL)|((long)z<<32);bodyChunks.computeIfAbsent(key,k->new LinkedHashSet<>()).add(f.id);chunks.add(key);}
++        bodyDependencies.put(f.id,chunks);
++    }
++    private void schedule(DebrisFragment f) {
++        if(!f.reconciled||!f.visible()||!f.complete())return;
++        if(f.phase==Phase.SLEEPING){if(sleepQueued.add(f.id))sleepers.add(f.id);}
++        else if(activeQueued.add(f.id))roundRobin.add(f.id);
++    }
++    public boolean reserve(String structure,String operation,Collection<DebrisPlan.Source> requested) {
++        if(!state.writable()||!StructurePersistentState.get(world).supportsTransitions())return false;
++        String key=opKey(structure,operation);UUID op=state.operations.get(key);
++        if(op==null){if(state.operations.size()>=16384){capacityDeferrals++;return false;}op=UUID.randomUUID();}
++        var existing=sources.getOrDefault(op.toString(),Map.of());var missing=requested.stream().filter(c->!existing.containsKey(c.packed())&&!claimedOrProtected(structure,c.packed())).toList();
++        if(missing.isEmpty())return true;
++        List<DebrisFragment> plan;try{plan=DebrisPlan.create(world.getRegistryKey().getValue().toString(),structure,op,missing);}catch(IllegalArgumentException invalid){capacityDeferrals++;return false;}
++        int stored=state.fragments.values().stream().mapToInt(f->f.cells.size()).sum();
++        if(state.fragments.size()+plan.size()>DebrisPersistentState.MAX_RECORDS||stored+missing.size()>DebrisPersistentState.MAX_STORED_CELLS){capacityDeferrals++;return false;}
++        // Retarget uncommitted constituents atomically with the new reservation. A removed source is never claimed twice.
++        for(var source:missing)for(var previous:bySource.getOrDefault(source.packed(),Set.of()))if(previous.structure.equals(structure)&&!previous.operation.equals(op)) {
++            for(var cell:previous.cells)if(cell.source==source.packed()&&(cell.commit==Commit.RESERVED||cell.commit==Commit.ARMED)) {
++                cell.commit=Commit.CONFLICT;cell.durable=false;previous.changed(true);
++            }
++            if(previous.complete()&&previous.visible()&&previous.phase==Phase.ANIMATING)launch(previous);
++            schedule(previous);
++        }
++        int nextIndex=state.fragments.values().stream().filter(f->f.operation.equals(plan.get(0).operation)).mapToInt(f->f.index+1).max().orElse(0);
++        for(var temporary:plan){int index=nextIndex++;UUID id=UUID.nameUUIDFromBytes((temporary.dimension+"/"+structure+"/"+op+"/"+index).getBytes(StandardCharsets.UTF_8));
++            var f=new DebrisFragment(id,op,temporary.dimension,structure,index,temporary.cells,temporary.sourcePose);f.reconciled=true;state.fragments.put(id,f);index(f);}
++        state.operations.put(key,op);
++        var record=DestructibleStructureRegistry.get(structure);if(record!=null){var proof=record.toCompactNbt();proof.putInt("DebrisSnapshotSchema",2);state.structureSnapshots.put(structure,proof);}
++        state.dirty=true;needsBarrier=true;return true;
++    }
++    public void prearm(String structure,String operation,Collection<DebrisPlan.Source> source,int maximum) {
++        int work=0;for(var candidate:source) {
++            if(work>=maximum)break;var p=new BlockPos(candidate.x(),candidate.y(),candidate.z());
++            if(!world.isChunkLoaded(p.getX()>>4,p.getZ()>>4))continue;
++            var f=find(structure,operation,p.asLong());if(f==null)continue;
++            var cell=f.cells.stream().filter(c->c.source==p.asLong()).findFirst().orElseThrow();if(cell.commit!=Commit.RESERVED)continue;
++            work++;var actual=world.getBlockState(p);
++            if(candidate.state().equals(RefineryTransitions.encode(actual))&&!actual.hasBlockEntity())beforeRemove(structure,operation,p,actual);
++            else if(!candidate.state().equals(RefineryTransitions.encode(actual)))reject(structure,operation,p);
++        }
++    }
++    private DebrisFragment find(String structure,String operation,long source){UUID op=state.operations.get(opKey(structure,operation));return op==null?null:sources.getOrDefault(op.toString(),Map.of()).get(source);}
++    private boolean claimedOrProtected(String structure,long source) {
++        for(var previous:bySource.getOrDefault(source,Set.of()))for(var c:previous.cells)
++            if(c.source==source&&DebrisLifecycle.preventsNewClaim(c,previous.structure.equals(structure)))return true;
++        return false;
++    }
++    public boolean conflicted(String structure,String operation,BlockPos pos) {
++        var f=find(structure,operation,pos.asLong());return f==null?claimedOrProtected(structure,pos.asLong()):f.cells.stream().anyMatch(c->c.source==pos.asLong()&&c.commit==Commit.CONFLICT);
++    }
++    public boolean beforeRemove(String structure,String operation,BlockPos pos,BlockState actual) {
++        if(!state.writable())return false;var f=find(structure,operation,pos.asLong());if(f==null)return false;
++        Cell c=f.cells.stream().filter(a->a.source==pos.asLong()).findFirst().orElseThrow();
++        if(c.commit==Commit.CONFLICT)return false;
++        if(!c.state.equals(RefineryTransitions.encode(actual))){reject(structure,operation,pos);return false;}
++        if(c.commit==Commit.REMOVED)return false;
++        if(c.commit==Commit.RESERVED) {
++            boolean needsActiveSlot=!f.visible()&&f.cells.stream().noneMatch(a->a.commit==Commit.ARMED);
++            if(needsActiveSlot&&activeReservations>=Math.min(maxActiveFragments,maxSimulationsPerTick)){capacityDeferrals++;return false;}
++            var shape=actual.getCollisionShape(world,pos);if(shape.isEmpty())shape=actual.getOutlineShape(world,pos);
++            var boxes=shape.getBoundingBoxes();if(boxes.size()>MAX_SHAPES_PER_CELL){capacityDeferrals++;return false;}
++            var local=new ArrayList<B>();for(var b:boxes)local.add(new B(b.minX+c.local.x(),b.minY+c.local.y(),b.minZ+c.local.z(),b.maxX+c.local.x(),b.maxY+c.local.y(),b.maxZ+c.local.z()));
++            // A genuinely non-colliding model still has a source-cell conservative physical envelope.
++            if(local.isEmpty())local.add(new B(c.local.x(),c.local.y(),c.local.z(),c.local.x()+1,c.local.y()+1,c.local.z()+1));
++            if(needsActiveSlot)activeReservations++;
++            c.shapes=List.copyOf(local);c.commit=Commit.ARMED;c.durable=false;f.changed(true);state.dirty=needsBarrier=true;
++            return false; // Removal waits for the next successful single per-tick journal barrier.
++        }
++        return DebrisLifecycle.mayRemove(c,RefineryTransitions.encode(actual));
++    }
++    public void removed(String structure,String operation,BlockPos pos) {
++        var f=find(structure,operation,pos.asLong());if(f==null)throw new IllegalStateException("Unreserved source removal");
++        for(var c:f.cells)if(c.source==pos.asLong()){
++            if(c.commit==Commit.REMOVED)return;
++            if(c.commit!=Commit.ARMED||!c.durable)throw new IllegalStateException("Removal without durable intent");c.commit=Commit.REMOVED;}
++        // Authoritative source pose is the handoff; never use a client keyframe end-pose or guessed floor.
++        if(f.complete()&&(f.phase==Phase.ANIMATING||f.phase==Phase.PAUSED_UNLOADED&&f.resume==Phase.ANIMATING))launch(f);
++        if(f.complete())partial.remove(f.id);else partial.add(f.id);
++        f.changed(true);state.dirty=true;indexBody(f);supportIndex.changed(f.supportToken);schedule(f);
++    }
++    private static void launch(DebrisFragment f) {
++        int h=f.id.hashCode();double direction=(h&255)*Math.PI/128;
++        boolean metal=f.cells.stream().anyMatch(c->c.state.contains("metal")||c.state.contains("iron")||c.state.contains("copper"));
++        f.velocity=new V(Math.cos(direction)*.035,0,Math.sin(direction)*.035);
++        f.angularVelocity=new V(Math.sin(direction)*(metal?.018:.009),.003,Math.cos(direction)*(metal?.018:.009));
++    }
++    public void reject(String structure,String operation,BlockPos pos) {
++        var f=find(structure,operation,pos.asLong());if(f==null)return;
++        for(var c:f.cells)if(c.source==pos.asLong()&&c.commit!=Commit.REMOVED){c.commit=Commit.CONFLICT;c.protectedSource=true;c.durable=false;f.changed(true);state.dirty=true;}
++        if(f.complete()&&f.visible()&&f.phase==Phase.ANIMATING)launch(f);
++        schedule(f);
++    }
++    /** Successful external writes protect reserved source cells and queue exact support rechecks. */
++    public static void blockChanged(ServerWorld world,BlockPos pos) {
++        var manager=WORLDS.get(world);if(manager==null)return;
++        if(!world.getServer().isOnThread()) {
++            long chunk=((long)(pos.getX()>>4)&0xffffffffL)|((long)(pos.getZ()>>4)<<32);
++            if(!manager.observedChunks.contains(chunk))return;
++            if(manager.asynchronousChanges.size()<16384)manager.asynchronousChanges.put(pos.asLong(),Boolean.TRUE);else manager.observerOverflow=true;
++            return;
++        }
++        manager.supportIndex.changed(pos.asLong());if(isSourceWrite())return;
++        boolean changed=false;
++        for(var f:manager.bySource.getOrDefault(pos.asLong(),Set.of())){
++            for(var c:f.cells)if(c.source==pos.asLong()) {
++                if(c.commit==Commit.REMOVED){if(!c.protectedSource){c.protectedSource=true;f.changed(false);changed=true;}}
++                else if(c.commit==Commit.RESERVED||c.commit==Commit.ARMED){c.commit=Commit.CONFLICT;c.protectedSource=true;c.durable=false;f.changed(true);changed=true;}
++            }}
++        if(changed){manager.state.dirty=true;manager.needsBarrier=true;}
++    }
++    public void beginTick() {
++        queries=0;recoveryWrites=0;
++        activeReservations=(int)state.fragments.values().stream().filter(f->f.phase!=Phase.SLEEPING&&(f.visible()||f.cells.stream().anyMatch(c->c.commit==Commit.ARMED))).count();
++        if(observerOverflow){for(var f:state.fragments.values())for(var c:f.cells)if(c.commit==Commit.RESERVED||c.commit==Commit.ARMED){c.commit=Commit.CONFLICT;c.protectedSource=true;f.changed(true);state.dirty=needsBarrier=true;}
++            observerOverflow=false;}
++        int notifications=0;for(long p:asynchronousChanges.keySet()){if(notifications++>=256)break;asynchronousChanges.remove(p);blockChanged(world,BlockPos.fromLong(p));}
++        if(needsBarrier&&state.writable()) {
++            if(state.flush()){for(var f:state.fragments.values())for(var c:f.cells)if(c.commit==Commit.ARMED)c.durable=true;needsBarrier=false;}
++        }
++    }
++    private boolean reconcile(DebrisFragment f) {
++        if(!state.writable())return false;
++        for(var c:f.cells)if(c.commit==Commit.ARMED||c.commit==Commit.REMOVED){var pos=BlockPos.fromLong(c.source);
++            if(!world.isChunkLoaded(pos.getX()>>4,pos.getZ()>>4)){f.pause();return false;}}
++        // WAL always predates removals. Reapply only exact authorized expected states when chunk saves rolled back.
++        for(var c:f.cells)if(c.commit==Commit.ARMED||c.commit==Commit.REMOVED) {
++            var pos=BlockPos.fromLong(c.source);BlockState current=world.getBlockState(pos);
++            var ledger=RefineryTransitionState.get(world).ledgers.get(f.structure);
++            boolean protectedCell=ledger!=null&&ledger.protectedCells.contains(c.source);
++            boolean emptyHopper=current.isOf(Blocks.HOPPER)&&world.getBlockEntity(pos) instanceof net.minecraft.inventory.Inventory inventory&&inventory.isEmpty();
++            var decision=DebrisLifecycle.recover(c,RefineryTransitions.encode(current),current.isAir(),protectedCell,current.hasBlockEntity()&&!emptyHopper);
++            if(decision==DebrisLifecycle.Recovery.KEEP_COMMITTED){c.protectedSource=true;f.changed(false);state.dirty=true;continue;}
++            if(decision==DebrisLifecycle.Recovery.CONFIRM_REMOVAL){if(c.commit!=Commit.REMOVED){c.commit=Commit.REMOVED;f.changed(true);state.dirty=true;}continue;}
++            if(decision==DebrisLifecycle.Recovery.REMOVE_EXPECTED) {
++                if(recoveryWrites>=16)return false;
++                if(writeSource(world,pos,Blocks.AIR.getDefaultState())&&world.getBlockState(pos).isAir()){c.commit=Commit.REMOVED;recoveryWrites++;state.dirty=true;}else return false;
++            } else {c.commit=Commit.CONFLICT;c.protectedSource=true;f.changed(true);state.dirty=true;}
++        }
++        f.reconciled=true;indexBody(f);if(f.visible()&&!f.complete())partial.add(f.id);schedule(f);return true;
++    }
++    public void tick() {
++        if(!state.writable())return;
++        var pendingIterator=partial.iterator();int partialChecks=0;
++        while(pendingIterator.hasNext()&&partialChecks++<32){var f=state.fragments.get(pendingIterator.next());if(f==null||f.complete()){pendingIterator.remove();continue;}
++            boolean loaded=true;for(var c:f.cells){var pos=BlockPos.fromLong(c.source);if(!world.isChunkLoaded(pos.getX()>>4,pos.getZ()>>4))loaded=false;}
++            long revision=f.revision;
++            if(!loaded)f.pause("SOURCE_CHUNKS_UNLOADED");else if(f.phase==Phase.PAUSED_UNLOADED&&f.pauseReason.equals("SOURCE_CHUNKS_UNLOADED")){f.phase=f.resume;f.pauseReason="";f.changed(false);}
++            if(revision!=f.revision)state.dirty=true;
++        }
++        for(var id:supportIndex.drain(32)){var f=state.fragments.get(id);if(f!=null&&f.phase==Phase.SLEEPING){f.wake();state.dirty=true;schedule(f);}}
++        int recover=Math.min(8,recovery.size());while(recover-->0){UUID id=recovery.remove();var f=state.fragments.get(id);if(f!=null&&!reconcile(f))recovery.add(id);}
++        int sleepingChecks=Math.min(8,sleepers.size());
++        while(sleepingChecks-->0){UUID id=sleepers.remove();sleepQueued.remove(id);var f=state.fragments.get(id);
++            if(f==null||f.phase!=Phase.SLEEPING)continue;
++            long before=f.revision;DebrisCollision.tick(f,b->obstacles(f,b));supportIndex.update(f.id,f.supports);
++            if(before!=f.revision){state.dirty=true;supportIndex.changed(f.supportToken);indexBody(f);}schedule(f);
++        }
++        int visits=Math.min(roundRobin.size(),maxSimulationsPerTick);
++        while(visits-->0&&!roundRobin.isEmpty()) {
++            UUID id=roundRobin.remove();activeQueued.remove(id);var f=state.fragments.get(id);if(f==null)continue;
++            if(!f.reconciled||!f.visible()||!f.complete()||f.phase==Phase.SLEEPING){schedule(f);continue;}
++            long before=f.revision;DebrisCollision.tick(f,b->obstacles(f,b));
++            supportIndex.update(f.id,f.supports);if(before!=f.revision){state.dirty=true;supportIndex.changed(f.supportToken);indexBody(f);}schedule(f);
++        }
++        // Durable pose checkpoints are independent of render/network cadence; source intents force earlier barriers.
++        if(state.dirty&&(world.getTime()%20==0||needsBarrier)){if(state.flush()){for(var f:state.fragments.values())for(var c:f.cells)if(c.commit==Commit.ARMED)c.durable=true;needsBarrier=false;}}
++    }
++    private List<DebrisCollision.Obstacle> obstacles(DebrisFragment fragment,B b) {
++        int x0=(int)Math.floor(b.x0())-1,y0=Math.max(world.getBottomY(),(int)Math.floor(b.y0())-1),z0=(int)Math.floor(b.z0())-1;
++        int x1=(int)Math.floor(b.x1())+1,y1=Math.min(world.getTopY()-1,(int)Math.floor(b.y1())+1),z1=(int)Math.floor(b.z1())+1;
++        long volume=(long)(x1-x0+1)*(y1-y0+1)*(z1-z0+1);if(volume<0||volume>4096||queries+volume>maxBlockQueriesPerTick){fragment.pause("COLLISION_BUDGET");return null;}
++        Set<Long> dependencies=new LinkedHashSet<>();for(int x=x0>>4;x<=x1>>4;x++)for(int z=z0>>4;z<=z1>>4;z++){
++            dependencies.add(((long)x&0xffffffffL)|((long)z<<32));if(!world.isChunkLoaded(x,z)){fragment.dependencies=dependencies;fragment.pause("UNLOADED_CHUNKS");return null;}}
++        fragment.dependencies=dependencies;observedChunks.addAll(dependencies);queries+=volume;var result=new ArrayList<DebrisCollision.Obstacle>();
++        for(int x=x0;x<=x1;x++)for(int z=z0;z<=z1;z++)for(int y=y0;y<=y1;y++) {
++            var p=new BlockPos(x,y,z);for(var box:world.getBlockState(p).getCollisionShape(world,p).getBoundingBoxes()){
++                result.add(new DebrisCollision.Obstacle(new B(box.minX+x,box.minY+y,box.minZ+z,box.maxX+x,box.maxY+y,box.maxZ+z),p.asLong()));if(result.size()>DebrisCollision.MAX_OBSTACLES)return null;}}
++        // Other authoritative fragments are collision bodies, without entering entity/world block collision APIs.
++        var neighbors=new TreeSet<UUID>();for(long key:dependencies)neighbors.addAll(bodyChunks.getOrDefault(key,Set.of()));
++        if(neighbors.size()>128)return null;
++        for(var id:neighbors){if(id.equals(fragment.id))continue;var other=state.fragments.get(id);if(other==null)continue;if(!other.reconciled){fragment.pause("DEBRIS_RECOVERY_PENDING");return null;}
++            for(var box:other.volumes(other.rotation,other.position))if(box.intersects(b.expand(.02))){
++                if(++queries>maxBlockQueriesPerTick||result.size()>=DebrisCollision.MAX_OBSTACLES)return null;
++                result.add(new DebrisCollision.Obstacle(box,other.supportToken));
++            }}
++        // World border is solid; no synthetic ground/sea-level plane is inserted.
++        var border=world.getWorldBorder();if(b.x0()<border.getBoundWest()||b.x1()>border.getBoundEast()||b.z0()<border.getBoundNorth()||b.z1()>border.getBoundSouth())return null;
++        return result;
++    }
++    public static void resetStructure(ServerWorld world,String structure) {
++        if(world==null)return;var manager=get(world);if(!manager.state.writable())throw new IllegalStateException("Debris journal is read-only; structure reset deferred");
++        var fragments=new LinkedHashMap<>(manager.state.fragments);var operations=new LinkedHashMap<>(manager.state.operations);var proofs=new LinkedHashMap<>(manager.state.structureSnapshots);
++        manager.state.fragments.values().removeIf(f->f.structure.equals(structure));manager.state.operations.keySet().removeIf(k->k.startsWith(structure+"/"));manager.state.structureSnapshots.remove(structure);
++        manager.state.dirty=true;
++        if(!manager.state.flush()) {
++            manager.state.fragments.clear();manager.state.fragments.putAll(fragments);manager.state.operations.clear();manager.state.operations.putAll(operations);manager.state.structureSnapshots.clear();manager.state.structureSnapshots.putAll(proofs);
++            throw new IllegalStateException("Debris reset barrier failed; source reset has not started");
++        }
++        for(var f:fragments.values())if(f.structure.equals(structure)){manager.supportIndex.changed(f.supportToken);manager.supportIndex.update(f.id,Set.of());}
++        manager.sources.clear();manager.bySource.clear();manager.bodyTokens.clear();manager.bodyChunks.clear();manager.bodyDependencies.clear();
++        for(var f:manager.state.fragments.values()){manager.index(f);manager.indexBody(f);}
++    }
++    public String diagnostics(){return "stored="+state.fragments.size()+" visible="+state.fragments.values().stream().filter(DebrisFragment::visible).count()+" paused="+state.fragments.values().stream().filter(f->f.phase==Phase.PAUSED_UNLOADED).count()+" reserved="+state.fragments.values().stream().flatMap(f->f.cells.stream()).filter(c->c.commit==Commit.RESERVED||c.commit==Commit.ARMED).count()+" queries="+queries+" capacity_deferrals="+capacityDeferrals+" writable="+state.writable()+" last_journal_bytes="+state.lastFlushBytes+" last_journal_ns="+state.lastFlushNanos;}
++    public static void closeAll(){for(var m:WORLDS.values())m.state.flush();WORLDS.clear();DebrisNetworking.clear();}
++}
+--- R2/src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java
++++ Stage5/src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java
+@@ -14,7 +14,9 @@
+ public abstract class RefineryExternalEditMixin {
+     @Inject(method="setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState;",at=@At("RETURN"))
+     private void bobin$observe(BlockPos pos,BlockState state,boolean moved,CallbackInfoReturnable<BlockState> cir) {
+-        if(cir.getReturnValue()!=null && ((WorldChunk)(Object)this).getWorld() instanceof ServerWorld world)
+-            RefineryTransitions.external(world,pos);
++        if(cir.getReturnValue()!=null && ((WorldChunk)(Object)this).getWorld() instanceof ServerWorld world) {
++            com.bobincraft.destruction.debris.StructureDebrisManager.blockChanged(world,pos);
++            if(!com.bobincraft.destruction.debris.StructureDebrisManager.isSourceWrite())RefineryTransitions.external(world,pos);
++        }
+     }
+ }
+--- R2/src/test/java/com/bobincraft/destruction/DebrisContract.java
++++ Stage5/src/test/java/com/bobincraft/destruction/DebrisContract.java
+@@ -0,0 +1,131 @@
++package com.bobincraft.destruction;
++
++import com.bobincraft.destruction.debris.*;
++import java.util.*;
++import static com.bobincraft.destruction.debris.DebrisFragment.*;
++
++/** Actual production planner/rigid solver/support index. Engine IO/network adapters are covered separately by GameTest. */
++public final class DebrisContract {
++    private static int checks;
++    private static void check(boolean condition,String message){checks++;if(!condition)throw new AssertionError(message);}
++    private static DebrisFragment fragment(int x,int y,int z) {
++        var f=DebrisPlan.create("test:zone","tank",UUID.fromString("11111111-2222-3333-4444-555555555555"),List.of(new DebrisPlan.Source(x,y,z,"minecraft:stone"))).get(0);
++        var c=f.cells.get(0);c.commit=Commit.REMOVED;c.shapes=List.of(new B(c.local.x(),c.local.y(),c.local.z(),c.local.x()+1,c.local.y()+1,c.local.z()+1));f.phase=Phase.FALLING;f.reconciled=true;return f;
++    }
++    private static void journal() {
++        java.nio.file.Path directory=null;
++        try {
++            directory=java.nio.file.Files.createTempDirectory("bobin-real-journal-contract-");var wal=directory.resolve("records.wal");var snapshot=directory.resolve("records.dat");
++            byte[] first="durable source intent".getBytes(java.nio.charset.StandardCharsets.UTF_8),second="committed geometry/pose".getBytes(java.nio.charset.StandardCharsets.UTF_8);
++            long end=DebrisJournal.append(wal,0,1,first);end=DebrisJournal.append(wal,end,2,second);var read=DebrisJournal.read(wal);
++            check(read.frames().size()==2&&java.util.Arrays.equals(read.frames().get(0).payload(),first),"actual fsynced WAL read reproduces durable intent");
++            byte[] all=java.nio.file.Files.readAllBytes(wal);
++            for(int cut=1;cut<24+second.length;cut++) {
++                java.nio.file.Files.write(wal,java.util.Arrays.copyOf(all,all.length-cut));var partial=DebrisJournal.read(wal);
++                check(partial.frames().size()==1&&partial.validBytes()==24+first.length,"every incomplete trailing frame preserves valid prefix");
++                DebrisJournal.append(wal,partial.validBytes(),2,second);check(DebrisJournal.read(wal).frames().size()==2,"retry truncates incomplete tail without duplicate frame");
++            }
++            byte[] corrupt=all.clone();corrupt[corrupt.length-1]^=1;java.nio.file.Files.write(wal,corrupt);boolean checksum=false;
++            try{DebrisJournal.read(wal);}catch(java.io.IOException expected){checksum=true;}check(checksum&&java.util.Arrays.equals(corrupt,java.nio.file.Files.readAllBytes(wal)),"corruption rejected without rewriting evidence");
++            java.nio.file.Files.write(wal,all);DebrisJournal.atomicSnapshot(snapshot,second);
++            check(java.util.Arrays.equals(second,java.nio.file.Files.readAllBytes(snapshot)),"actual atomic snapshot replacement");
++            check(DebrisJournal.read(wal).frames().stream().filter(frame->frame.sequence()>2).count()==0,"checkpoint sequence suppresses old WAL replay if crash precedes truncation");
++            DebrisJournal.truncate(wal);check(DebrisJournal.read(wal).frames().isEmpty(),"checkpoint permits empty WAL");
++            DebrisJournal.append(wal,0,3,first);check(DebrisJournal.read(wal).frames().get(0).sequence()==3,"post-checkpoint sequence does not restart");
++            var file=directory.resolve("not_a_directory");java.nio.file.Files.writeString(file,"barrier failure fixture");boolean blocked=false;
++            try{DebrisJournal.append(file.resolve("records.wal"),0,1,first);}catch(java.io.IOException expected){blocked=true;}check(blocked,"actual failed filesystem barrier blocks detachment");
++        }catch(java.io.IOException e){throw new AssertionError(e);}finally{if(directory!=null)try(var paths=java.nio.file.Files.walk(directory)){for(var path:paths.sorted(java.util.Comparator.reverseOrder()).toList())java.nio.file.Files.deleteIfExists(path);}catch(java.io.IOException e){throw new AssertionError(e);}}
++    }
++    public static void main(String[] args) { runAll(); }
++    public static void runAll() {
++        checks=0;UUID op=UUID.fromString("11111111-2222-3333-4444-555555555555");
++        var input=new ArrayList<DebrisPlan.Source>();
++        for(int x=-9;x<=9;x++)for(int z=-9;z<=9;z++)if(x*x+z*z<=81)for(int y=1;y<=11;y++)
++            if(y==11||x*x+z*z>64)input.add(new DebrisPlan.Source(x,y,z,y==11?"test:roof[variant=old]":"test:shell[variant=aged]"));
++        var pieces=DebrisPlan.create("test:zone","tank",op,input);Set<Long> cells=new HashSet<>();Set<UUID> ids=new HashSet<>();
++        for(var f:pieces){check(ids.add(f.id),"stable unique fragment identity");check(f.cells.size()<=16,"bounded recognizable patches");
++            double lo=Double.POSITIVE_INFINITY,hi=Double.NEGATIVE_INFINITY;
++            for(var c:f.cells){check(cells.add(c.source),"no duplicated source cell");check(!f.visible(),"reservation cannot reveal unremoved geometry");
++                check(c.state.startsWith("test:"),"exact source material/property preserved");lo=Math.min(lo,c.local.y());hi=Math.max(hi,c.local.y()+1);
++                double wx=f.sourcePose.x()+c.local.x(),wy=f.sourcePose.y()+c.local.y(),wz=f.sourcePose.z()+c.local.z();
++                check(Math.abs(wx-Math.rint(wx))<1e-9&&Math.abs(wy-Math.rint(wy))<1e-9&&Math.abs(wz-Math.rint(wz))<1e-9,"exact initial world placement, no scale or scatter");}
++            check(hi-lo<=2.00001,"no generated tall column from unrelated animation cube dimensions");}
++        check(cells.size()==input.size(),"every actual source constituent conserved once");
++        Collections.shuffle(input,new Random(42));var again=DebrisPlan.create("test:zone","tank",op,input);
++        check(pieces.stream().map(f->f.id).toList().equals(again.stream().map(f->f.id).toList()),"planner independent of input iteration");
++        check(!pieces.get(0).id.equals(DebrisPlan.create("test:other","tank",op,input).get(0).id),"dimension identity separate");
++        var floor=new DebrisCollision.Obstacle(new B(-100,0,-100,100,.5,100),1);
++        var wall=new DebrisCollision.Obstacle(new B(2,-100,-100,2.1,100,100),2);
++        var ceiling=new DebrisCollision.Obstacle(new B(-100,5,-100,100,5.25,100),3);
++        for(int speed=1;speed<=15;speed++) {
++            var f=fragment(0,2,0);f.velocity=new V(speed/10.,-speed/10.,0);
++            for(int tick=0;tick<100;tick++){DebrisCollision.tick(f,b->List.of(floor,wall,ceiling));check(f.bounds().x1()<=2.000001&&f.bounds().y0()>=.499999,"swept whole-shape side/floor collision");}
++            check(f.phase==Phase.SLEEPING,"verified finite settling on slab");
++            double prior=f.position.y();DebrisCollision.tick(f,b->List.of(wall,ceiling));check(f.phase==Phase.FALLING&&f.position.y()<prior,"support loss resumes falling from existing pose");
++        }
++        var up=fragment(0,3,0);up.velocity=new V(0,1.5,0);DebrisCollision.tick(up,b->List.of(ceiling));check(up.bounds().y1()<=5.000001&&up.phase!=Phase.SLEEPING,"overhead contact never becomes floor");
++        var fall=fragment(0,12,0);for(int tick=0;tick<100;tick++)DebrisCollision.tick(fall,b->List.of(new DebrisCollision.Obstacle(new B(-10,-20,-10,10,-19,10),9)));
++        check(fall.position.y()<0,"deep water has no guessed sea-level floor");
++        var unloaded=fragment(0,6,0);unloaded.velocity=new V(.1,-.7,0);V pose=unloaded.position;Q rotation=unloaded.rotation;
++        DebrisCollision.tick(unloaded,b->null);check(unloaded.phase==Phase.PAUSED_UNLOADED&&unloaded.resume==Phase.FALLING&&unloaded.position.equals(pose)&&unloaded.rotation.equals(rotation),"unavailable swept volume pauses exact pose");
++        DebrisCollision.tick(unloaded,b->List.of());check(unloaded.phase==Phase.FALLING&&unloaded.position.y()<pose.y(),"loaded collision context resumes without floor teleport");
++        var rotating=fragment(0,3,0);rotating.angularVelocity=new V(.12,0,.1);
++        for(int i=0;i<150;i++){DebrisCollision.tick(rotating,b->List.of(floor,wall,ceiling));for(var v:rotating.volumes(rotating.rotation,rotating.position))check(!v.intersects(wall.box())&&!v.intersects(floor.box())&&!v.intersects(ceiling.box()),"rotating volume avoids walls/floor/ceiling");}
++        var shape=new B(-2,-.125,-1,2,.125,1);var q=Q.turn(new V(.7,.3,.2),1);B bounds=shape.transformed(q,new V(2,5,1));
++        for(int i=0;i<5000;i++){var r=new Random(i);V p=q.rotate(new V(-2+r.nextDouble()*4,-.125+r.nextDouble()*.25,-1+r.nextDouble()*2)).add(new V(2,5,1));
++            check(p.x()>=bounds.x0()-1e-8&&p.x()<=bounds.x1()+1e-8&&p.y()>=bounds.y0()-1e-8&&p.y()<=bounds.y1()+1e-8&&p.z()>=bounds.z0()-1e-8&&p.z()<=bounds.z1()+1e-8,"rotated subshape encloses all source geometry");}
++        var supports=new DebrisSupportIndex();UUID id=UUID.randomUUID();supports.update(id,Set.of(1L,2L));supports.changed(999);supports.changed(1);supports.changed(1);
++        check(supports.drain(1).equals(Set.of(id))&&supports.drain(8).isEmpty(),"support wake deduplicated, unrelated edits fast-exit");
++        supports.update(id,Set.of(3L));supports.changed(1);check(supports.drain(10).isEmpty(),"old support dependencies removed");supports.changed(3);check(supports.drain(1).contains(id),"piston/explosion/block write support notification wakes identity");
++        // A multi-cell plate must tip about surviving support when its mass leaves the support polygon.
++        var longPlate=DebrisPlan.create("test:zone","roof",op,List.of(new DebrisPlan.Source(0,1,0,"minecraft:stone"),new DebrisPlan.Source(1,1,0,"minecraft:stone"),new DebrisPlan.Source(2,1,0,"minecraft:stone"))).get(0);
++        for(var c:longPlate.cells){c.commit=Commit.REMOVED;c.shapes=List.of(new B(c.local.x(),c.local.y(),c.local.z(),c.local.x()+1,c.local.y()+1,c.local.z()+1));}
++        longPlate.phase=Phase.SLEEPING;longPlate.reconciled=true;double initialY=longPlate.position.y();
++        var narrowSupport=new DebrisCollision.Obstacle(new B(0,0,0,1,1,1),77);
++        for(int i=0;i<30;i++)DebrisCollision.tick(longPlate,b->List.of(narrowSupport));
++        check(longPlate.phase!=Phase.SLEEPING&&longPlate.position.y()<initialY,"loss of partial support tips source plate instead of leaving a vertical frozen cluster");
++        for(int i=0;i<1000;i++) {
++            var random=new Random(i);B box=new B(-2,-.3,-1,2,.3,1);V omega=new V(random.nextDouble()*.1,random.nextDouble()*.1,random.nextDouble()*.1);
++            V pivot=new V(1,0,0);B swept=DebrisCollision.sweptRotation(box,Q.IDENTITY,new V(0,2,0),pivot,omega,1);
++            for(int j=0;j<=10;j++){Q turn=Q.turn(omega,j/10.0);V origin=pivot.add(turn.rotate(new V(0,2,0).add(pivot.mul(-1))));B at=box.transformed(turn,origin);
++                check(swept.x0()<=at.x0()+1e-8&&swept.y0()<=at.y0()+1e-8&&swept.z0()<=at.z0()+1e-8&&swept.x1()>=at.x1()-1e-8&&swept.y1()>=at.y1()-1e-8&&swept.z1()>=at.z1()-1e-8,"entire angular sweep includes intermediate corner extrema");}
++        }
++        var commitCell=new Cell(1,V.ZERO,"minecraft:stone");
++        for(var status:Commit.values())for(boolean protectedCell:new boolean[]{false,true})for(boolean entity:new boolean[]{false,true}) {
++            commitCell.commit=status;commitCell.durable=false;
++            check(!DebrisLifecycle.mayRemove(commitCell,"minecraft:stone"),"no source removal before successful durable journal barrier");
++            commitCell.durable=true;
++            check(DebrisLifecycle.mayRemove(commitCell,"minecraft:stone")== (status==Commit.ARMED),"only durably armed exact source can be removed");
++            check(!DebrisLifecycle.mayRemove(commitCell,"minecraft:gold_block"),"mismatching source is never removal permission");
++            var removed=DebrisLifecycle.recover(commitCell,"minecraft:air",true,protectedCell,entity);
++            if(status==Commit.RESERVED||status==Commit.CONFLICT)check(removed==DebrisLifecycle.Recovery.IGNORE,"unarmed/denied geometry never invented during recovery");
++            if(status==Commit.ARMED)check(removed==(protectedCell?DebrisLifecycle.Recovery.CONFLICT:DebrisLifecycle.Recovery.CONFIRM_REMOVAL),"chunk saved before commit checkpoint recovers exactly once");
++            if(status==Commit.REMOVED)check(removed==DebrisLifecycle.Recovery.CONFIRM_REMOVAL,"confirmed fragment survives subsequent empty source edits");
++            var restored=DebrisLifecycle.recover(commitCell,"minecraft:stone",false,protectedCell,entity);
++            if(status==Commit.ARMED||status==Commit.REMOVED)check(restored==(!protectedCell&&!entity?DebrisLifecycle.Recovery.REMOVE_EXPECTED:status==Commit.REMOVED?DebrisLifecycle.Recovery.KEEP_COMMITTED:DebrisLifecycle.Recovery.CONFLICT),"rolled-back source replay requires exact intent; subsequent player rebuild cannot erase an already committed fragment");
++        }
++        var crowded=new DebrisSupportIndex();for(int i=0;i<8192;i++)crowded.update(new UUID(0,i+1),Set.of(77L));crowded.changed(77);
++        Set<UUID> allWoken=new HashSet<>();for(int tick=0;tick<300;tick++){var batch=crowded.drain(32);check(batch.size()<=32,"crowded support rechecks have a real per-fragment bound");allWoken.addAll(batch);}
++        check(allWoken.size()==8192,"bounded wake cursor eventually reaches every stored fragment without loss");
++        var ownership=new Cell(7,V.ZERO,"minecraft:iron_block");
++        for(var phase:Commit.values()){ownership.commit=phase;ownership.protectedSource=false;
++            check(DebrisLifecycle.preventsNewClaim(ownership,true)==(phase==Commit.REMOVED),"retarget can transfer only unremoved source geometry");
++            check(DebrisLifecycle.preventsNewClaim(ownership,false)==(phase!=Commit.CONFLICT),"overlapping structure cannot steal another live source claim");
++            ownership.protectedSource=true;check(DebrisLifecycle.preventsNewClaim(ownership,true),"external same-material replacement stays protected across later operations");}
++        var window=new DebrisRevisionWindow();UUID session=UUID.randomUUID(),fragmentId=UUID.randomUUID();
++        check(window.reset("test:zone",session,1),"initial snapshot stream generation");
++        check(window.accept("test:zone",session,2,fragmentId,17,false),"late observer accepts current sleeping fragment without explosion replay");
++        check(!window.accept("test:zone",session,2,fragmentId,17,false),"duplicate packet rejected");
++        check(!window.accept("test:other",session,3,fragmentId,18,false),"wrong dimension snapshot rejected");
++        check(!window.accept("test:zone",UUID.randomUUID(),3,fragmentId,18,false),"old connection generation rejected");
++        check(!window.accept("test:zone",session,3,fragmentId,16,false),"older representation revision rejected");
++        check(window.accept("test:zone",session,4,fragmentId,18,false),"new geometry/motion correction accepted");
++        check(window.accept("test:zone",session,5,fragmentId,0,true),"visibility tombstone accepted");
++        check(!window.accept("test:zone",session,4,fragmentId,18,false),"old snapshot cannot resurrect a tombstoned representation");
++        check(window.accept("test:zone",session,6,fragmentId,18,false),"returning observer receives same persistent fragment identity");
++        window.clear();check(!window.accept("test:zone",session,7,fragmentId,18,false),"disconnect resets cosmetic cache generation");
++        journal();
++        boolean rejected=false;try{new V(Double.NaN,0,0);}catch(IllegalArgumentException expected){rejected=true;}check(rejected,"invalid pose rejected");
++        System.out.println("PASS Stage 5 production geometry/collision/support kernels: "+checks+" checks; "+pieces.size()+" recognizable source patches, "+cells.size()+" conserved source cells");
++    }
++}
+--- R2/src/test/java/com/bobincraft/destruction/DebrisTest.java
++++ Stage5/src/test/java/com/bobincraft/destruction/DebrisTest.java
+@@ -0,0 +1,3 @@
++package com.bobincraft.destruction;
++import org.junit.jupiter.api.Test;
++final class DebrisTest { @Test void sourcePhysicsAndSupport(){DebrisContract.runAll();} }

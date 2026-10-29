@@ -1,0 +1,27 @@
+{
+  "release": "2.7.0",
+  "date": "2026-10-23",
+  "seed": 19860426,
+  "arena_size": 2048,
+  "generation_profile": 10,
+  "junit": {
+    "passed": 353,
+    "failed": 0,
+    "skipped": 0,
+    "classes": 70
+  },
+  "native_chunk_positions": 102,
+  "native_generation_orders": 2,
+  "resource_validation_commands": 7,
+  "static_vehicle_geometry_tests": 8,
+  "armor_access_tests": 10,
+  "grenade_entry_tests": 4,
+  "grenade_animation_tests": 2,
+  "mixin_audit": "MIXIN_REMAP_PASS mixins=25 selectors=38 shadows=4 invocationTargets=3 constantTargets=1",
+  "runtime_mixin_probe": "ARMOR_COLLISION_MIXIN_APPLIED net.minecraft.class_1924 parts=451",
+  "runtime_client_mixin_probe": "ARMOR_CLIENT_MIXINS_APPLIED net.minecraft.class_759 parts=451",
+  "jar_bytes": 5576592,
+  "jar_sha256": "e8c88dcef0dc8b659a460e367f9c9352d1b16c68d66a5b300240844cba89393a",
+  "live_client_playtest": false,
+  "live_dedicated_server_playtest": false
+}

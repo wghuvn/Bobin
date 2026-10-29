@@ -1,0 +1,44 @@
+[
+  {
+    "name": "R1-java-checks",
+    "command": [
+      "java",
+      "docs/Stabilization/Verify.java"
+    ],
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "R1-resources-and-scope",
+    "command": [
+      "python",
+      "docs/Stabilization/check_resources.py",
+      "../../upload/Bobin_craft(1).zip"
+    ],
+    "exit_code": 0,
+    "status": "PASS"
+  },
+  {
+    "name": "R1-gradle-build",
+    "command": [
+      "bash",
+      "gradlew",
+      "clean",
+      "build",
+      "-x",
+      "test"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION"
+  },
+  {
+    "name": "R1-gradle-test",
+    "command": [
+      "bash",
+      "gradlew",
+      "test"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION"
+  }
+]

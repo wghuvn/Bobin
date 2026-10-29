@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "facing=north,variant=0": {
+      "model": "bobin_craft:block/faction_marker_0",
+      "y": 0
+    },
+    "facing=east,variant=0": {
+      "model": "bobin_craft:block/faction_marker_0",
+      "y": 90
+    },
+    "facing=south,variant=0": {
+      "model": "bobin_craft:block/faction_marker_0",
+      "y": 180
+    },
+    "facing=west,variant=0": {
+      "model": "bobin_craft:block/faction_marker_0",
+      "y": 270
+    },
+    "facing=north,variant=1": {
+      "model": "bobin_craft:block/faction_marker_1",
+      "y": 0
+    },
+    "facing=east,variant=1": {
+      "model": "bobin_craft:block/faction_marker_1",
+      "y": 90
+    },
+    "facing=south,variant=1": {
+      "model": "bobin_craft:block/faction_marker_1",
+      "y": 180
+    },
+    "facing=west,variant=1": {
+      "model": "bobin_craft:block/faction_marker_1",
+      "y": 270
+    },
+    "facing=north,variant=2": {
+      "model": "bobin_craft:block/faction_marker_2",
+      "y": 0
+    },
+    "facing=east,variant=2": {
+      "model": "bobin_craft:block/faction_marker_2",
+      "y": 90
+    },
+    "facing=south,variant=2": {
+      "model": "bobin_craft:block/faction_marker_2",
+      "y": 180
+    },
+    "facing=west,variant=2": {
+      "model": "bobin_craft:block/faction_marker_2",
+      "y": 270
+    }
+  }
+}

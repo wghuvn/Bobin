@@ -1,0 +1,27 @@
+PASS Java 17 syntax parse: 301 files (not Minecraft symbol resolution)
+PASS: 4196 assertions; all 12 categories, protocol rejection, seeded geometry and budgets
+PASS Stage 2.1: 60 profile/budget scenarios; all five layers, flash duration, lifetimes and determinism
+PASS Stage 3: 10000 bounded deterministic wind/turbulence/envelope samples
+PASS Stage 4: all 4 tank sizes x 4 variants; roof bounds, interrupted retarget, crash reconciliation, idempotence, legacy and player conflicts
+Exception in thread "main" java.lang.reflect.InvocationTargetException
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at Verify.main(Verify.java:39)
+Caused by: java.lang.AssertionError: bounded immutable-base illumination
+	at com.bobincraft.destruction.StabilizationContract.check(StabilizationContract.java:10)
+	at com.bobincraft.destruction.StabilizationContract.runAll(StabilizationContract.java:24)
+	at com.bobincraft.destruction.StabilizationContract.main(StabilizationContract.java:93)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at Verify.main(Verify.java:39)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:77)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:569)
+	at jdk.compiler/com.sun.tools.javac.launcher.Main.execute(Main.java:419)
+	at jdk.compiler/com.sun.tools.javac.launcher.Main.run(Main.java:192)
+	at jdk.compiler/com.sun.tools.javac.launcher.Main.main(Main.java:132)

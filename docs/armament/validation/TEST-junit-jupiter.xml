@@ -1,0 +1,1046 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="JUnit Jupiter" tests="164" skipped="0" failures="0" errors="0" time="0.329" hostname="e8d722c6862b" timestamp="2026-10-29T14:49:20">
+<properties>
+<property name="file.encoding" value="UTF-8"/>
+<property name="file.separator" value="/"/>
+<property name="java.class.path" value="/workspace/validation/armament-task2/lib/junit-platform-console-standalone-1.10.3.jar"/>
+<property name="java.class.version" value="61.0"/>
+<property name="java.home" value="/workspace/toolchains/jdk-17.0.21+9"/>
+<property name="java.io.tmpdir" value="/tmp"/>
+<property name="java.library.path" value="/usr/java/packages/lib:/usr/lib64:/lib64:/lib:/usr/lib"/>
+<property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+<property name="java.runtime.version" value="17.0.21+9"/>
+<property name="java.specification.maintenance.version" value="1"/>
+<property name="java.specification.name" value="Java Platform API Specification"/>
+<property name="java.specification.vendor" value="Oracle Corporation"/>
+<property name="java.specification.version" value="17"/>
+<property name="java.vendor" value="Eclipse Adoptium"/>
+<property name="java.vendor.url" value="https://adoptium.net/"/>
+<property name="java.vendor.url.bug" value="https://github.com/adoptium/adoptium-support/issues"/>
+<property name="java.vendor.version" value="Temurin-17.0.21+9"/>
+<property name="java.version" value="17.0.21"/>
+<property name="java.version.date" value="2026-10-20"/>
+<property name="java.vm.compressedOopsMode" value="Zero based"/>
+<property name="java.vm.info" value="mixed mode, sharing"/>
+<property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+<property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+<property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+<property name="java.vm.specification.version" value="17"/>
+<property name="java.vm.vendor" value="Eclipse Adoptium"/>
+<property name="java.vm.version" value="17.0.21+9"/>
+<property name="jdk.debug" value="release"/>
+<property name="line.separator" value="
+"/>
+<property name="native.encoding" value="UTF-8"/>
+<property name="os.arch" value="amd64"/>
+<property name="os.name" value="Linux"/>
+<property name="os.version" value="6.18.55"/>
+<property name="path.separator" value=":"/>
+<property name="sun.arch.data.model" value="64"/>
+<property name="sun.boot.library.path" value="/workspace/toolchains/jdk-17.0.21+9/lib"/>
+<property name="sun.cpu.endian" value="little"/>
+<property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+<property name="sun.java.command" value="/workspace/validation/armament-task2/lib/junit-platform-console-standalone-1.10.3.jar execute --class-path /workspace/validation/armament-task2/isolated/run-nQHTWEgR/main:/workspace/validation/armament-task2/isolated/run-nQHTWEgR/test:/workspace/validation/armament-task2/lib/gson-2.10.jar:/workspace/analysis/BOBIN_CRAFT/Bobin_craft/src/test/resources --scan-class-path --include-package com.bobincraft.armament --fail-if-no-tests --reports-dir /workspace/validation/armament-task2/isolated/run-nQHTWEgR/reports --details summary --disable-ansi-colors"/>
+<property name="sun.java.launcher" value="SUN_STANDARD"/>
+<property name="sun.jnu.encoding" value="UTF-8"/>
+<property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+<property name="user.dir" value="/workspace/analysis/BOBIN_CRAFT/Bobin_craft"/>
+<property name="user.home" value="/home/agent"/>
+<property name="user.language" value="en"/>
+<property name="user.name" value="agent"/>
+<property name="user.timezone" value="Etc/UTC"/>
+</properties>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[50]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#50]
+display-name: unknown transform member
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[51]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#51]
+display-name: string vector component
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[45]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#45]
+display-name: gltf visual allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[46]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#46]
+display-name: unsafe model URI
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[47]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#47]
+display-name: wrong model format
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[48]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#48]
+display-name: missing NPC view
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[41]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#41]
+display-name: duplicate actions
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[42]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#42]
+display-name: string as actions
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[43]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#43]
+display-name: actions excessive
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[44]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#44]
+display-name: actions empty allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[49]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#49]
+display-name: unknown view
+]]></system-out>
+</testcase>
+<testcase name="nestedCollectionsAreDefensivelyCopied()" classname="com.bobincraft.armament.VisualContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.VisualContractTest]/[method:nestedCollectionsAreDefensivelyCopied()]
+display-name: nestedCollectionsAreDefensivelyCopied()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[60]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#60]
+display-name: second root
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[61]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#61]
+display-name: self cycle with root
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[62]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#62]
+display-name: role must select root
+]]></system-out>
+</testcase>
+<testcase name="bundleChecksAllReferencesAndSocketNodes()" classname="com.bobincraft.armament.VisualContractTest" time="0.013">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.VisualContractTest]/[method:bundleChecksAllReferencesAndSocketNodes()]
+display-name: bundleChecksAllReferencesAndSocketNodes()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[56]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#56]
+display-name: missing root role
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[57]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#57]
+display-name: unknown node role
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[58]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#58]
+display-name: unknown parent
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[59]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#59]
+display-name: no root
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[52]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#52]
+display-name: short vector
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[53]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#53]
+display-name: negative scale
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[54]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.008">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#54]
+display-name: non-unit quaternion
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[55]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#55]
+display-name: nested null transform
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[19]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#19]
+display-name: strict syntax NULL
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[17]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#17]
+display-name: strict syntax TRUE
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[15]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#15]
+display-name: reject {"x":"a
+text"}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[18]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#18]
+display-name: strict syntax FALSE
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[14]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#14]
+display-name: reject {"a":{"x":1,"x":2}}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[15]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#15]
+display-name: strict syntax {"x":"a&#0;text"}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[13]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#13]
+display-name: reject {"x":1,"x":2}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[16]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#16]
+display-name: strict syntax {"x":"a\'text"}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[12]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#12]
+display-name: reject {"x":01}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[13]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#13]
+display-name: strict syntax {"x":"a
+text"}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[11]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#11]
+display-name: reject /*comment*/{}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[14]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#14]
+display-name: strict syntax {"x":"a	text"}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[10]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#10]
+display-name: reject // comment
+{}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[11]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#11]
+display-name: strict syntax {"x":1,"x":2}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[12]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#12]
+display-name: strict syntax {"a":{"x":1,"x":2}}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[10]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#10]
+display-name: strict syntax {"x":01}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[23]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#23]
+display-name: rig version 2
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[24]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#24]
+display-name: rig version string
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[25]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#25]
+display-name: rig invalid namespace
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[26]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#26]
+display-name: rig traversal
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[20]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#20]
+display-name: rig unknown field
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[21]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#21]
+display-name: rig missing id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[22]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#22]
+display-name: rig null id
+]]></system-out>
+</testcase>
+<testcase name="snapshotsRejectImpossibleTimeAndActionCombinations()" classname="com.bobincraft.armament.ApiContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:snapshotsRejectImpossibleTimeAndActionCombinations()]
+display-name: snapshotsRejectImpossibleTimeAndActionCombinations()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[27]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#27]
+display-name: sockets unknown field
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[28]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#28]
+display-name: sockets missing id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[29]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#29]
+display-name: sockets null id
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[1]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#1]
+display-name: reject 
+]]></system-out>
+</testcase>
+<testcase name="snapshotCodecRejectsCoercionOverflowUnknownAndNullFields()" classname="com.bobincraft.armament.ApiContractTest" time="0.005">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:snapshotCodecRejectsCoercionOverflowUnknownAndNullFields()]
+display-name: snapshotCodecRejectsCoercionOverflowUnknownAndNullFields()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[40]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#40]
+display-name: animation-events traversal
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[22]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#22]
+display-name: strict syntax nulL
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[20]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#20]
+display-name: strict syntax truE
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[21]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#21]
+display-name: strict syntax falsE
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[34]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#34]
+display-name: animation-events unknown field
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[35]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#35]
+display-name: animation-events missing id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[36]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#36]
+display-name: animation-events null id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[37]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#37]
+display-name: animation-events version 2
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[30]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#30]
+display-name: sockets version 2
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[31]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#31]
+display-name: sockets version string
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[32]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#32]
+display-name: sockets invalid namespace
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[33]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#33]
+display-name: sockets traversal
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[8]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#8]
+display-name: reject {"x":NaN}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[9]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#9]
+display-name: reject {"x":Infinity}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[6]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#6]
+display-name: reject {unquoted:1}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[7]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#7]
+display-name: reject {'x':1}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[38]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#38]
+display-name: animation-events version string
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[4]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#4]
+display-name: reject {} {}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[39]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#39]
+display-name: animation-events invalid namespace
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[5]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#5]
+display-name: reject {"x":1,}
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[2]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#2]
+display-name: reject null
+]]></system-out>
+</testcase>
+<testcase name="malformedJsonIsNeverSilentlyAccepted()[3]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:malformedJsonIsNeverSilentlyAccepted()]/[dynamic-test:#3]
+display-name: reject []
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[6]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#6]
+display-name: weapon unknown field
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[5]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#5]
+display-name: animation-events valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[4]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#4]
+display-name: sockets valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[3]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#3]
+display-name: rig valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[9]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#9]
+display-name: weapon version 2
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[8]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#8]
+display-name: weapon null id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[7]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#7]
+display-name: weapon missing id
+]]></system-out>
+</testcase>
+<testcase name="deeplyNestedAndOversizedDocumentsAreRejected()" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.005">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[method:deeplyNestedAndOversizedDocumentsAreRejected()]
+display-name: deeplyNestedAndOversizedDocumentsAreRejected()
+]]></system-out>
+</testcase>
+<testcase name="errorIdentifiesNestedField()" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.019">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[method:errorIdentifiesNestedField()]
+display-name: errorIdentifiesNestedField()
+]]></system-out>
+</testcase>
+<testcase name="identifiersAreExplicitCanonicalValues()" classname="com.bobincraft.armament.ApiContractTest" time="0.032">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:identifiersAreExplicitCanonicalValues()]
+display-name: identifiersAreExplicitCanonicalValues()
+]]></system-out>
+</testcase>
+<testcase name="constructorsAlsoRejectNonFiniteDataAndInvalidReferences()" classname="com.bobincraft.armament.VisualContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.VisualContractTest]/[method:constructorsAlsoRejectNonFiniteDataAndInvalidReferences()]
+display-name: constructorsAlsoRejectNonFiniteDataAndInvalidReferences()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[2]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#2]
+display-name: visual valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[1]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#1]
+display-name: weapon valid
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[14]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#14]
+display-name: test:a
+
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[2]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#2]
+display-name: strict syntax {} {}
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[13]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#13]
+display-name: test:a b
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[3]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#3]
+display-name: strict syntax {"x":1,}
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[16]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#16]
+display-name: ..:fixture
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[15]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#15]
+display-name: .:fixture
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[1]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#1]
+display-name: strict syntax 
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[18]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#18]
+display-name: https://host/a.glb
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[17]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#17]
+display-name: test..x:a
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[19]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#19]
+display-name: test:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[12]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#12]
+display-name: weapon traversal
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[13]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#13]
+display-name: visual unknown field
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[14]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#14]
+display-name: visual missing id
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[15]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#15]
+display-name: visual null id
+]]></system-out>
+</testcase>
+<testcase name="actionEventsRoundTripAndRequireSequenceAndIdentity()" classname="com.bobincraft.armament.ApiContractTest" time="0.004">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:actionEventsRoundTripAndRequireSequenceAndIdentity()]
+display-name: actionEventsRoundTripAndRequireSequenceAndIdentity()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[10]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#10]
+display-name: weapon version string
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[11]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#11]
+display-name: weapon invalid namespace
+]]></system-out>
+</testcase>
+<testcase name="nullsHaveDomainDiagnostics()" classname="com.bobincraft.armament.ApiContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:nullsHaveDomainDiagnostics()]
+display-name: nullsHaveDomainDiagnostics()
+]]></system-out>
+</testcase>
+<testcase name="definitionIsImmutableAndHasNoRuntimeRegistration()" classname="com.bobincraft.armament.ApiContractTest" time="0.009">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:definitionIsImmutableAndHasNoRuntimeRegistration()]
+display-name: definitionIsImmutableAndHasNoRuntimeRegistration()
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[8]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#8]
+display-name: strict syntax // comment
+{}
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[9]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#9]
+display-name: strict syntax /*comment*/{}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[16]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#16]
+display-name: visual version 2
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[6]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#6]
+display-name: strict syntax {"x":NaN}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[17]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#17]
+display-name: visual version string
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[7]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#7]
+display-name: strict syntax {"x":Infinity}
+]]></system-out>
+</testcase>
+<testcase name="idleAndActiveSnapshotsRoundTripWithoutLosingLongPrecision()" classname="com.bobincraft.armament.ApiContractTest" time="0.046">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:idleAndActiveSnapshotsRoundTripWithoutLosingLongPrecision()]
+display-name: idleAndActiveSnapshotsRoundTripWithoutLosingLongPrecision()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[18]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#18]
+display-name: visual invalid namespace
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[4]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#4]
+display-name: strict syntax {unquoted:1}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[19]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#19]
+display-name: visual traversal
+]]></system-out>
+</testcase>
+<testcase name="invalidSyntaxIsRejectedByParserItself()[5]" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[test-factory:invalidSyntaxIsRejectedByParserItself()]/[dynamic-test:#5]
+display-name: strict syntax {'x':1}
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[70]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#70]
+display-name: missing socket transform
+]]></system-out>
+</testcase>
+<testcase name="validJsonIsNotConfusedWithInvalidDefinitions()" classname="com.bobincraft.armament.StrictJsonTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.StrictJsonTest]/[method:validJsonIsNotConfusedWithInvalidDefinitions()]
+display-name: validJsonIsNotConfusedWithInvalidDefinitions()
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[1]" classname="com.bobincraft.armament.ApiContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#1]
+display-name: fixture
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[71]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#71]
+display-name: socket quaternion component too large
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[2]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#2]
+display-name: :fixture
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[72]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#72]
+display-name: gameplay marker forbidden
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[3]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#3]
+display-name: test:
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[73]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#73]
+display-name: executable marker payload forbidden
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[4]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#4]
+display-name: test:a:b
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[5]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#5]
+display-name: Test:a
+]]></system-out>
+</testcase>
+<testcase name="semanticChecksRejectUnknownActionsAndWrongDefinition()" classname="com.bobincraft.armament.ApiContractTest" time="0.004">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:semanticChecksRejectUnknownActionsAndWrongDefinition()]
+display-name: semanticChecksRejectUnknownActionsAndWrongDefinition()
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[6]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#6]
+display-name: test:../a
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[7]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#7]
+display-name: test:a/../b
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[8]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#8]
+display-name: test:a//b
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[67]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#67]
+display-name: null parent
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[9]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#9]
+display-name: test:/a
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[68]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#68]
+display-name: empty sockets allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[69]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#69]
+display-name: duplicate socket name
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[63]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#63]
+display-name: duplicate node name
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[64]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#64]
+display-name: duplicate node index
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[65]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#65]
+display-name: fractional node index
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[66]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#66]
+display-name: negative node index
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[10]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#10]
+display-name: test:a/
+]]></system-out>
+</testcase>
+<testcase name="userViewCanDescribeANonPlayerWithoutMinecraft()" classname="com.bobincraft.armament.ApiContractTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[method:userViewCanDescribeANonPlayerWithoutMinecraft()]
+display-name: userViewCanDescribeANonPlayerWithoutMinecraft()
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[12]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#12]
+display-name: test:a%2fb
+]]></system-out>
+</testcase>
+<testcase name="unsafeIdentifiersAreRejected()[11]" classname="com.bobincraft.armament.ApiContractTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiContractTest]/[test-factory:unsafeIdentifiersAreRejected()]/[dynamic-test:#11]
+display-name: test:a\b
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[81]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#81]
+display-name: namespace traversal
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[3]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#3]
+display-name: rig valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[82]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#82]
+display-name: namespace empty segment
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[4]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#4]
+display-name: sockets valid
+]]></system-out>
+</testcase>
+<testcase name="commonSourceAndBytecodeHaveNoGameOrClientDependencies()" classname="com.bobincraft.armament.ApiBoundaryTest" time="0.008">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.ApiBoundaryTest]/[method:commonSourceAndBytecodeHaveNoGameOrClientDependencies()]
+display-name: commonSourceAndBytecodeHaveNoGameOrClientDependencies()
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[83]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#83]
+display-name: trailing newline ID
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[1]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#1]
+display-name: weapon valid
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[2]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.004">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#2]
+display-name: visual valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[80]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#80]
+display-name: empty events allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[78]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#78]
+display-name: zero duration
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[79]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#79]
+display-name: duplicate clip name
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[9]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#9]
+display-name: empty events allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[74]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#74]
+display-name: marker out of duration
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[7]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#7]
+display-name: gltf visual allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[75]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#75]
+display-name: duplicate marker name
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[8]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#8]
+display-name: empty sockets allowed
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[76]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#76]
+display-name: unsorted markers
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[5]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#5]
+display-name: animation-events valid
+]]></system-out>
+</testcase>
+<testcase name="definitionsAcceptValidDataAndRejectInvalidData()[77]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:definitionsAcceptValidDataAndRejectInvalidData()]/[dynamic-test:#77]
+display-name: negative marker time
+]]></system-out>
+</testcase>
+<testcase name="validMetadataRoundTrips()[6]" classname="com.bobincraft.armament.DefinitionValidationTest" time="0">
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]/[class:com.bobincraft.armament.DefinitionValidationTest]/[test-factory:validMetadataRoundTrips()]/[dynamic-test:#6]
+display-name: actions empty allowed
+]]></system-out>
+</testcase>
+<system-out><![CDATA[
+unique-id: [engine:junit-jupiter]
+display-name: JUnit Jupiter
+]]></system-out>
+</testsuite>

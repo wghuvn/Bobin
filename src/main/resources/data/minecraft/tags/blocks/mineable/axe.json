@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "bobin_craft:map_table",
+    "bobin_craft:supply_crate",
+    "bobin_craft:reinforced_wood",
+    "bobin_craft:palisade",
+    "bobin_craft:ammo_crate",
+    "bobin_craft:weapon_rack",
+    "bobin_craft:warning_sign",
+    "bobin_craft:weathered_bark",
+    "bobin_craft:dark_pine_wood",
+    "bobin_craft:rotten_wood"
+  ]
+}

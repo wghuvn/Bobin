@@ -1,0 +1,9 @@
+EXPECTED FAIL: R2 shared-emitter wiring regression against actual R1 StructureDestructionClient source.
+COMMAND: python docs/Stabilization/audit_geometry.py (isolated tree with R1 client)
+EXIT: 1
+Traceback (most recent call last):
+  File "/tmp/bobin-r1-smoke-regression-2j95ailv/Bobin_craft/docs/Stabilization/audit_geometry.py", line 35, in <module>
+    assert 'if (isSmokeEmitter(v, world, observer)) activeSmokeEmitters++;' in client
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
+R1 denominator: 1 burning refinery + 256 non-burning damaged/critical structures = 257; near rate at intensity .9 = 0.19455252918287938 per second instead of 7.68.

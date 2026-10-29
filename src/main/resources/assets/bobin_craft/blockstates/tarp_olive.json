@@ -1,0 +1,226 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_up_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_up_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_up_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_up_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_down"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_down_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_down_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_down_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_down_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_north"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_north_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_north_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_north_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_north_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_south_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_south_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_south_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_south_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_east_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_east_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_east_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_east_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_west"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_west_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_west_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_west_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/tarp_olive_west_up"
+      }
+    }
+  ]
+}

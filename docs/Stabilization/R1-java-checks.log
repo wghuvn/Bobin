@@ -1,0 +1,9 @@
+COMMAND: java docs/Stabilization/Verify.java
+EXIT: 0
+STATUS: PASS
+PASS Java 17 syntax parse: 301 files (not Minecraft symbol resolution)
+PASS: 4196 assertions; all 12 categories, protocol rejection, seeded geometry and budgets
+PASS Stage 2.1: 60 profile/budget scenarios; all five layers, flash duration, lifetimes and determinism
+PASS Stage 3: 10000 bounded deterministic wind/turbulence/envelope samples
+PASS Stage 4: all 4 tank sizes x 4 variants; roof bounds, interrupted retarget, crash reconciliation, idempotence, legacy and player conflicts
+PASS stabilization production kernels: 35991 checks; policy, smoke color, phase schedules, audio clusters, parked ledger, swept cosmetic collision

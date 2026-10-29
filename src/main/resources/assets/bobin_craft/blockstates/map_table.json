@@ -1,0 +1,31 @@
+{
+  "variants": {
+    "tile=0": {
+      "model": "bobin_craft:block/map_table_0"
+    },
+    "tile=1": {
+      "model": "bobin_craft:block/map_table_1"
+    },
+    "tile=2": {
+      "model": "bobin_craft:block/map_table_2"
+    },
+    "tile=3": {
+      "model": "bobin_craft:block/map_table_3"
+    },
+    "tile=4": {
+      "model": "bobin_craft:block/map_table_4"
+    },
+    "tile=5": {
+      "model": "bobin_craft:block/map_table_5"
+    },
+    "tile=6": {
+      "model": "bobin_craft:block/map_table_6"
+    },
+    "tile=7": {
+      "model": "bobin_craft:block/map_table_7"
+    },
+    "tile=8": {
+      "model": "bobin_craft:block/map_table_8"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+MIXIN_REMAP_PASS mixins=25 selectors=38 shadows=4 invocationTargets=3 constantTargets=1
+Built /workspace/scratch/5920b2cd4cff/work/Bobin_craft/build/libs/bobin_craft-2.7.0.jar (5,737,831 bytes)
+SHA256 716f821c1626c72cd642d1809fc717bc27517a037a7192bb34ebe48f86e4b875
+
+ARMOR_COLLISION_MIXIN_APPLIED net.minecraft.class_1924 parts=3236
+ARMOR_CLIENT_MIXINS_APPLIED net.minecraft.class_759 parts=3236

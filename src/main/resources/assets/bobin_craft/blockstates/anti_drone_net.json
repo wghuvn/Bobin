@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "bobin_craft:block/anti_drone_net"
+    },
+    "axis=z": {
+      "model": "bobin_craft:block/anti_drone_net",
+      "x": 90
+    },
+    "axis=x": {
+      "model": "bobin_craft:block/anti_drone_net",
+      "x": 90,
+      "y": 90
+    }
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_up_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_up_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_up_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_up_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_down"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_down_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_down_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_down_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_down_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_north"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_north_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_north_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_north_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_north_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_south_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_south_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_south_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_south_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_east_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_east_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_east_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_east_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_west"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_west_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_west_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_west_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/metal_garage_door_west_up"
+      }
+    }
+  ]
+}

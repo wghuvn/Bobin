@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:visual:1",
+  "title": "Bobin Craft armament visual v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "model": {
+      "allOf": [
+        {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+        },
+        {
+          "pattern": "\\.(glb|gltf)(?![\\s\\S])"
+        }
+      ]
+    },
+    "rig_id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "sockets_id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "events_id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "views": {
+      "type": "object",
+      "properties": {
+        "first_person": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        },
+        "third_person": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        },
+        "npc": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        },
+        "gui": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        },
+        "ground": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        },
+        "fixed": {
+          "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+        }
+      },
+      "required": [
+        "first_person",
+        "third_person",
+        "npc"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "model",
+    "rig_id",
+    "sockets_id",
+    "events_id",
+    "views"
+  ],
+  "additionalProperties": false
+}

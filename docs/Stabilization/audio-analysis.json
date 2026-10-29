@@ -1,0 +1,24 @@
+{
+  "probe": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "vorbis",
+        "sample_rate": "48000",
+        "channels": 1
+      }
+    ],
+    "format": {
+      "duration": "8.000000"
+    }
+  },
+  "decoded_samples": 384000,
+  "decoded_peak": 0.5869046449661255,
+  "decoded_rms": 0.11208509653806686,
+  "decoded_dc": -4.7024462901390507e-07,
+  "join_step": 0.033434659242630005,
+  "adjacent_step_99th_percentile": 0.0360318087041378,
+  "sha256": "aeeadaf131616d52ec6b4bb69c616a418e86c749dd264c129dba4bff4c121487",
+  "listening_test": "NOT EXECUTED",
+  "in_game_loop_pitch_attenuation": "NOT EXECUTED"
+}

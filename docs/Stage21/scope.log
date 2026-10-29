@@ -1,0 +1,10 @@
+PASS: no deletions; all original-file edits match the stage allowlist.
+MODIFIED
+src/main/java/com/bobincraft/combat/ExplosionVisualProfile.java
+src/main/java/com/bobincraft/combat/client/ExplosionSmokeParticle.java
+src/main/java/com/bobincraft/combat/client/VoxelBlastClient.java
+src/test/java/com/bobincraft/combat/ExplosionVisualProfileTest.java
+ADDED
+scripts/verify_revisions.py
+src/main/java/com/bobincraft/combat/WeaponExplosionLayers.java
+src/test/java/com/bobincraft/combat/Stage21Contract.java

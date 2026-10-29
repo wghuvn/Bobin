@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "surface": "bobin_craft:block/rack_metal",
+    "particle": "bobin_craft:block/rack_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        15.45,
+        16.006
+      ],
+      "to": [
+        16,
+        16,
+        16.006
+      ],
+      "faces": {
+        "south": {
+          "texture": "#surface",
+          "uv": [
+            0,
+            0,
+            16,
+            1
+          ]
+        }
+      }
+    }
+  ]
+}

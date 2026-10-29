@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    " F ",
+    "IDI",
+    " F "
+  ],
+  "key": {
+    "F": {
+      "item": "minecraft:flint"
+    },
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "D": {
+      "item": "bobin_craft:fpv_drone"
+    }
+  },
+  "result": {
+    "item": "bobin_craft:fpv_fragmentation_drone",
+    "count": 1
+  }
+}

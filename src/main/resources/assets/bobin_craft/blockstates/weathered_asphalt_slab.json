@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "bobin_craft:block/weathered_asphalt_slab"
+    },
+    "type=top": {
+      "model": "bobin_craft:block/weathered_asphalt_slab_top"
+    },
+    "type=double": {
+      "model": "bobin_craft:block/weathered_asphalt_double"
+    }
+  }
+}

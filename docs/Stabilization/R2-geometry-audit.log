@@ -1,0 +1,313 @@
+COMMAND: python docs/Stabilization/audit_geometry.py
+EXIT: 0
+STATUS: PASS
+{
+  "kind": "STATIC SOURCE-BOUND GEOMETRY AUDIT; NOT FABRIC RUNTIME",
+  "source_sha256": {
+    "src/main/java/com/bobincraft/destruction/StructureSpatialIndex.java": "f3237c441c50cdf0584a542a3080cb226e6632582c4e0d5374ea6921b13b7c68",
+    "src/main/java/com/bobincraft/destruction/DestructibleStructure.java": "df50e96ae02e6e14278bfff2748f2b2cf979005e257c428f31a6380abb222154",
+    "src/main/java/com/bobincraft/destruction/DestructibleStructureRegistry.java": "d3bcd42954e9c3d1057a114707452626f3b3ea96ef84e0d5ab2bbe0a98292eb2",
+    "src/main/java/com/bobincraft/destruction/StructureGeometrySnapshot.java": "e4110e9f1a6168d7ba0e2bb9be99ba60628e2af91d634d427806af343d57803b",
+    "src/main/java/com/bobincraft/destruction/RefineryGeometryRules.java": "98317f8d6da8fc31cff84637c301fffe879b519cad352f2a10db7858db0f0377",
+    "src/main/java/com/bobincraft/destruction/StructureCollapseManager.java": "476a19c299a281e3acb32ceeee61fb04cd0b898764cdab2033d8a7b97bce5854",
+    "src/main/java/com/bobincraft/destruction/StructureDamagePolicy.java": "2795040f1fb98d3b7bab38022fcd5d6fb227201e7d5ae233d4ff5758f5c8e4ea",
+    "src/main/java/com/bobincraft/destruction/StructureDamageSource.java": "b9cae8c0c3ea34c37c6cc380a3926cf9ebe3632c805ef34dbe6ea95c3ee50abc",
+    "src/main/java/com/bobincraft/drone/BlastTerrain.java": "4ee2fd69df93443a0607573aea181b1acc82c166ccb9f0ef1329b00549c3fd62",
+    "src/main/java/com/bobincraft/drone/DroneExplosion.java": "011d87912f7ace4ba703bbfc94b81f5bad67a6876cb38adb1adba7f2111e4fec",
+    "src/main/java/com/bobincraft/drone/DroneBlastType.java": "0114001975d97379e6c46894d2295f06f416f1638cd3a5a9f92fa87bcfde3b7b",
+    "src/main/java/com/bobincraft/warzone/ZoneInfrastructure.java": "6ed0693d0992d1a14640ed7ed2ef6c8b355ba756acce97bd0e5a8ce387d15005",
+    "src/main/java/com/bobincraft/warzone/IndustrialFacilities.java": "a1b4f7ee4633df0f62fb12d468466aeb44cecd957f7b46de9f28b5c6ff0ef7d4",
+    "src/main/java/com/bobincraft/warzone/ZonePlan.java": "ee045bf88548a0cc4355282267c21690812b21de37279f205c94df5696c64685",
+    "src/main/resources/data/bobin_craft/tags/blocks/drone_breachable.json": "0e517e056430313114465c39d61fbc926219ea490e1568bc3dc2778419069aa0",
+    "src/main/resources/data/bobin_craft/tags/blocks/drone_scorchable_plants.json": "99fab53952f6ee6ef84c19a5cbd512856c04ba7b65aa7d5b8177399f159180e4",
+    "src/main/resources/data/bobin_craft/tags/blocks/drone_shatterable_glass.json": "e06d166b7e8c48b32a00981adf34d8d595f2129ef80d721d1b64baa03a2c6054",
+    "src/main/resources/data/bobin_craft/tags/blocks/drone_scorchable_soil.json": "5ac346637b558fb8059511112b263ea16a979a33e395513e916538f7c59c9d9c"
+  },
+  "tank_masks": [
+    {
+      "radius": 8,
+      "height": 10,
+      "reference_mask_cells_including_air": 2289,
+      "missed_by_primary_at_cell_centers": 0
+    },
+    {
+      "radius": 6,
+      "height": 8,
+      "reference_mask_cells_including_air": 1103,
+      "missed_by_primary_at_cell_centers": 0
+    },
+    {
+      "radius": 7,
+      "height": 11,
+      "reference_mask_cells_including_air": 1894,
+      "missed_by_primary_at_cell_centers": 0
+    },
+    {
+      "radius": 5,
+      "height": 9,
+      "reference_mask_cells_including_air": 880,
+      "missed_by_primary_at_cell_centers": 0
+    }
+  ],
+  "tank_face_and_attachment_probes": 43162,
+  "bridge_envelopes": [
+    {
+      "layout": "black_alder_layout.json",
+      "crossing": 1,
+      "style": 0,
+      "alongX": false,
+      "conservative_candidate_cells": 2125,
+      "outside_primary_envelopes": {
+        "possible_abutment": 660,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 88,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout.json",
+      "crossing": 2,
+      "style": 1,
+      "alongX": true,
+      "conservative_candidate_cells": 2325,
+      "outside_primary_envelopes": {
+        "possible_abutment": 682,
+        "parapet": 10,
+        "truss": 16,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 90,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout.json",
+      "crossing": 3,
+      "style": 2,
+      "alongX": false,
+      "conservative_candidate_cells": 2155,
+      "outside_primary_envelopes": {
+        "possible_abutment": 737,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 76,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v10.json",
+      "crossing": 1,
+      "style": 0,
+      "alongX": false,
+      "conservative_candidate_cells": 2125,
+      "outside_primary_envelopes": {
+        "possible_abutment": 660,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 88,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v10.json",
+      "crossing": 2,
+      "style": 1,
+      "alongX": true,
+      "conservative_candidate_cells": 2325,
+      "outside_primary_envelopes": {
+        "possible_abutment": 682,
+        "parapet": 10,
+        "truss": 16,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 90,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v10.json",
+      "crossing": 3,
+      "style": 2,
+      "alongX": false,
+      "conservative_candidate_cells": 2155,
+      "outside_primary_envelopes": {
+        "possible_abutment": 737,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 76,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v7.json",
+      "crossing": 1,
+      "style": 0,
+      "alongX": false,
+      "conservative_candidate_cells": 2125,
+      "outside_primary_envelopes": {
+        "possible_abutment": 660,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 88,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v7.json",
+      "crossing": 2,
+      "style": 1,
+      "alongX": true,
+      "conservative_candidate_cells": 2325,
+      "outside_primary_envelopes": {
+        "possible_abutment": 682,
+        "parapet": 10,
+        "truss": 16,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 90,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v7.json",
+      "crossing": 3,
+      "style": 2,
+      "alongX": false,
+      "conservative_candidate_cells": 2155,
+      "outside_primary_envelopes": {
+        "possible_abutment": 737,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 76,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v8.json",
+      "crossing": 1,
+      "style": 0,
+      "alongX": false,
+      "conservative_candidate_cells": 2125,
+      "outside_primary_envelopes": {
+        "possible_abutment": 660,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 88,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v8.json",
+      "crossing": 2,
+      "style": 1,
+      "alongX": true,
+      "conservative_candidate_cells": 2325,
+      "outside_primary_envelopes": {
+        "possible_abutment": 682,
+        "parapet": 10,
+        "truss": 16,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 90,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v8.json",
+      "crossing": 3,
+      "style": 2,
+      "alongX": false,
+      "conservative_candidate_cells": 2155,
+      "outside_primary_envelopes": {
+        "possible_abutment": 737,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 76,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v9.json",
+      "crossing": 1,
+      "style": 0,
+      "alongX": false,
+      "conservative_candidate_cells": 2125,
+      "outside_primary_envelopes": {
+        "possible_abutment": 660,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 88,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v9.json",
+      "crossing": 2,
+      "style": 1,
+      "alongX": true,
+      "conservative_candidate_cells": 2325,
+      "outside_primary_envelopes": {
+        "possible_abutment": 682,
+        "parapet": 10,
+        "truss": 16,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 90,
+        "abutment_edge": 8
+      }
+    },
+    {
+      "layout": "black_alder_layout_v9.json",
+      "crossing": 3,
+      "style": 2,
+      "alongX": false,
+      "conservative_candidate_cells": 2155,
+      "outside_primary_envelopes": {
+        "possible_abutment": 737,
+        "parapet": 10,
+        "girder": 27,
+        "deck": 27,
+        "possible_pier": 76,
+        "abutment_edge": 8
+      }
+    }
+  ],
+  "authored_materials": [
+    "bobin_craft:cracked_asphalt",
+    "bobin_craft:cracked_concrete",
+    "bobin_craft:equipment_panel",
+    "bobin_craft:mossy_concrete",
+    "bobin_craft:rusted_sheet_metal",
+    "bobin_craft:utility_pipe",
+    "bobin_craft:weathered_asphalt_slab",
+    "bobin_craft:weathered_gravel",
+    "minecraft:cobblestone_slab",
+    "minecraft:dark_oak_log",
+    "minecraft:gray_terracotta",
+    "minecraft:hopper",
+    "minecraft:iron_bars",
+    "minecraft:ladder",
+    "minecraft:light_gray_terracotta",
+    "minecraft:polished_andesite",
+    "minecraft:stone_brick_stairs",
+    "minecraft:waxed_oxidized_copper"
+  ],
+  "explicit_mutable_tag_intersections": {
+    "shatterable_glass": [],
+    "scorchable_soil": [],
+    "scorchable_plants": []
+  },
+  "conclusion": "Tank reference/attachment cells covered. Bridge hit zones are not exact geometry: endpoints and deep supports can lie outside. Forbidden profiles have no breach/fire branch; authored structural materials are not their glass/soil/plant targets. No terrain/index production change required for current authored content.",
+  "limitations": "Geometry formula evaluation and explicit tags only. Actual generated blocks, dynamic/nested tags, Minecraft index, collection/application, saves and multiplayer require Fabric GameTest/runtime; NOT EXECUTED."
+}
+PASS static geometry/source gates; terrainAllowed and findPrimaryAt unchanged; no ordinary-terrain protection expansion

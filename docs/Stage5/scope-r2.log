@@ -1,0 +1,7 @@
+COMMAND: python docs/Stage5/check_scope.py ../../deliverables/BobinCraft_Stabilized_Full_Source.zip
+EXIT: 0
+STATUS: PASS
+PASS exact R2 baseline: 2,325 hashes; no original files deleted; 10 permitted original Java modifications
+PASS all other R2 source/resources byte-identical, including damage/policy prefix, smoke budgets/appearance, motor/audio, transient chips, world generation, saves, all six animation/model assets
+PASS static ownership wiring: no legacy aftermath/scaled block rendering; new client is render-only and committed-source gated; source transfer and drone observer present
+Stage 6 and Stage 7 NOT STARTED. Static source checks do not establish Minecraft runtime or visual acceptance.

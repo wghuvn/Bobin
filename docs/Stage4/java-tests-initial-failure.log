@@ -1,0 +1,4 @@
+PASS Stage 3: 10000 bounded deterministic wind/turbulence/envelope samples
+Exception in thread "main" java.lang.AssertionError: recovery must not repeat completed work
+	at com.bobincraft.destruction.RefineryTransitionContract.require(RefineryTransitionContract.java:4)
+	at com.bobincraft.destruction.RefineryTransitionContract.main(RefineryTransitionContract.java:20)

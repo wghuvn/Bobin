@@ -1,0 +1,432 @@
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Preparing Minecraft test registries...
+Minecraft test registries ready.
+Running CombatMarksTest
+  Checking networkFieldsRoundTripAndInvalidFacesAndCoordinatesAreRejected()
+  Checking theBudgetEvictsOldestMarksAndNeverExceedsTheSaveLimit()
+  Checking removalUpdatesTheStateButScorchingTheSameSoilKeepsItsMark()
+  Checking allSixFacesHaveOutwardNormalsAndStayClippedToSlabEdges()
+  Checking bloodAndFragmentMarksSurviveDimensionStateSaveLoadWithoutTimers()
+  Checking malformedEntriesAreSkippedAndFutureSavesArePreserved()
+Running GuardInjuryPoseTest
+  Checking eitherMissingLegMakesTheNpcProneAndBothLegsSlowItFurther()
+  Checking theFlatColliderRotatesWithTheBodyAndKeepsItsCenterAtTheFeet()
+  Checking proneHeadAndLimbsAreClassifiedAlongTheGround()
+  Checking fallingIsBoundedAndFinishesInEightTicks()
+Running GuardMobilityTest
+  Checking regionalInjuriesDistinguishCrawlingFromAWalkingRetreat()
+Running HitRegionTest
+  Checking impactSeverityHasThreeFiniteLevels()
+  Checking torsoAndBackOfHeadDoNotTriggerTheFacialOverlay()
+  Checking distanceCoverAndWaterOnlyReduceFragmentEnergy()
+  Checking limbSideFollowsTheTargetsFacingDirection()
+  Checking turningTheHeadDoesNotSwapBodyLimbs()
+Running InjuryStateTest
+  Checking savingAndReloadingKeepsTheRemainingDeadlineRatherThanRestartingIt()
+  Checking newHitsNeverResetOrLengthenAnExistingDeadline()
+  Checking reloadingAnExpiredWoundDoesNotGiveThePlayerAnotherDeadline()
+  Checking aMoreSeriousHitShortensTheTimerAndTreatmentLeavesLimbLoss()
+  Checking oldSavesAndInvalidFieldsAreBoundedAndStartWithoutInjuries()
+  Checking untreatedWoundsExpireAtExactlyTenFiveAndOneMinutes()
+Running PlayerInjuriesTest
+  Checking legLossUsesNativeCrawlDimensionsAndAnAttributePenalty()
+  Checking treatmentStopsBleedingWithoutRestoringAPlayersMissingLimbs()
+  Checking aLostArmDisablesOnlyTheCorrespondingHand()
+Running VoxelExplosionShapeTest
+  Checking aSharedSeedProducesTheSameCloudAndDifferentSeedsVaryItsLobes()
+  Checking kernelsHaveDepthHeightAndRadialExpansionRatherThanAFlatSpritePlane()
+  Checking graphicsBudgetsAndLifetimesAreBounded()
+Running VoxelParticleGeometryTest
+  Checking turningTheCameraDoesNotFlattenOrRotateTheCubeIntoABillboard()
+  Checking theParticleEmitsSixOutwardFacingQuadsWithActualDepth()
+Running BlastRaycastTest
+  Checking anUnloadedChunkIsRejectedBeforeReadingItsCollisionShapes()
+  Checking solidCoverStopsFragmentsAndGlassAttenuatesThem()
+  Checking exitingGlassCannotSkipTheAdjacentSolidWall()
+  Checking aPaneAttenuatesOnlyOnceAndAnOpenDoorwayPassesFragments()
+Running DroneAssistedFlightTest
+  Checking fpvBuildsSpeedProgressivelyAndKeepsAGentleAssistedAttitude()
+  Checking fpvStopsAtItsPredictedPointWithoutReversingOrOscillating()
+  Checking legacyThrottleAlsoLiftsBothTypesOffTheVanillaFloor()
+  Checking bomberStrafingAndCameraPitchDoNotLoseAltitude()
+  Checking bothTypesSettleOnAnActualVanillaCollisionShapeThenTakeOffWithAssistance()
+  Checking neutralAssistanceHoldsPositionAndHeightWhileTurning()
+  Checking assistedDescentStaysBelowBomberCrashSpeedAndUnarmedFpvRecoverySpeed()
+  Checking releasedSticksBrakeAndReturnToTheCapturedHoverPosition()
+  Checking fpvForwardFollowsMouseLookAndNeutralInputStopsTheClimb()
+Running DroneCollisionTest
+  Checking anUnmovedLaunchFloorIsSafeAndAnAirborneLandingIsNot()
+  Checking diagonalBroadPhaseOverlapAndMovementAwayAreNotContacts()
+  Checking hoveringThroughVanillasTinyMovementCutoffCannotBecomeAnAirCollision()
+  Checking continuousWireCollisionCatchesFastAndStationaryContactsWithoutProximityDetonation()
+  Checking overlappingEntityCanTriggerAStationaryAirborneFpv()
+  Checking emptyHoverAndARealGapRemainSafe()
+  Checking theVanillaFloorIsSafeForGroundArmingButAnyLandingAfterTakeoffIsContact()
+  Checking aSlowWallTouchCannotSlipUnderTheOldImpactSpeedThreshold()
+  Checking disarmingClearsThePreviousFlightFuseBeforeRearmingOnTheFloor()
+  Checking slowContactAndFastSweptContactHitTheActualPhysicalBox()
+  Checking aStationaryFlushNoseContactAndSubMillimeterMovementBothDetonate()
+Running DroneDamageBalanceTest
+  Checking productionExplosionCallsEachDamageStageOnceWithoutAnExtraVanillaExplosion()
+  Checking infantryChargesLeaveAFullHealthTwentyHpGuardAliveEvenAtMaximumDamage()
+  Checking healthCapsDoNotWeakenTheFragmentEnergyThatCausesLimbLoss()
+  Checking waveDamageFallsWithDistanceAndStopsAtSolidCover()
+  Checking specialistChargesHaveDifferentRoles()
+Running DroneFlightTest
+  Checking aFastGroundSkimUsesOnlyNormalImpactSpeed()
+  Checking levelHalfThrottleBalancesGravity()
+  Checking positivePitchThrustsAlongHeading()
+  Checking packetsRejectNonFiniteAndOutOfRangeAxesRatherThanTrustingThem()
+  Checking pitchedFlightNeedsAdditionalThrottleToMaintainHeight()
+  Checking heartbeatAllowsShortJitterButNeverAnOldOrMissingStream()
+  Checking allControlsAtOnceCannotExceedTheDroneSpeedLimit()
+  Checking disarmingImmediatelyRemovesThrustEvenWithAStuckThrottleCommand()
+  Checking releasingSticksSelfLevelsInAngleMode()
+  Checking staleDuplicateAndNegativeSequenceNumbersAreRejected()
+  Checking bomberHasLowerTiltAndSlowerYawThanFpv()
+  Checking signalDecaysWithRangeAndObstructionAndIsZeroOutsideEnvelope()
+  Checking rateModeRetainsAttitudeAndCanPassThroughAnInvertedAttitude()
+Running DronePayloadProfileTest
+  Checking payloadsHaveDistinctFallPathsAndAllReleaseFullyBelowTheCarrier()
+  Checking fragmentationAirburstRequiresBothArmingAndAnActualNearbySurface()
+  Checking heUsesArmedContactAndASeparateFallbackTimer()
+  Checking grenadeRetainsItsTimedFuseEvenOnContactAndAtLowHeight()
+Running DronePayloadSafetyTest
+  Checking theSameThreeSecondFuseCanExplodeWhileStillInTheAir()
+  Checking aLowReleaseStaysVisibleAndRestingOnTheFloorUntilTheSixtiethTick()
+  Checking aWallContactReflectsOnlyItsNormalVelocity()
+  Checking theFuseExpiresOnTickSixtyExactlyOnce()
+  Checking releasePositionKeepsTheWholeChargeBelowTheActualCarrierBox()
+  Checking aHigherDropBouncesLosesEnergyAndSettlesWithGroundFriction()
+  Checking onlyTheActualCarrierIsProtectedUntilTheChargeHasClearedIt()
+  Checking gravityPreservesInheritedHorizontalMotionWhileAirDragGraduallySlowsIt()
+Running DroneSessionTest
+  Checking diagnosticsDistinguishHeartbeatLossFromOperatorDamageAndSignalLoss()
+  Checking droppingPayloadsCannotBeDecodedAsExitOrUnlink()
+  Checking aTimedOutFlightCannotRetainItsImpactFuseForTheFailsafeDescent()
+  Checking aHealthyHoverWithContinuousInputHasNoTenSecondExpiry()
+Running DroneSignalTest
+  Checking fifteenMetresWithAThinWallOrFoliageKeepsACleanLink()
+  Checking distanceAndSuccessiveObstaclesProgressivelyReduceReception()
+  Checking transientDropoutsRecoverButContinuousLossEndsTheSessionAfterTwoSeconds()
+Running DroneVariantTest
+  Checking legacyAndWrongFamilyNbtFallBackWithoutConvertingAircraftTypes()
+  Checking eachDroppedPayloadKeepsItsCarrierChargeProfile()
+  Checking allSixVariantsSurviveEntitySaveLoadAndResolveToTheCorrectRecoveryItem()
+  Checking savedPayloadCountsRespectTheVariantAndOldGeneralBombersKeepThree()
+  Checking spawnEggTargetsTheModsActualGuardEntity()
+Running DroneCameraGeometryTest
+  Checking actualWarheadTipIsVisibleAtTheBottomWithoutMovingTheLensBackwards()
+  Checking bomberKeepsItsOriginalForwardOffsetAndIgnoresFrameTilt()
+  Checking bomberDownCameraKeepsItsOriginalUnobstructedLocation()
+  Checking fpvMountIsOnTheActualLensAtEveryBodyAttitude()
+  Checking theBatteryAndCameraCageAreBehindTheFpvOptics()
+Running DroneFpvGeometryTest
+  Checking fpvPassesAHalfBlockWideAndHalfBlockHighTunnel()
+  Checking actualFpvMeshFitsItsBoxAcrossAssistedTiltYawAndSpinningPropellers()
+  Checking fpvPassesAOneBlockDoorwayWithTheActualOpenDoorPanel()
+  Checking allFpvVariantPayloadsFitTheExistingColliderDuringAssistedFlight()
+  Checking dynamicShadowReplacesCircularShadowAndScalesWithAltitude()
+Running DroneHudProjectionTest
+  Checking worldEastAppearsOnTheLeftWhenLookingSouthAndBankRotatesIt()
+  Checking forwardAndDownwardCamerasCenterTheVisibleTarget()
+  Checking zoomMagnifiesTheRealProjectionAndRejectsBehindCameraTargets()
+Running DronePayloadGeometryTest
+  Checking allDroppedMeshesStayInsideTheActualColliderAndRestOnTheSurface()
+Running DroneScreenInputTest
+  Checking helpStartsHiddenAndZoomDoesNotQueueFlightActions()
+  Checking pointerAndFocusGuardsStayActiveButLowAltitudeAllowsRelease()
+[23:26:41] [main/INFO]: Drone input action: uuid=null action=payload_release_queued
+  Checking fpvMouseSmoothingPreservesSmallTurnsWithoutOvershooting()
+  Checking incidentalRemovalKeepsTheSessionAndQueuedClick()
+[23:26:41] [main/INFO]: Drone input action: uuid=null action=payload_release_queued
+  Checking leftClickQueuesOneDropWhileFAndSpaceDoNot()
+[23:26:41] [main/INFO]: Drone input action: uuid=null action=payload_release_queued
+Running DroneVideoProfileTest
+  Checking healthyVideoIsCappedAtItsFrameIntervalAndPoorVideoCannotStallForever()
+  Checking latencySelectsAnActualOlderFrameAndRecoversWhenTheLinkImproves()
+  Checking receiverSizesKeepAspectAndFitTheirFramebufferAcrossDisplayAndSignalChanges()
+  Checking linkQualityStartsWithMildPixelationAndProgressivelyAddsFineCorruption()
+Running ControlMathTest
+  Checking largeBandsRemainSymmetricInSmallWindows()
+  Checking [1] 0, 0, 1
+  Checking [2] 90, -1, 0
+  Checking [3] 180, 0, -1
+  Checking [4] 270, 1, 0
+  Checking [1] 1
+  Checking [2] 15
+  Checking [3] 30
+  Checking [4] 60
+  Checking [5] 144
+  Checking [6] 240
+  Checking [1] 15
+  Checking [2] 30
+  Checking [3] 60
+  Checking [4] 144
+  Checking [5] 240
+  Checking [1] 0, 0, -1, 1
+  Checking [2] 100, 0, 1, 1
+  Checking [3] 0, 100, -1, -1
+  Checking [4] 100, 100, 1, -1
+  Checking followingDoesNotAdvanceWithoutElapsedTime()
+  Checking fractionalInputRetainsItsMagnitudeForPreciseMovement()
+  Checking [1] 0, 1, 0
+  Checking [2] 90, 0, 1
+  Checking [3] 180, -1, 0
+  Checking [4] 270, 0, -1
+  Checking arbitraryYawAndTurningDoNotChangeDiagonalSpeed()
+  Checking noInputProducesNoMovementAtAnyYaw()
+  Checking [1] 0, -1
+  Checking [2] 2.5, -0.75
+  Checking [3] 5, -0.5
+  Checking [4] 10, 0
+  Checking [5] 50, 0
+  Checking [6] 90, 0
+  Checking [7] 95, 0.5
+  Checking [8] 97.5, 0.75
+  Checking [9] 100, 1
+  Checking [1] 5
+  Checking [2] 15
+  Checking [3] 60
+  Checking [4] 240
+  Checking smoothingDoesNotAdvanceForZeroOrNegativeElapsedTime()
+  Checking [1] 1, 1
+  Checking [2] 1, -1
+  Checking [3] -1, 1
+  Checking [4] -1, -1
+  Checking equivalentWrappedYawsGiveIdenticalInput()
+  Checking invalidOrOutsideWindowCoordinatesDoNotScroll()
+Running DeploymentMapPreparationTest
+  Checking coldAuthoredTableRequestCompletesPromptlyAndProducesAReadableDeploymentPacket()
+  Checking reopeningTheTablePreservesThePlayersAlreadyOfferedChoicesAndCycle()
+  Checking completedCyclesCanPrepareAnotherSeparatedTripleWithoutChangingTheWorld()
+Running EncounterActivationTest
+  Checking aLoadedCheckpointActivatesEvenWhenTheRestOfTheDistrictIsUnloaded()
+  Checking activationUsesThePostPositionAndRequiresALivePhysicalVisitor()
+Running HubDesertionTest
+  Checking minecraftAcceptsBombGeometryAndDataDrivenDamageDefinition()
+  Checking countdownExpiresAtExactlyTenSecondsAndCannotBeRestartedOrStrikeTwice()
+  Checking onlyCompletedMapDeploymentExemptsDepartureAndCreativeIsExempt()
+  Checking reconnectAndRestartPreserveAbsoluteDeadlineAndExpiredStrikeRemainsOneShot()
+  Checking reentryCancelsStrikeAndNextUnauthorizedDepartureGetsNewCountdown()
+  Checking boundaryIncludesWallAndRejectsUnauthorizedDimensionsAndFallingBelowFloor()
+  Checking playerWithoutRaidOnboardingOutsideActualReportedPositionStillGetsCountdown()
+Running HubDialogueSessionTest
+  Checking conversationAcceptsBoundTargetAndThrottlesRepeatedChoices()
+  Checking validDialogueExtendsSessionWhileOldTokenRemainsSpecific()
+  Checking teleportRoleChangeAndOutOfReachInvalidateCapability()
+  Checking expiredSessionsCannotBeRevivedByDelayedPackets()
+  Checking forgedCapabilityAndWrongNpcCannotDriveConversation()
+Running HubLayoutTest
+  Checking enclosureHasFiveWallWatchtowersAndACompletePerimeter()
+  Checking servicesHaveSeparateStandingAndFixturePositions()
+  Checking gateArrivalConnectsEveryServiceZoneWithoutCrossingThePalisade()
+  Checking serviceLocationsFollowTheReferenceImageOrientation()
+Running HubRepairTest
+  Checking preservesPlayerReplacement()
+  Checking preservesPersistentDataEvenWhenBlockMatches()
+  Checking repairManifestStaysInsideCampAndNeverMovesStorage()
+  Checking repairsExpectedStructure()
+  Checking restoresMissingSupport()
+Running RaidLandingSafetyTest
+  Checking actualCampSentriesPreviouslyRejectedEveryFirstJoinLandingCandidate()
+  Checking friendlyGuardsShareTheHostileBaseClassButCannotRejectALanding()
+Running RaidStateTest
+  Checking mapPacketRoundTripPreservesCoordinatesAndRotation()
+  Checking unsupportedFutureSaveFormatDisablesInitializationAndPreservesAllUnknownData()
+  Checking currentHubAndFreshWorldAreAcceptedButOtherPlacedLayoutsArePreserved()
+  Checking legacyInitializedHubRetainsItsMarkerAndIsRejectedByTheNewLayout()
+  Checking reloadPreservesHubChoicesRaidDiscoveriesAndEncounterConsumption()
+  Checking completionAndDeathRefreshOnlyTheAffectedPlayerCycle()
+  Checking oversizedNetworkMapIsRejectedBeforePixelAllocation()
+  Checking redesignedArenaPacketPreservesFull2048BlockBounds()
+Running TacticalFieldMapTest
+  Checking extendedDiscoveryNamespacesDoNotCollideWithLegacyBaseIds()
+  Checking readOnlyFieldPacketRoundTripAllowsUnrevealedExtractionAndRejectsTrailingData()
+  Checking terrainVersionsKeepDistinctMapCachesAndPersistedPlanSignatures()
+  Checking discoveriesAreFilteredBeforeSendingAndPersistWithoutSavingPlayerPositions()
+  Checking fieldPacketCannotContainDeploymentOptionsOrAuthorizeTeleportation()
+  Checking fieldPacketEndsAfterMapInformationWithoutASerializedDeploymentToken()
+Running TacticalTerrainPaletteTest
+  Checking routeStylesAndWaterStatesRemainDistinguishableOnTheMap()
+  Checking mapChangesFromShallowToDeepAtTheActualTwoBlockDepthBoundary()
+Running GuardDamageFeedbackTest
+  Checking hurtAndDeathPacketsNeverColourTheGuardMeshRed()
+  Checking animationPacketsAndOrdinaryKnockbackDoNotInterruptLocomotion()
+Running GuardModelGeometryTest
+  Checking legCutsStayHorizontalAndMissingShouldersIgnoreArmSwing()
+  Checking everyLimbCombinationIsVisibleInTheModelAndDoesNotLeakBetweenNpcs()
+  Checking crawlingUsesAlternatingShoulderPullsAndHasAQuietRestPose()
+  Checking cutShouldersCannotInheritAnyMotionFromTheSeveredArm()
+  Checking theActualProneMeshStaysAboveGroundAndFitsTheLowCollider()
+  Checking shoulderCutsAreVerticalAndSitAtTheSidesOfTheTorso()
+Running CombatGuardRosterTest
+  Checking forestResidentsHaveASeparateStableReservationNamespace()
+  Checking futureSaveDataIsRetainedWithoutActivatingResidents()
+  Checking aFutureForestRosterCannotIssueOrAdoptResidents()
+  Checking issuedResidentsDoNotRespawnWhenMissingOrUnloaded()
+  Checking explicitRejectedInsertionCanRetryButADeadOrDifferentSlotCannotBeRolledBack()
+  Checking loadedEntitiesAreAdoptedBeforeAnySpawnAndSlotsAreIndependent()
+  Checking deathIsPersistentAndRequiresTheAssignedUuid()
+Running DroneThreatPolicyTest
+  Checking guardsDistinguishAHearingContactFromAVisibleFiringSolution()
+  Checking distantUnarmedAndFriendlyDronesDoNotBecomeTargets()
+Running GuardDepotSupplyTest
+  Checking depotMagazineDoesNotCreateAnInfiniteReloadLoop()
+  Checking reloadKeepsWorkProgressAndSpentReserve()
+  Checking requiresCalmPhysicalDepotWorkAndCanOnlyBeUsedOnce()
+Running GuardDutyScheduleTest
+  Checking combatPausesWorkAndSaveRestoresUnfinishedInspection()
+  Checking factionHostilityIsSymmetricAndAlliesAreSafe()
+  Checking impossibleSavedProgressStaysBoundedAndEmptyRoutesAreSafe()
+  Checking workRotaIncludesWorkInspectionAndRest()
+  Checking sentryHoldsItsPostAndPatrolHasABreak()
+  Checking courtyardCornerPatrolsRemainInsideTheirAssignedTerritory()
+Running ResidentialNavigationTest
+  Checking generatedForestDutiesConnectToTheStreetAcrossActualElevationChanges()
+Running ResidentialResidentsTest
+  Checking competingForestGroupsAreHostileWhileTheirOwnMembersAreAllies()
+  Checking civilianWorkRolesKeepTheExistingInterruptibleRota()
+  Checking appendingForestIdentitiesPreservesSavedLegacyOrdinals()
+  Checking residentsHaveConventionalGunsAndNoUniformArmorLoadout()
+  Checking everyForestGroupHasItsOwnNonMilitaryIdentity()
+Running ArmorAccessTest
+  Checking remotePlayersCannotChangeTheHatchAndTheOccupantCan()
+  Checking anInsideExplosionIsNotAttenuatedByAClosedHatch()
+  Checking nativePlayerMovementClimbsFromTheGroundOntoTheRearDeck()
+  Checking hatchStatePersistsAndOldVehiclesReceiveAnOpenHatch()
+  Checking theDeckCarriesAnUnseatedPlayerWhenTheTankMoves()
+  Checking npcCrewStayBelowTheClosedCoverAndOnlyTheOpenHatchAllowsAHeadShot()
+  Checking aPhysicalGrenadeFallsThroughTheOpeningAndRestsOnTheClosedCover()
+  Checking theHullStopsSideShotsEvenWithTheHatchOpen()
+  Checking anOpenHatchExposesTheActualSeatedPlayerAtFourTurretRotations()
+Running ArmorControlsTest
+  Checking malformedControlsCannotReachTheSimulation()
+  Checking aBuriedVehicleNeverMovesAndAReleasedThrottleBrakes()
+  Checking issuedAndDestroyedVehiclesSurviveSaveReloadWithoutDuplication()
+  Checking turretUsesTheShortTurnAndCannotFireBeforeItIsAligned()
+Running ArmorPhysicsTest
+  Checking shellMotionRetainsItsSpeedAboveTheVanillaPacketLimit()
+  Checking unoccupiedTankBrakesAndBuriedTankCannotMove()
+  Checking rotatedAndBuriedTanksOfferSupportedStationsOutsideTheHull()
+  Checking aTwoBlockWallAndLowCeilingCannotBeClimbed()
+  Checking playerOccupiesAnInternalSeatedStation()
+  Checking fullBlockClimbUsesTrackContactsWithoutATeleport()
+  Checking chamberRequiresAnOwnedReloadAndCannotFireContinuously()
+  Checking aWallShieldsMaterialBehindItUntilAnotherImpact()
+  Checking onlyOneHealthyNpcCanReserveTheSeatAndReservationsExpire()
+  Checking blastCollectsVisibleTerrainButProtectsUnbreakableBlocksAndContainers()
+  Checking shellOrientationTracksItsThreeDimensionalVelocity()
+Running ArmorShockwaveTest
+  Checking concussionFadesWithDistanceAndCover()
+  Checking disabledTerrainDamageKeepsWindowsAndWallsAndUnloadedChunksBlockPressure()
+  Checking anIntactSecondWallShieldsTheRoomAndTrenchBanksShieldAcrossTheEarth()
+  Checking pressureEntersAnExposedBreachAndReachesWindowsInsideTheBuilding()
+Running GrenadeEntryTest
+  Checking bothCrewHatchesHaveARealOpeningAndTheDriverViewIsOutsideTheFrontArmor()
+  Checking theClosedHatchStopsTheSameChargeOutsideTheCrewCompartment()
+  Checking handGrenadePassesAnOccupiedOpenHatchAtSeveralHullAndTurretHeadings()
+  Checking theHandChargeHasASixSecondFuseAndADimensionConsistentWithItsSmallModel()
+Running ArmorSurfaceTest
+  Checking everyHullFaceSamplesATextureAreaRatherThanCollapsingToAStripe()
+Running GrenadeAnimationTest
+  Checking theSequencePullsThePinBeforeWindingUpAndReleasesAfterTheWindup()
+  Checking bothHandedSkinsHaveADistinctPullWindupReleaseAndReturnToTheNativePose()
+Running AuthoredChunkTest
+  Checking nativeChunksAreIdenticalInReverseOrderAcrossBridgesBuildingsPipesAndWorldEdges()
+AUTHORED_CHUNK_PASS chunks=102 orders=2
+  Checking actualManholesAndBridgeDecksSurviveTheWholeGenerationPipeline()
+  Checking cableGeometrySurvivesActualChunkGeneration()
+  Checking registryContainsEveryAuthoredBlockAndProperty()
+Running AuthoredZoneTest
+  Checking everyAreaIsDrySeparatedAndOutsideExtraction()
+  Checking roadsNeverFordDeepWaterOrMakeUnwalkableSteps()
+  Checking allBlueprintsStayInsideTheirBoundsAndHaveDistinctGeometry()
+  Checking bridgesAreThreeDifferentModernDesignsWithContinuousClearDecks()
+  Checking chunkSlicesExactlyReassembleInForwardAndReverseOrder()
+  Checking doorsStorageAndBedsAreCompleteAndSupported()
+  Checking allMaterialsAndBlockPropertiesExistInTheRealAssets()
+  Checking collectorsDescendToRealOutfallsWithOpenConnectedBores()
+  Checking unfinishedFloorsHaveContinuousStairsAndOpenHeadroom()
+  Checking bobinModeAlwaysUsesTheCuratedSeedAndSize()
+  Checking allAreasAndBothBanksOfEveryBridgeBelongToOneRoadNetwork()
+  Checking noRetiredStructureOrBridgeBuildersRemainInProduction()
+Running CombatZonePlanTest
+  Checking occupiedLocationsAreDeterministicDryAndSeparatedFromTheReturnLanding()
+  Checking olderSavedProfilesHaveNoNewOccupationPads()
+Running ConnectedSurfaceTest
+  Checking generatedAndOldStatesJoinAcrossAChunkBoundaryWithoutNeighborUpdates()
+  Checking differentCoverMaterialsKeepTheirOwnBoundaryAndContainerLabelsHaveOneAnchor()
+Running GenerationCompatibilityTest
+  Checking savedLegacyProfilesRetainTheirTerrain()
+  Checking savedNaturalProfilesRetainTerrainReservationsAndRoutes()
+  Checking revisedProfileIsExplicitAndReusedLegacySamplesResetNewMetadata()
+  Checking savedRevisedProfilesKeepTheirRiverbanksAndRoutePlans()
+Running NaturalForestTest
+  Checking anchoredPlantsRespectRoutesGroundAndWoodLeafConnectivity()
+  Checking independentlyClippedChunksMatchWholeForestIncludingNegativeBordersAndReverseOrder()
+  Checking silhouettesAreDistinctBoundedAndVaryWithThePlantSeed()
+Running NaturalLandscapeTest
+  Checking seedAndSamplingOrderCannotChangeChunkSeamsOrReuseLegacyFields()
+  Checking woodlandWetlandsAndRockyCoverExistWithoutExcessiveMountains()
+  Checking landingAndCenteredBoundsStayCompatibleWithRaids()
+  Checking naturalTerrainRetainsSafeSeparatedDeterministicRaidChoices()
+  Checking futureOpportunitiesUseGentleDryGroundAndRoadsOnlyUseWalkableShallowCrossings()
+Running NaturalRoutesTest
+  Checking routeAppearanceIsStableAcrossChunkSeamsAndSamplingOrder()
+  Checking wagonTracksHaveExposedWheelRutsAndGrassyCenters()
+  Checking routesHaveDistinctWidthsSurfacesAndAlternateConnections()
+  Checking roundedCurvesStayRenderedAndNeverCutThroughDeepWaterOrCliffs()
+Running NaturalWaterwaysTest
+  Checking waterAndRouteMetadataAreDeterministicWhenSamplesAreReusedInAnotherOrder()
+  Checking waterAreaHasApproximatelyFourDeepColumnsForEveryShallowColumnAcrossSeeds()
+  Checking mainChannelChangesWidthAlongItsCourse()
+Running OccupationClearanceTest
+  Checking theBottomOfEveryShaftConnectsToTheWalkableCollector()
+  Checking manholeHasNoSideSlitAndStillPassesAPlayerThroughItsRoundCenter()
+  Checking checkpointsHaveFiveDesignsAndBothMobileAndBuriedArmorPositions()
+  Checking nettingHasContinuousPhysicalCollisionInAllThreeOrientations()
+  Checking photographedRidgesKeepTheirTerrainAndGainDifferentFacilities()
+  Checking repairedCampfiresAndLidsTouchTheirVisibleSupports()
+Running OccupationMovementTest
+  Checking everyCheckpointTrenchHasAContinuousThreeWideCoreWithoutLogObstructions()
+NATIVE_TRENCH_WALKS=11
+  Checking eachDistrictHasNearbyCheckpointSentriesWithActualSpawnHeadroom()
+Running ResidentialPlanTest
+  Checking defaultWorldPlotsLeaveMostOfTheirSurroundingLandscapeAvailableToTheForest()
+  Checking savedProfilesKeepTheirOriginalSettlementContract()
+  Checking authoredStreetElevationsMatchTheFinalGroundUsedByResidents()
+  Checking newWorldsHaveScatteredArmedResidentsInsteadOfTheLegacyMilitaryPlan()
+Running ZoneDressingTest
+  Checking scatteredHomesHaveDifferentLayoutsAndConnectedDoorsteps()
+  Checking pavedCarriagewaysDoNotHaveTwoBlockJunctionSteps()
+  Checking powerGridIsFedFromSubstationWithSupportedClearSpans()
+  Checking extractionMarkingIsAnHOnExistingGround()
+  Checking industrialCornersAreNotSquareClearings()
+  Checking completeTreeCrownsStayClearOfBuildingsFieldsRoadsAndWires()
+  Checking eachManholeHasOneControlledCoverAndASupportedLadder()
+  Checking refineryHasFourRoundStorageTanksAndTallProcessTowers()
+  Checking vehicleTurnoutsAreConnectedAndHaveLevelGround()
+Running ZoneLayoutCompatibilityTest
+  Checking storedFixedLayoutExactlyMatchesTheOfflineDeterministicPlanner()
+ZONE_BAKE surveying homesteads
+ZONE_BAKE routing 11 districts and 14 homesteads
+ZONE_BAKE grading complete; collectors
+Running ZoneUtilityBehaviorTest
+  Checking openManholeHasGroundCornersAndARoundPassableAperture()
+  Checking generatedFencesAndPanesJoinBothSlabHalvesAcrossChunkEdges()
+  Checking offRoadDiscoveriesAreSeparatedVariedAndDoNotAcquireRoadsOrWires()
+  Checking manholeSlideHasSmoothEndpointsAndOnlyOpensCollisionNearTheEnd()
+  Checking cablePhasesRemainSeparateContinuousCurvesRatherThanVoxelLadders()
+  Checking palletsHaveNoHalfBlockGapAndWellSupportsReachTheirMasonry()
+  Checking mixedMaterialsSurviveNativeNbtRoundTripAndHaveNoCollisionGap()
+  Checking occupiedEntrancesHaveFactionMarkersCoverAndClearTravelLanes()
+  Checking smallOutfallsNeverCarveExposedAirPocketsIntoReceivingWater()
+Running WeaponBallisticsTest
+  Checking diagonalShotsVisitNegativeCoordinatesAndKeepMaterialOrder()
+  Checking fastShotCannotSkipASingleBlockWall()
+Running WeaponTimingTest
+  Checking fullRangeRifleFlightsAreRealTimeWithoutChangingReloadsOrCooldowns()
+TEST_RESULT passed=351 failed=0 skipped=0
+OFFLINE_JUNIT_COMPLETE {"passed": 351, "failed": 0, "skipped": 0, "classes": 70}

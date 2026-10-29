@@ -1,0 +1,226 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_up_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_up_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_up_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_up_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_down"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_down_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_down_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_down_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_down_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_north"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_north_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_north_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_north_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_north_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_south_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_south_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_south_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_south_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_east_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_east_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_east_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_east_up"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_west"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_west_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_west_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_west_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/roof_shingles_west_up"
+      }
+    }
+  ]
+}

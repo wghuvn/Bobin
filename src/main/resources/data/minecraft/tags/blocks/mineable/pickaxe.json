@@ -1,0 +1,21 @@
+{
+  "replace": false,
+  "values": [
+    "bobin_craft:rusted_sheet_metal",
+    "bobin_craft:cracked_concrete",
+    "bobin_craft:mossy_concrete",
+    "bobin_craft:container_green",
+    "bobin_craft:container_blue",
+    "bobin_craft:container_red",
+    "bobin_craft:roof_shingles",
+    "bobin_craft:hub_barbed_wire",
+    "bobin_craft:equipment_locker",
+    "bobin_craft:radio",
+    "bobin_craft:icicle",
+    "bobin_craft:moss_covered_rock",
+    "bobin_craft:weathered_crag",
+    "bobin_craft:lichen_boulder",
+    "bobin_craft:cracked_asphalt",
+    "bobin_craft:weathered_asphalt_slab"
+  ]
+}

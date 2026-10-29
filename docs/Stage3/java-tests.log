@@ -1,0 +1,3 @@
+PASS Stage 3: 10000 bounded deterministic wind/turbulence/envelope samples
+PASS: 4196 assertions; all 12 categories, protocol rejection, seeded geometry and budgets
+PASS Stage 2.1: 60 profile/budget scenarios; all five layers, flash duration, lifetimes and determinism

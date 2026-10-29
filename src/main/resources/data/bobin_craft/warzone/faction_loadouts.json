@@ -1,0 +1,12 @@
+{
+  "REGULAR_ARMY": {"primary":"STANDARD","sentry":"STANDARD","elite":"CRYO","reactionTicks":20,"spreadDegrees":4.5,"burstSize":3,"burstPauseTicks":18,"reserveMagazines":3,"detectionRange":44,"armored":true},
+  "IRON_WOLVES": {"primary":"STANDARD","sentry":"STANDARD","elite":"BREACHER","reactionTicks":18,"spreadDegrees":4.0,"burstSize":3,"burstPauseTicks":16,"reserveMagazines":4,"detectionRange":46,"armored":true},
+  "GLASS_COMPANY": {"primary":"STANDARD","sentry":"SPOTTER","elite":"CRYO","reactionTicks":18,"spreadDegrees":3.5,"burstSize":2,"burstPauseTicks":18,"reserveMagazines":4,"detectionRange":48,"armored":true},
+  "FROST_CORPS": {"primary":"CRYO","sentry":"STANDARD","elite":"CRYO","reactionTicks":22,"spreadDegrees":4.0,"burstSize":3,"burstPauseTicks":20,"reserveMagazines":3,"detectionRange":44,"armored":true},
+  "ASH_RAIDERS": {"primary":"SPOTTER","sentry":"STANDARD","elite":"BREACHER","reactionTicks":28,"spreadDegrees":7.0,"burstSize":1,"burstPauseTicks":25,"reserveMagazines":2,"detectionRange":36,"armored":false},
+  "BLACK_CROWS": {"primary":"SPOTTER","sentry":"STANDARD","elite":"STANDARD","reactionTicks":26,"spreadDegrees":6.0,"burstSize":2,"burstPauseTicks":24,"reserveMagazines":2,"detectionRange":40,"armored":false},
+  "MARSH_REAVERS": {"primary":"SPOTTER","sentry":"SPOTTER","elite":"BREACHER","reactionTicks":28,"spreadDegrees":6.5,"burstSize":1,"burstPauseTicks":28,"reserveMagazines":2,"detectionRange":36,"armored":false},
+  "MARAUDERS": {"primary":"STANDARD","sentry":"SNIPER_RIFLE","elite":"STANDARD","reactionTicks":30,"spreadDegrees":7.0,"burstSize":1,"burstPauseTicks":30,"reserveMagazines":2,"detectionRange":34,"armored":false},
+  "BANDITS": {"primary":"STANDARD","sentry":"STANDARD","elite":"SNIPER_RIFLE","reactionTicks":26,"spreadDegrees":6.0,"burstSize":2,"burstPauseTicks":26,"reserveMagazines":2,"detectionRange":38,"armored":false},
+  "UNIDENTIFIED": {"primary":"STANDARD","sentry":"SNIPER_RIFLE","elite":"STANDARD","reactionTicks":28,"spreadDegrees":5.5,"burstSize":2,"burstPauseTicks":28,"reserveMagazines":2,"detectionRange":36,"armored":false}
+}

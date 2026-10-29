@@ -1,0 +1,17 @@
+COMMAND: python docs/Stabilization/check_resources.py ../../upload/Bobin_craft(1).zip
+EXIT: 0
+STATUS: PASS
+PASS JSON: 1512
+PARTICLE_SPRITE_REFERENCES 25 MISSING []
+SOUND_REFERENCES_MISSING []
+PASS metadata: all mixin classes present; GameTest entrypoint explicit (application not executed)
+BRIDGE_NBT intact.nbt SIZE [13, 49, 20] COUNTS {'minecraft:polished_andesite': 28, 'minecraft:air': 4136}
+BRIDGE_NBT damaged_b.nbt SIZE [20, 49, 13] COUNTS {'minecraft:polished_andesite': 22, 'minecraft:air': 4042, 'minecraft:cobblestone_slab': 6, 'minecraft:iron_bars': 38, 'minecraft:waxed_oxidized_copper': 50}
+BRIDGE_NBT destroyed_a.nbt SIZE [13, 49, 20] COUNTS {'minecraft:air': 4332, 'minecraft:polished_andesite': 22, 'minecraft:iron_bars': 10, 'minecraft:cobblestone_slab': 7, 'minecraft:stone_brick_stairs': 7}
+BRIDGE_NBT critical.nbt SIZE [13, 49, 20] COUNTS {'minecraft:air': 4141, 'minecraft:polished_andesite': 28, 'minecraft:iron_bars': 1, 'minecraft:cobblestone_slab': 2}
+BRIDGE_NBT destroyed_b.nbt SIZE [20, 49, 13] COUNTS {'minecraft:air': 4172, 'minecraft:polished_andesite': 17, 'minecraft:waxed_oxidized_copper': 32, 'minecraft:cobblestone_slab': 28, 'minecraft:iron_bars': 31, 'minecraft:stone_brick_stairs': 6}
+BRIDGE_NBT damaged_a.nbt SIZE [13, 49, 20] COUNTS {'minecraft:polished_andesite': 28, 'minecraft:air': 4128, 'minecraft:cobblestone_slab': 8}
+PASS NBT structure syntax/indices/coordinates: 19 (does not prove useful template geometry)
+BASELINE_SHA256 4a4729e35da7842671b03de4d91d01a4c17aefff2797e5eab9b77073b295abe0
+PASS protected source byte comparison: 189 files; GROM gameplay prefix, all NBT/animation models, existing save serializers and snapshot preserved
+STAGE 5 NOT STARTED

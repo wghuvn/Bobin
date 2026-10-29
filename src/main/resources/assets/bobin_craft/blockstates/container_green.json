@@ -1,0 +1,262 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_up_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_up_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_up_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_up_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_down"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_down_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_down_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_down_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_down_south"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_north"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_north_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_north_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_north_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_north_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_north_label"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_south"
+      }
+    },
+    {
+      "when": {
+        "west": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_south_west"
+      }
+    },
+    {
+      "when": {
+        "east": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_south_east"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_south_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_south_up"
+      }
+    },
+    {
+      "when": {
+        "west": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_south_label"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_east"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_east_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_east_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_east_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_east_up"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_east_label"
+      }
+    },
+    {
+      "apply": {
+        "model": "bobin_craft:block/container_green_west"
+      }
+    },
+    {
+      "when": {
+        "north": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_west_north"
+      }
+    },
+    {
+      "when": {
+        "south": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_west_south"
+      }
+    },
+    {
+      "when": {
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_west_down"
+      }
+    },
+    {
+      "when": {
+        "up": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_west_up"
+      }
+    },
+    {
+      "when": {
+        "north": "false",
+        "down": "false"
+      },
+      "apply": {
+        "model": "bobin_craft:block/container_green_west_label"
+      }
+    }
+  ]
+}

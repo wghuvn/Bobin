@@ -1,0 +1,42 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "bobin_craft:block/faction_marker_0",
+    "cloth": "bobin_craft:block/faction_marker_0"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        -16,
+        14
+      ],
+      "to": [
+        16,
+        16,
+        14.03
+      ],
+      "faces": {
+        "north": {
+          "texture": "#cloth",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        },
+        "south": {
+          "texture": "#cloth",
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ]
+        }
+      }
+    }
+  ]
+}

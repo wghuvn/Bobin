@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/block",
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "bobin_craft:block/pipe_iron",
+    "metal": "bobin_craft:block/pipe_iron"
+  },
+  "elements": []
+}

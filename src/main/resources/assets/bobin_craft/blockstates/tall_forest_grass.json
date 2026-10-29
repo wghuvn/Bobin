@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "bobin_craft:block/tall_forest_grass_bottom"
+    },
+    "half=upper": {
+      "model": "bobin_craft:block/tall_forest_grass_top"
+    }
+  }
+}

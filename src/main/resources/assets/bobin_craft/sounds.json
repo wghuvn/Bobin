@@ -1,0 +1,406 @@
+{
+  "hub.sentry.greeting": {
+    "subtitle": "subtitles.bobin_craft.hub.sentry.greeting",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/sentry_greeting",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.sentry.reply": {
+    "subtitle": "subtitles.bobin_craft.hub.sentry.reply",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/sentry_reply",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.sentry.accept": {
+    "subtitle": "subtitles.bobin_craft.hub.sentry.accept",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/sentry_accept",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.sentry.goodbye": {
+    "subtitle": "subtitles.bobin_craft.hub.sentry.goodbye",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/sentry_goodbye",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.quartermaster.greeting": {
+    "subtitle": "subtitles.bobin_craft.hub.quartermaster.greeting",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/quartermaster_greeting",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.quartermaster.reply": {
+    "subtitle": "subtitles.bobin_craft.hub.quartermaster.reply",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/quartermaster_reply",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.quartermaster.accept": {
+    "subtitle": "subtitles.bobin_craft.hub.quartermaster.accept",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/quartermaster_accept",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.quartermaster.goodbye": {
+    "subtitle": "subtitles.bobin_craft.hub.quartermaster.goodbye",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/quartermaster_goodbye",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.cook.greeting": {
+    "subtitle": "subtitles.bobin_craft.hub.cook.greeting",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/cook_greeting",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.cook.reply": {
+    "subtitle": "subtitles.bobin_craft.hub.cook.reply",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/cook_reply",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.cook.accept": {
+    "subtitle": "subtitles.bobin_craft.hub.cook.accept",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/cook_accept",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.cook.goodbye": {
+    "subtitle": "subtitles.bobin_craft.hub.cook.goodbye",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/cook_goodbye",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.medic.greeting": {
+    "subtitle": "subtitles.bobin_craft.hub.medic.greeting",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/medic_greeting",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.medic.reply": {
+    "subtitle": "subtitles.bobin_craft.hub.medic.reply",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/medic_reply",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.medic.accept": {
+    "subtitle": "subtitles.bobin_craft.hub.medic.accept",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/medic_accept",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.medic.goodbye": {
+    "subtitle": "subtitles.bobin_craft.hub.medic.goodbye",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/medic_goodbye",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.commander.greeting": {
+    "subtitle": "subtitles.bobin_craft.hub.commander.greeting",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/commander_greeting",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.commander.reply": {
+    "subtitle": "subtitles.bobin_craft.hub.commander.reply",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/commander_reply",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.commander.accept": {
+    "subtitle": "subtitles.bobin_craft.hub.commander.accept",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/commander_accept",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.commander.goodbye": {
+    "subtitle": "subtitles.bobin_craft.hub.commander.goodbye",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/commander_goodbye",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.deserter.warning": {
+    "subtitle": "subtitles.bobin_craft.hub.deserter.warning",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/deserter_warning",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.deserter.whistle": {
+    "subtitle": "subtitles.bobin_craft.hub.deserter.whistle",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/bomb_whistle",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "hub.deserter.explosion": {
+    "subtitle": "subtitles.bobin_craft.hub.deserter.explosion",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/deserter_explosion",
+        "attenuation_distance": 18
+      }
+    ]
+  },
+  "armor_engine": {
+    "subtitle": "subtitles.bobin_craft.armor_engine",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/engine",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "armor_tracks": {
+    "subtitle": "subtitles.bobin_craft.armor_tracks",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/tracks",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "armor_cannon": {
+    "subtitle": "subtitles.bobin_craft.armor_cannon",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/cannon",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "armor_impact": {
+    "subtitle": "subtitles.bobin_craft.armor_impact",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/impact",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "armor_breech": {
+    "subtitle": "subtitles.bobin_craft.armor_breech",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/breech",
+        "attenuation_distance": 32
+      }
+    ]
+  },
+  "blast_ring": {
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/ring",
+        "stream": false
+      }
+    ]
+  },
+  "rpg_fire": {
+    "subtitle": "subtitles.bobin_craft.rpg_fire",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/cannon",
+        "attenuation_distance": 64
+      }
+    ]
+  },
+  "rpg_reload": {
+    "subtitle": "subtitles.bobin_craft.rpg_reload",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/breech",
+        "attenuation_distance": 24
+      }
+    ]
+  },
+  "fp1_engine_loop": {
+    "subtitle": "subtitles.bobin_craft.fp1_engine_loop",
+    "sounds": [
+      {
+        "name": "bobin_craft:drone/fp1_engine_loop",
+        "attenuation_distance": 160
+      }
+    ]
+  },
+  "fp1_mega_explosion": {
+    "subtitle": "subtitles.bobin_craft.fp1_mega_explosion",
+    "sounds": [
+      {
+        "name": "bobin_craft:drone/fp1_mega_explosion",
+        "attenuation_distance": 192
+      }
+    ]
+  },
+  "grom7_attach": {
+    "subtitle": "subtitles.bobin_craft.grom7_attach",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/breech",
+        "pitch": 1.25,
+        "attenuation_distance": 16
+      }
+    ]
+  },
+  "grom7_button": {
+    "subtitle": "subtitles.bobin_craft.grom7_button",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/breech",
+        "pitch": 1.65,
+        "volume": 0.65,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "grom7_error": {
+    "subtitle": "subtitles.bobin_craft.grom7_error",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/ring",
+        "pitch": 0.65,
+        "volume": 0.6,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "grom7_slap": {
+    "subtitle": "subtitles.bobin_craft.grom7_slap",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/impact",
+        "pitch": 1.75,
+        "volume": 0.55,
+        "attenuation_distance": 14
+      }
+    ]
+  },
+  "grom7_click": {
+    "subtitle": "subtitles.bobin_craft.grom7_click",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/breech",
+        "pitch": 1.85,
+        "volume": 0.5,
+        "attenuation_distance": 12
+      }
+    ]
+  },
+  "grom7_detonate_crack": {
+    "subtitle": "subtitles.bobin_craft.grom7_detonate_crack",
+    "sounds": [
+      {
+        "name": "bobin_craft:armor/cannon",
+        "pitch": 0.82,
+        "volume": 1.0,
+        "attenuation_distance": 140
+      },
+      {
+        "name": "bobin_craft:armor/impact",
+        "pitch": 0.9,
+        "volume": 1.0,
+        "attenuation_distance": 140
+      }
+    ]
+  },
+  "grom7_detonate_sub": {
+    "subtitle": "subtitles.bobin_craft.grom7_detonate_sub",
+    "sounds": [
+      {
+        "name": "bobin_craft:drone/fp1_mega_explosion",
+        "pitch": 0.68,
+        "volume": 1.0,
+        "attenuation_distance": 160
+      }
+    ]
+  },
+  "grom7_debris_crumble": {
+    "subtitle": "subtitles.bobin_craft.grom7_debris_crumble",
+    "sounds": [
+      {
+        "name": "bobin_craft:hub/deserter_explosion",
+        "pitch": 0.58,
+        "volume": 0.95,
+        "attenuation_distance": 120
+      },
+      {
+        "name": "bobin_craft:armor/impact",
+        "pitch": 0.52,
+        "volume": 0.9,
+        "attenuation_distance": 120
+      }
+    ]
+  },
+  "fpv_motor_loop": {
+    "subtitle": "subtitles.bobin_craft.fpv_motor_loop",
+    "sounds": [
+      {
+        "name": "bobin_craft:drone/fpv_motor_loop",
+        "attenuation_distance": 64
+      }
+    ]
+  }
+}

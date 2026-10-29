@@ -1,0 +1,14 @@
+{
+  "date": "2026-10-27",
+  "platform": "Linux-6.18.55-x86_64-with-glibc2.39",
+  "java": "openjdk version \"17.0.20\" 2026-07-21\nOpenJDK Runtime Environment (build 17.0.20+8-1-24.04-Ubuntu)\nOpenJDK 64-Bit Server VM (build 17.0.20+8-1-24.04-Ubuntu, mixed mode, sharing)\n",
+  "gradle_distribution": "8.8",
+  "loom": "1.7.4",
+  "yarn": "1.20.1+build.10",
+  "fabric_api": "0.92.2+1.20.1",
+  "network_block": "services.gradle.org DNS/bootstrap",
+  "runtime": "NOT EXECUTED",
+  "stage5_started": false,
+  "revision": 1,
+  "dependency_host_check": "services.gradle.org and maven.fabricmc.net remain unresolved; no local Gradle cache"
+}

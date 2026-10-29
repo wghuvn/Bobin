@@ -1,0 +1,24 @@
+COMMAND: python apply_stage5_patch.py Bobin_craft
+EXIT: 0
+Applied and byte-verified: 30 added, 10 modified, 0 deleted.
+Original modified/deleted files backed up at: /tmp/bobin-stage5-patch-tests-_z4yigsp/valid/Bobin_before_stage5_d9srga_s
+Stage 5 source candidate applied. Build/runtime/visual verification is still required. Stages 6 and 7 not started.
+
+PASS R2 overlay reproduces every final Stage 5 project byte
+COMMAND: python apply_stage5_patch.py Bobin_craft
+EXIT: 0
+This exact Stage 5 checkpoint is already applied.
+
+PASS idempotent repeat application
+COMMAND: python apply_stage5_patch.py Bobin_craft
+EXIT: 1
+Baseline differs. Nothing changed. Use the full source ZIP or reconcile first:
+gradle.properties
+
+PASS different baseline rejected before mutation
+COMMAND: python apply_stage5_patch.py Bobin_craft
+EXIT: 1
+Patch payload is missing/invalid: src/main/java/com/bobincraft/BobinCraftClient.java
+
+PASS corrupt payload rejected before mutation
+PASS injected mid-copy failure restores all original R2 source bytes

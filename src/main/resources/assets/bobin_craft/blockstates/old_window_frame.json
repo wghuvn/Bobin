@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "bobin_craft:block/old_window_frame"
+      },
+      {
+        "model": "bobin_craft:block/old_window_frame_alt"
+      }
+    ]
+  }
+}

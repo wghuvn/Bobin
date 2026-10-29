@@ -1,0 +1,2498 @@
+--- baseline/build.gradle
++++ stabilized/build.gradle
+@@ -5,6 +5,9 @@
+ 
+ // Automatically clean up retired/removed files if this archive was extracted over an older directory
+ def retiredFiles = [
++    // Replaced by direct, finally-scoped project-owned observation during stabilization.
++    'src/main/java/com/bobincraft/mixin/RefineryBlueprintScopeMixin.java',
++    'src/main/java/com/bobincraft/mixin/RefineryGeneratedCellMixin.java',
+     'src/main/java/com/bobincraft/camera/BobinCameraState.java',
+     'src/main/java/com/bobincraft/input/ControlMath.java',
+     'src/main/java/com/bobincraft/input/RaycastHelper.java',
+@@ -132,3 +135,16 @@
+     useJUnitPlatform()
+     maxHeapSize = '1G'
+ }
++
++// Explicit, separate integration harness. gradle test does not run Fabric GameTest.
++loom {
++    runs {
++        gametest {
++            server()
++            name "Bobin stabilization GameTest"
++            vmArg "-Dfabric-api.gametest"
++            vmArg "-Dfabric-api.gametest.report-file=${project.buildDir}/gametest-results.xml"
++            runDir "build/gametest"
++        }
++    }
++}
+--- baseline/src/main/java/com/bobincraft/combat/TransientDebrisCollision.java
++++ stabilized/src/main/java/com/bobincraft/combat/TransientDebrisCollision.java
+@@ -0,0 +1,31 @@
++package com.bobincraft.combat;
++
++import java.util.List;
++
++/** Small cosmetic fragments only. Axis clipping uses the entire conservative rotating volume. */
++public final class TransientDebrisCollision {
++    public record Bounds(double x0,double y0,double z0,double x1,double y1,double z1) {
++        public Bounds offset(double x,double y,double z){return new Bounds(x0+x,y0+y,z0+z,x1+x,y1+y,z1+z);}
++        public boolean overlaps(Bounds b){return x1>b.x0&&x0<b.x1&&y1>b.y0&&y0<b.y1&&z1>b.z0&&z0<b.z1;}
++    }
++    public record Motion(double x,double y,double z,boolean supported) {}
++    private TransientDebrisCollision(){}
++    public static Motion move(Bounds box,double x,double y,double z,List<Bounds> obstacles) {
++        double wantedY=y;
++        for(var b:obstacles)if(box.x1>b.x0&&box.x0<b.x1&&box.z1>b.z0&&box.z0<b.z1) {
++            if(y>0&&box.y1<=b.y0)y=Math.min(y,b.y0-box.y1);
++            if(y<0&&box.y0>=b.y1)y=Math.max(y,b.y1-box.y0);
++        }
++        box=box.offset(0,y,0);
++        for(var b:obstacles)if(box.y1>b.y0&&box.y0<b.y1&&box.z1>b.z0&&box.z0<b.z1) {
++            if(x>0&&box.x1<=b.x0)x=Math.min(x,b.x0-box.x1);
++            if(x<0&&box.x0>=b.x1)x=Math.max(x,b.x1-box.x0);
++        }
++        box=box.offset(x,0,0);
++        for(var b:obstacles)if(box.x1>b.x0&&box.x0<b.x1&&box.y1>b.y0&&box.y0<b.y1) {
++            if(z>0&&box.z1<=b.z0)z=Math.min(z,b.z0-box.z1);
++            if(z<0&&box.z0>=b.z1)z=Math.max(z,b.z1-box.z0);
++        }
++        return new Motion(x,y,z,wantedY<0&&y>wantedY+1e-8);
++    }
++}
+--- baseline/src/main/java/com/bobincraft/combat/WeaponExplosionLayers.java
++++ stabilized/src/main/java/com/bobincraft/combat/WeaponExplosionLayers.java
+@@ -5,10 +5,16 @@
+ /** Deterministic choreography within one event, with separate flash/fire/dust/smoke envelopes. */
+ public final class WeaponExplosionLayers {
+     public enum Kind { FLASH, FIRE, SMOKE, DUST, EMBER }
+-    public record Layer(Kind kind, VoxelExplosionShape.Puff puff, float intensity, float expansion) {}
++    public record Layer(Kind kind, VoxelExplosionShape.Puff puff, float intensity, float expansion, int delayTicks) {
++        public Layer(Kind kind, VoxelExplosionShape.Puff puff, float intensity, float expansion) {
++            this(kind, puff, intensity, expansion, 0);
++        }
++    }
+     private WeaponExplosionLayers() {}
+     public static List<Layer> create(ExplosionVisualProfile p, long seed, int budget) {
+         if (budget <= 0) return List.of();
++        if (p == ExplosionVisualProfile.FP1_STRIKE || p == ExplosionVisualProfile.GROM7_DEMOLITION)
++            return special(p, seed, budget);
+         var rng = new Random(seed);
+         var result = new ArrayList<Layer>();
+         result.add(new Layer(Kind.FLASH, new VoxelExplosionShape.Puff(0,.1,0,0,0,0,
+@@ -30,4 +36,56 @@
+         }
+         return List.copyOf(result);
+     }
++
++    private static List<Layer> special(ExplosionVisualProfile p, long seed, int budget) {
++        boolean strike = p == ExplosionVisualProfile.FP1_STRIKE;
++        var rng = new Random(seed);
++        var out = new ArrayList<Layer>();
++        out.add(new Layer(Kind.FLASH, new VoxelExplosionShape.Puff(0,.15,0,0,0,0,
++                (float)(p.scale*.85),p.flashTicks,0,seed),(float)p.flashIntensity,(float)p.expansionSpeed,0));
++        for (int i=1; i<budget; i++) {
++            // Interleave layers so low budgets keep the identity instead of spending everything on fire.
++            Kind kind = switch (i % 8) {
++                case 1, 5 -> Kind.DUST;
++                case 2, 3 -> Kind.FIRE;
++                case 7 -> Kind.EMBER;
++                default -> Kind.SMOKE;
++            };
++            double a=rng.nextDouble()*Math.PI*2, jitter=.75+rng.nextDouble()*.5;
++            double x,y,z,vx,vy,vz; int delay,life; float radius;
++            if (strike) {
++                if (kind==Kind.DUST) { // Expanding ground-pressure skirt, ahead of rising combustion lobes.
++                    double r=p.scale*(.75+rng.nextDouble()*.8);
++                    x=Math.cos(a)*r; z=Math.sin(a)*r; y=.08;
++                    vx=Math.cos(a)*.48; vz=Math.sin(a)*.48; vy=.015; delay=1+rng.nextInt(3);
++                    radius=(float)(p.scale*.33*jitter); life=30;
++                } else if (kind==Kind.FIRE) {
++                    double r=p.scale*(.2+rng.nextDouble()*.9);
++                    x=Math.cos(a)*r; z=Math.sin(a)*r; y=.4+rng.nextDouble()*p.scale*.8;
++                    vx=x*.045; vz=z*.045; vy=.11; delay=2+rng.nextInt(7);
++                    radius=(float)(p.scale*.55*jitter); life=p.fireTicks;
++                } else { // Stem then separated upper rolling cloud, not a persistent industrial column.
++                    boolean upper=i%4==0;
++                    double r=p.scale*(upper ? .9 : .35)*Math.sqrt(rng.nextDouble());
++                    x=Math.cos(a)*r; z=Math.sin(a)*r; y=p.scale*(upper ? 1.8 : .65);
++                    vx=x*.025; vz=z*.025; vy=upper?.075:.16; delay=upper?14+rng.nextInt(7):7+rng.nextInt(6);
++                    radius=(float)(p.scale*(upper?.45:.30)*jitter); life=p.smokeLife;
++                }
++            } else {
++                // Demolition: a compressed hemispherical ejecta fan, dense low torus and short local crown.
++                double r=p.scale*(kind==Kind.DUST ? 1.2+rng.nextDouble() : rng.nextDouble()*.75);
++                x=Math.cos(a)*r; z=Math.sin(a)*r;
++                y=kind==Kind.DUST?.06:rng.nextDouble()*p.scale*.6;
++                vx=Math.cos(a)*(kind==Kind.DUST?.32:.13); vz=Math.sin(a)*(kind==Kind.DUST?.32:.13);
++                vy=kind==Kind.DUST?.008:kind==Kind.SMOKE?.055:.08;
++                delay=kind==Kind.DUST?0:kind==Kind.FIRE?1+rng.nextInt(3):4+rng.nextInt(4);
++                radius=(float)(p.scale*(kind==Kind.DUST?.52:kind==Kind.FIRE?.62:.45)*jitter);
++                life=kind==Kind.DUST?24:kind==Kind.FIRE?p.fireTicks:48;
++            }
++            if (kind==Kind.EMBER) {radius*=.12f;life=18;vy+=.12;}
++            out.add(new Layer(kind,new VoxelExplosionShape.Puff(x,y,z,vx,vy,vz,radius,life,.55f,rng.nextLong()),
++                    kind==Kind.SMOKE?.74f:.9f,(float)p.expansionSpeed,delay));
++        }
++        return List.copyOf(out);
++    }
+ }
+--- baseline/src/main/java/com/bobincraft/combat/client/ImpactDebrisClient.java
++++ stabilized/src/main/java/com/bobincraft/combat/client/ImpactDebrisClient.java
+@@ -1,7 +1,10 @@
+ package com.bobincraft.combat.client;
+ 
+ import com.bobincraft.combat.ImpactDebris;
++import com.bobincraft.combat.TransientDebrisCollision;
++import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
++import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
+ import net.minecraft.block.*;
+ import net.minecraft.client.MinecraftClient;
+@@ -16,86 +19,25 @@
+ import net.minecraft.world.LightType;
+ import java.util.*;
+ 
+-/**
+- * Client-side 3D flying debris physics and persistent non-collidable wreckage aftermath renderer.
+- *
+- * <p>When flying 3D rubble fragments land on solid ground or blocks below, they settle into a bounded,
+- * zero-physics {@link #SETTLED_RUBBLE} aftermath buffer instead of vanishing abruptly in mid-air.
+- */
++/** Bounded transient impact chips. These are not Stage 5 persistent structural debris. */
+ public final class ImpactDebrisClient {
+-    private static final int TOPPLE_TICKS = 14;
+-    private static final int MAX_SETTLED_RUBBLE = 128;
+-    private static final int SETTLED_RUBBLE_LIFETIME_TICKS = 3600; // 3 minutes of persistent visual aftermath
+-
+-    private record FallingProp(BlockState state, BlockPos pos, float dirX, float dirZ, long startTick) {}
+-
+-    private static final class FlyingDebrisBlock {
+-        final BlockState state;
+-        double x, y, z, prevX, prevY, prevZ;
+-        double vx, vy, vz;
+-        float rotX, rotY, rotZ, spinX, spinY, spinZ;
+-        final float sx, sy, sz;
+-        final int maxAge;
+-        int age;
+-        long lastTick;
+-        int lastValidLight = -1;
+-        boolean settledOnGround = false;
+-
+-        FlyingDebrisBlock(BlockState state, Vec3d pos, Vec3d vel, float sx, float sy, float sz,
+-                          float spinX, float spinY, float spinZ, int maxAge, long now) {
+-            this.state = state;
+-            this.x = this.prevX = pos.x;
+-            this.y = this.prevY = pos.y;
+-            this.z = this.prevZ = pos.z;
+-            this.vx = vel.x; this.vy = vel.y; this.vz = vel.z;
+-            this.sx = sx; this.sy = sy; this.sz = sz;
+-            this.spinX = spinX; this.spinY = spinY; this.spinZ = spinZ;
+-            this.maxAge = maxAge;
+-            this.lastTick = now;
+-        }
+-    }
+-
+-    /**
+-     * Lightweight non-collidable visual rubble fragment resting on a surface after an explosion or collapse.
+-     * Requires zero per-tick physics once settled and never obstructs entity movement.
+-     */
+-    public static final class SettledRubbleFragment {
+-        public final BlockState state;
+-        public double x, y, z;
+-        public final float sx, sy, sz;
+-        public final float rotX, rotY, rotZ;
+-        public final long settledTick;
+-        public int lastValidLight;
+-
+-        SettledRubbleFragment(BlockState state, double x, double y, double z,
+-                              float sx, float sy, float sz,
+-                              float rotX, float rotY, float rotZ,
+-                              long settledTick, int lastValidLight) {
+-            this.state = state;
+-            this.x = x;
+-            this.y = y;
+-            this.z = z;
+-            this.sx = sx;
+-            this.sy = sy;
+-            this.sz = sz;
+-            this.rotX = rotX;
+-            this.rotY = rotY;
+-            this.rotZ = rotZ;
+-            this.settledTick = settledTick;
+-            this.lastValidLight = lastValidLight;
+-        }
+-    }
+-
+-    private static final List<FallingProp> FALLING = new ArrayList<>();
+-    private static final List<FlyingDebrisBlock> FLYING_BLOCKS = new ArrayList<>();
+-    private static final Deque<SettledRubbleFragment> SETTLED_RUBBLE = new ArrayDeque<>();
+-
+-    private ImpactDebrisClient() { }
+-
+-    /**
+-     * Section 3 Fix: Accurately samples dynamic block & sky light for an animated fragment without
+-     * ever returning 0 (pure black) when the fragment touches or slightly overlaps a solid block.
+-     */
++    private record FallingProp(BlockState state,BlockPos pos,float dirX,float dirZ,long startTick) {}
++    private static final class Chip {
++        final BlockState state; final float sx,sy,sz; final double radius;
++        double x,y,z,px,py,pz,vx,vy,vz;float rx,ry,rz,spin;int age,light;boolean sleeping;
++        Chip(BlockState state,Vec3d p,Vec3d v,float sx,float sy,float sz,float spin) {
++            this.state=state;x=px=p.x;y=py=p.y;z=pz=p.z;vx=v.x;vy=v.y;vz=v.z;
++            this.sx=sx;this.sy=sy;this.sz=sz;this.spin=spin;
++            radius=Math.sqrt(sx*sx+sy*sy+sz*sz)*.5+.002; // Encloses every orientation of the rendered chip.
++        }
++        Box box(){return new Box(x-radius,y-radius,z-radius,x+radius,y+radius,z+radius);}
++    }
++    private static final List<Chip> CHIPS=new ArrayList<>();
++    private static final List<FallingProp> FALLING=new ArrayList<>();
++    private static ClientWorld lastWorld;
++    private static int spawnBudget=48;
++    private ImpactDebrisClient(){}
++
+     public static int sampleFragmentLight(ClientWorld world, double x, double y, double z, int fallbackLight) {
+         if (world == null) return fallbackLight > 0 ? fallbackLight : LightmapTextureManager.pack(0, 12);
+         BlockPos center = BlockPos.ofFloored(x, y, z);
+@@ -152,265 +94,132 @@
+         return packed > 0 ? packed : (fallbackLight > 0 ? fallbackLight : LightmapTextureManager.pack(0, 12));
+     }
+ 
+-    private static BlockState variantMaterial(BlockState base, Random r) {
+-        Block b = base.getBlock();
+-        if (b == Blocks.GRASS_BLOCK || b == Blocks.DIRT || b == Blocks.COARSE_DIRT || b == Blocks.PODZOL
+-                || b == Blocks.ROOTED_DIRT || b == Blocks.FARMLAND || b == Blocks.DIRT_PATH || b == Blocks.MUD) {
+-            int pick = r.nextInt(20);
+-            if (pick < 9) return Blocks.DIRT.getDefaultState();
+-            if (pick < 14) return Blocks.COARSE_DIRT.getDefaultState();
+-            if (pick < 17) return b == Blocks.GRASS_BLOCK ? Blocks.GRASS_BLOCK.getDefaultState() : Blocks.ROOTED_DIRT.getDefaultState();
+-            return Blocks.COBBLESTONE.getDefaultState();
+-        }
+-        if (b == Blocks.STONE || b == Blocks.COBBLESTONE || b == Blocks.ANDESITE || b == Blocks.DIORITE
+-                || b == Blocks.GRANITE || b == Blocks.DEEPSLATE || b == Blocks.COBBLED_DEEPSLATE) {
+-            int pick = r.nextInt(10);
+-            if (pick < 5) return base;
+-            if (pick < 8) return Blocks.COBBLESTONE.getDefaultState();
+-            return Blocks.GRAVEL.getDefaultState();
+-        }
+-        if (b == Blocks.SAND || b == Blocks.RED_SAND || b == Blocks.SANDSTONE || b == Blocks.GRAVEL) {
+-            int pick = r.nextInt(10);
+-            if (pick < 6) return base;
+-            if (pick < 9) return Blocks.SANDSTONE.getDefaultState();
+-            return Blocks.GRAVEL.getDefaultState();
+-        }
+-        if (b instanceof FenceBlock || b instanceof FenceGateBlock || b instanceof DoorBlock || b instanceof TrapdoorBlock
+-                || base.getRegistryEntry().getKey().map(k -> k.getValue().getPath().contains("plank") || k.getValue().getPath().contains("log") || k.getValue().getPath().contains("wood")).orElse(false)) {
+-            return r.nextInt(4) == 0 ? Blocks.STRIPPED_OAK_WOOD.getDefaultState() : Blocks.OAK_PLANKS.getDefaultState();
+-        }
+-        if (b == Blocks.BRICKS || b == Blocks.STONE_BRICKS || b == Blocks.CRACKED_STONE_BRICKS) {
+-            return r.nextBoolean() ? base : Blocks.CRACKED_STONE_BRICKS.getDefaultState();
+-        }
+-        return r.nextInt(5) == 0 ? Blocks.COBBLESTONE.getDefaultState() : base;
+-    }
+-
+-    private static boolean isWoodLike(BlockState s) {
+-        Block b = s.getBlock();
+-        return b == Blocks.OAK_PLANKS || b == Blocks.SPRUCE_PLANKS || b == Blocks.BIRCH_PLANKS
+-                || b == Blocks.STRIPPED_OAK_WOOD || b instanceof FenceBlock || b instanceof DoorBlock || b instanceof TrapdoorBlock;
+-    }
+-
+-    private static void promoteToSettledRubble(FlyingDebrisBlock fb, long now) {
+-        while (SETTLED_RUBBLE.size() >= MAX_SETTLED_RUBBLE) {
+-            SETTLED_RUBBLE.pollFirst();
+-        }
+-        // Rest with a stable low-profile tilt on the surface
+-        float settledPitch = MathHelper.clamp(fb.rotX, -24.0f, 24.0f);
+-        float settledRoll = MathHelper.clamp(fb.rotZ, -24.0f, 24.0f);
+-        SETTLED_RUBBLE.addLast(new SettledRubbleFragment(
+-                fb.state,
+-                fb.x, fb.y, fb.z,
+-                fb.sx, fb.sy * 0.85f, fb.sz,
+-                settledPitch, fb.rotY, settledRoll,
+-                now,
+-                fb.lastValidLight
+-        ));
+-    }
+-
++    private static void clear(ClientWorld world) {lastWorld=world;CHIPS.clear();FALLING.clear();spawnBudget=48;}
++
++    /** Null means missing collision chunks or an excessive collision workload; retire a cosmetic chip safely. */
++    private static List<TransientDebrisCollision.Bounds> obstacles(ClientWorld world,Box swept) {
++        for(int x=MathHelper.floor(swept.minX)>>4;x<=MathHelper.floor(swept.maxX)>>4;x++)
++            for(int z=MathHelper.floor(swept.minZ)>>4;z<=MathHelper.floor(swept.maxZ)>>4;z++)
++                if(!world.isChunkLoaded(x,z))return null;
++        var result=new ArrayList<TransientDebrisCollision.Bounds>();
++        for(var shape:world.getBlockCollisions(null,swept.expand(.001))) for(var b:shape.getBoundingBoxes()) {
++            if(result.size()>=64)return null;
++            result.add(new TransientDebrisCollision.Bounds(b.minX,b.minY,b.minZ,b.maxX,b.maxY,b.maxZ));
++        }
++        return result;
++    }
++    private static TransientDebrisCollision.Bounds bounds(Box b) {
++        return new TransientDebrisCollision.Bounds(b.minX,b.minY,b.minZ,b.maxX,b.maxY,b.maxZ);
++    }
++    private static boolean free(ClientWorld world,Box box) {
++        var obstacles=obstacles(world,box);if(obstacles==null)return false;
++        var b=bounds(box);return obstacles.stream().noneMatch(b::overlaps);
++    }
++    private static void tick(MinecraftClient client) {
++        if(client.world!=lastWorld)clear(client.world);
++        spawnBudget=48;
++        if(client.world==null||client.isPaused())return;
++        long now=client.world.getTime();FALLING.removeIf(f->now<f.startTick()||now-f.startTick()>=14);
++        var it=CHIPS.iterator();while(it.hasNext()) {
++            var c=it.next();c.px=c.x;c.py=c.y;c.pz=c.z;
++            if(++c.age>=120||!free(client.world,c.box())){it.remove();continue;}
++            c.light=sampleFragmentLight(client.world,c.x,c.y,c.z,c.light);
++            if(c.sleeping) {
++                var near=obstacles(client.world,c.box().offset(0,-.025,0));
++                if(near==null){it.remove();continue;}
++                if(TransientDebrisCollision.move(bounds(c.box()),0,-.025,0,near).supported())continue;
++                c.sleeping=false;c.vy=0; // Resume falling from this pose, never snap to another height.
++            }
++            c.vy=Math.max(-.8,c.vy-.035);
++            Box swept=c.box().stretch(c.vx,c.vy,c.vz);
++            var near=obstacles(client.world,swept);
++            if(near==null){it.remove();continue;}
++            var motion=TransientDebrisCollision.move(bounds(c.box()),c.vx,c.vy,c.vz,near);
++            c.x+=motion.x();c.y+=motion.y();c.z+=motion.z();
++            if(Math.abs(motion.x()-c.vx)>1e-8)c.vx=0;
++            if(Math.abs(motion.z()-c.vz)>1e-8)c.vz=0;
++            if(Math.abs(motion.y()-c.vy)>1e-8)c.vy=0;
++            c.vx*=motion.supported()?.45:.97;c.vz*=motion.supported()?.45:.97;
++            c.sleeping=motion.supported()&&c.vx*c.vx+c.vz*c.vz<.0002;
++            if(!c.sleeping){c.rx+=c.spin;c.ry+=c.spin*.6f;c.rz+=c.spin*.3f;}
++        }
++    }
+     public static void register() {
+-        ClientPlayNetworking.registerGlobalReceiver(ImpactDebris.PACKET, (c, h, b, s) -> {
+-            if (b.readableBytes() != 52) return;
+-            int material = b.readInt();
+-            Vec3d p = new Vec3d(b.readDouble(), b.readDouble(), b.readDouble());
+-            Vec3d n = new Vec3d(b.readFloat(), b.readFloat(), b.readFloat());
+-            float power = b.readFloat();
+-            long seed = b.readLong();
+-            if (!Double.isFinite(p.x) || !Double.isFinite(p.y) || !Double.isFinite(p.z)
+-                    || !Double.isFinite(n.lengthSquared()) || !Float.isFinite(power)) return;
+-            c.execute(() -> spawn(Block.getStateFromRawId(material), p, n, power, seed));
++        ClientPlayConnectionEvents.DISCONNECT.register((handler,client)->clear(null));
++        ClientTickEvents.END_CLIENT_TICK.register(ImpactDebrisClient::tick);
++        ClientPlayNetworking.registerGlobalReceiver(ImpactDebris.PACKET,(client,handler,b,sender)->{
++            if(b.readableBytes()!=52)return;
++            int raw=b.readInt();var p=new Vec3d(b.readDouble(),b.readDouble(),b.readDouble());
++            var n=new Vec3d(b.readFloat(),b.readFloat(),b.readFloat());float power=b.readFloat();long seed=b.readLong();
++            if(!Double.isFinite(p.x)||!Double.isFinite(p.y)||!Double.isFinite(p.z)||Math.abs(p.x)>30000000||Math.abs(p.z)>30000000
++                    ||!Double.isFinite(n.lengthSquared())||!Float.isFinite(power)||Math.abs(power)>10||raw<0)return;
++            BlockState state=Block.getStateFromRawId(raw);
++            if(Block.getRawIdFromState(state)!=raw)return;
++            client.execute(()->spawn(state,p,n,power,seed));
+         });
+-        WorldRenderEvents.AFTER_TRANSLUCENT.register(ctx -> {
+-            var c = MinecraftClient.getInstance();
+-            if (c.world == null || (FALLING.isEmpty() && FLYING_BLOCKS.isEmpty() && SETTLED_RUBBLE.isEmpty())) return;
+-            long now = c.world.getTime();
+-            FALLING.removeIf(f -> now - f.startTick >= TOPPLE_TICKS || now < f.startTick);
+-            SETTLED_RUBBLE.removeIf(sr -> now - sr.settledTick >= SETTLED_RUBBLE_LIFETIME_TICKS || now < sr.settledTick);
+-
+-            Iterator<FlyingDebrisBlock> fbIt = FLYING_BLOCKS.iterator();
+-            while (fbIt.hasNext()) {
+-                FlyingDebrisBlock fb = fbIt.next();
+-                if (now < fb.lastTick) {
+-                    fbIt.remove();
+-                    continue;
+-                }
+-                while (fb.lastTick < now && fb.age < fb.maxAge) {
+-                    fb.lastTick++;
+-                    fb.age++;
+-                    fb.prevX = fb.x;
+-                    fb.prevY = fb.y;
+-                    fb.prevZ = fb.z;
+-                    fb.vy -= .046;
+-                    double nx = fb.x + fb.vx, ny = fb.y + fb.vy, nz = fb.z + fb.vz;
+-                    BlockPos below = BlockPos.ofFloored(nx, ny - fb.sy * .5, nz);
+-                    var colShape = c.world.getBlockState(below).getCollisionShape(c.world, below);
+-                    if (!colShape.isEmpty() && fb.vy < 0) {
+-                        double topY = below.getY() + colShape.getMax(Direction.Axis.Y);
+-                        ny = topY + fb.sy * .42;
+-                        fb.vy = -fb.vy * .34;
+-                        fb.vx *= .56;
+-                        fb.vz *= .56;
+-                        fb.spinX *= .45f;
+-                        fb.spinY *= .45f;
+-                        fb.spinZ *= .45f;
+-                        if (Math.abs(fb.vy) < .045 && (fb.vx * fb.vx + fb.vz * fb.vz) < 0.004) {
+-                            fb.vy = 0;
+-                            fb.vx = 0;
+-                            fb.vz = 0;
+-                            fb.settledOnGround = true;
+-                        }
+-                    } else {
+-                        fb.vx *= .97;
+-                        fb.vz *= .97;
+-                    }
+-                    fb.x = nx;
+-                    fb.y = ny;
+-                    fb.z = nz;
+-                    fb.rotX += fb.spinX;
+-                    fb.rotY += fb.spinY;
+-                    fb.rotZ += fb.spinZ;
+-                }
+-                // Once a flying block comes to rest on a surface or finishes its flight on the ground,
+-                // transition it into persistent non-collidable settled rubble instead of deleting it!
+-                if (fb.settledOnGround || fb.age >= fb.maxAge) {
+-                    BlockPos checkBelow = BlockPos.ofFloored(fb.x, fb.y - fb.sy * 0.65, fb.z);
+-                    if (fb.settledOnGround || !c.world.getBlockState(checkBelow).getCollisionShape(c.world, checkBelow).isEmpty()) {
+-                        promoteToSettledRubble(fb, now);
+-                    }
+-                    fbIt.remove();
+-                }
+-            }
+-
+-            if (FALLING.isEmpty() && FLYING_BLOCKS.isEmpty() && SETTLED_RUBBLE.isEmpty()) return;
+-            var matrices = ctx.matrixStack();
+-            var cam = ctx.camera().getPos();
+-            var consumers = ctx.consumers();
+-            if (matrices == null || consumers == null) return;
+-            var brm = c.getBlockRenderManager();
+-            float delta = ctx.tickDelta();
+-
+-            for (var f : FALLING) {
+-                float age = (now - f.startTick) + delta;
+-                float t = MathHelper.clamp(age / TOPPLE_TICKS, 0f, 1f);
+-                float ease = t * t;
+-                float angle = ease * 88f;
+-                int light = sampleFragmentLight(c.world, f.pos.getX() + 0.5, f.pos.getY() + 0.65, f.pos.getZ() + 0.5, -1);
+-                matrices.push();
+-                matrices.translate(f.pos.getX() + .5 - cam.x, f.pos.getY() - cam.y - ease * .12f, f.pos.getZ() + .5 - cam.z);
+-                if (f.dirX * f.dirX + f.dirZ * f.dirZ > 1e-4f) {
+-                    float yaw = (float) Math.toDegrees(Math.atan2(f.dirX, f.dirZ));
++        WorldRenderEvents.AFTER_TRANSLUCENT.register(ctx->{
++            var client=MinecraftClient.getInstance();if(client.world==null||client.world!=lastWorld)return;
++            var matrices=ctx.matrixStack();var consumers=ctx.consumers();if(matrices==null||consumers==null)return;
++            var cam=ctx.camera().getPos();var brm=client.getBlockRenderManager();float dt=ctx.tickDelta();
++            // Render callbacks never advance physics or support checks.
++            for(var f:FALLING) {
++                float t=MathHelper.clamp(((client.world.getTime()-f.startTick())+dt)/14f,0,1),ease=t*t;
++                matrices.push();matrices.translate(f.pos().getX()+.5-cam.x,f.pos().getY()-cam.y-ease*.12,f.pos().getZ()+.5-cam.z);
++                if(f.dirX()*f.dirX()+f.dirZ()*f.dirZ()>1e-4) {
++                    float yaw=(float)Math.toDegrees(Math.atan2(f.dirX(),f.dirZ()));
+                     matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(yaw));
+-                    matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(angle));
++                    matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(ease*88));
+                     matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-yaw));
+                 }
+-                matrices.translate(-.5, 0, -.5);
+-                brm.renderBlockAsEntity(f.state, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
++                matrices.translate(-.5,0,-.5);
++                brm.renderBlockAsEntity(f.state(),matrices,consumers,sampleFragmentLight(client.world,f.pos().getX()+.5,f.pos().getY()+.65,f.pos().getZ()+.5,-1),OverlayTexture.DEFAULT_UV);
+                 matrices.pop();
+             }
+-
+-            for (var fb : FLYING_BLOCKS) {
+-                double rx = MathHelper.lerp(delta, fb.prevX, fb.x) - cam.x;
+-                double ry = MathHelper.lerp(delta, fb.prevY, fb.y) - cam.y;
+-                double rz = MathHelper.lerp(delta, fb.prevZ, fb.z) - cam.z;
+-                int light = sampleFragmentLight(c.world, fb.x, fb.y + Math.max(0.25, fb.sy * 0.6), fb.z, fb.lastValidLight);
+-                fb.lastValidLight = light;
+-                matrices.push();
+-                matrices.translate(rx, ry, rz);
+-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(fb.rotY + fb.spinY * delta));
+-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(fb.rotX + fb.spinX * delta));
+-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(fb.rotZ + fb.spinZ * delta));
+-                matrices.scale(fb.sx, fb.sy, fb.sz);
+-                matrices.translate(-.5f, -.5f, -.5f);
+-                brm.renderBlockAsEntity(fb.state, matrices, consumers, light, OverlayTexture.DEFAULT_UV);
+-                matrices.pop();
+-            }
+-
+-            // Render persistent settled rubble fragments on the ground (zero per-tick physics cost)
+-            for (var sr : SETTLED_RUBBLE) {
+-                if (cam.squaredDistanceTo(sr.x, sr.y, sr.z) > 112.0 * 112.0) continue;
+-                long age = now - sr.settledTick;
+-                float fade = age > SETTLED_RUBBLE_LIFETIME_TICKS - 40
+-                        ? MathHelper.clamp((SETTLED_RUBBLE_LIFETIME_TICKS - age - delta) / 40f, 0f, 1f)
+-                        : 1.0f;
+-                if (((now + sr.hashCode()) & 31L) == 0L || sr.lastValidLight <= 0) {
+-                    BlockPos below = BlockPos.ofFloored(sr.x, sr.y - sr.sy * 0.6, sr.z);
+-                    var shape = c.world.getBlockState(below).getCollisionShape(c.world, below);
+-                    if (!shape.isEmpty()) {
+-                        sr.y = below.getY() + shape.getMax(Direction.Axis.Y) + sr.sy * 0.42;
+-                    }
+-                    sr.lastValidLight = sampleFragmentLight(c.world, sr.x, sr.y + 0.35, sr.z, sr.lastValidLight);
+-                }
+-                matrices.push();
+-                matrices.translate(sr.x - cam.x, sr.y - cam.y, sr.z - cam.z);
+-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(sr.rotY));
+-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(sr.rotX));
+-                matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(sr.rotZ));
+-                matrices.scale(sr.sx * fade, sr.sy * fade, sr.sz * fade);
+-                matrices.translate(-.5f, -.5f, -.5f);
+-                brm.renderBlockAsEntity(sr.state, matrices, consumers, sr.lastValidLight, OverlayTexture.DEFAULT_UV);
+-                matrices.pop();
++            for(var c:CHIPS) {
++                if(cam.squaredDistanceTo(c.x,c.y,c.z)>96*96)continue;
++                matrices.push();matrices.translate(MathHelper.lerp(dt,c.px,c.x)-cam.x,MathHelper.lerp(dt,c.py,c.y)-cam.y,MathHelper.lerp(dt,c.pz,c.z)-cam.z);
++                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(c.ry));matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(c.rx));matrices.multiply(RotationAxis.POSITIVE_Z.rotationDegrees(c.rz));
++                matrices.scale(c.sx,c.sy,c.sz);matrices.translate(-.5,-.5,-.5);
++                brm.renderBlockAsEntity(c.state,matrices,consumers,c.light,OverlayTexture.DEFAULT_UV);matrices.pop();
+             }
+         });
+     }
+-
+-    public static void spawn(BlockState state, Vec3d p, Vec3d normal, float power, long seed) {
+-        var c = MinecraftClient.getInstance();
+-        if (c.world == null || state.isAir()) return;
+-        Vec3d n = normal.lengthSquared() > 1e-6 ? normal.normalize() : new Vec3d(0, 1, 0);
+-        if (power < 0) {
+-            if (FALLING.size() >= 64) FALLING.remove(0);
+-            FALLING.add(new FallingProp(state, BlockPos.ofFloored(p.x, p.y + .05, p.z), (float) n.x, (float) n.z, c.world.getTime()));
+-            power = Math.abs(power) * .45f;
+-        }
+-        var mode = c.options.getParticles().getValue();
+-        var r = new java.util.Random(seed);
+-        // Spawn 3D miniature flying terrain blocks on shell/charge impacts (power >= 1.1)
+-        if (power >= 1.1f && mode != ParticlesMode.MINIMAL) {
+-            int blockCount = mode == ParticlesMode.DECREASED ? 3 : (4 + r.nextInt(4));
+-            long now = c.world.getTime();
+-            for (int i = 0; i < blockCount; i++) {
+-                if (FLYING_BLOCKS.size() >= 96) FLYING_BLOCKS.remove(0);
+-                BlockState debState = variantMaterial(state, r);
+-                boolean wood = isWoodLike(debState);
+-                float baseScale = .20f + r.nextFloat() * .22f;
+-                float sx = wood ? baseScale * 1.45f : baseScale * (.85f + r.nextFloat() * .35f);
+-                float sy = wood ? baseScale * .42f : baseScale * (.70f + r.nextFloat() * .40f);
+-                float sz = wood ? baseScale * .52f : baseScale * (.85f + r.nextFloat() * .35f);
+-                double angle = r.nextDouble() * Math.PI * 2.0;
+-                double speed = .16 + r.nextDouble() * .38;
+-                Vec3d vel = new Vec3d(Math.cos(angle) * speed + n.x * .18, .26 + r.nextDouble() * .42 + Math.max(0, n.y) * .16, Math.sin(angle) * speed + n.z * .18);
+-                float spX = (r.nextFloat() - .5f) * 32f, spY = (r.nextFloat() - .5f) * 32f, spZ = (r.nextFloat() - .5f) * 32f;
+-                FLYING_BLOCKS.add(new FlyingDebrisBlock(debState,
+-                        p.add((r.nextDouble() - .5) * .4, .15 + r.nextDouble() * .25, (r.nextDouble() - .5) * .4),
+-                        vel, sx, sy, sz, spX, spY, spZ, 55 + r.nextInt(35), now));
+-            }
+-        }
+-        int count = power > 1.5 ? 52 : power > .7 ? 42 : 10;
+-        if (mode == ParticlesMode.MINIMAL) count = Math.max(3, count / 4);
+-        else if (mode == ParticlesMode.DECREASED) count /= 2;
+-        for (int i = 0; i < count; i++) {
+-            BlockState chunkState = power >= 1.5f ? variantMaterial(state, r) : state;
+-            Vec3d scatter = new Vec3d(r.nextGaussian(), r.nextGaussian() * .65, r.nextGaussian());
+-            if (scatter.dotProduct(n) < 0) scatter = scatter.subtract(n.multiply(2 * scatter.dotProduct(n)));
+-            Vec3d v = scatter.multiply(.055 + power * .18).add(n.multiply(.07 + power * .17)).add(0, .06, 0);
+-            c.particleManager.addParticle(new Chunk(c.world, chunkState, p.add(n.multiply(.04)), v, r, power));
+-        }
+-        for (int i = 0; i < (power > .7 ? 10 : 2); i++) {
+-            c.world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, state),
+-                    p.x + n.x * .04, p.y + n.y * .04, p.z + n.z * .04, n.x * .03, .035 + n.y * .03, n.z * .03);
+-        }
+-    }
+-
+-    public static int settledRubbleCount() {
+-        return SETTLED_RUBBLE.size();
+-    }
++    public static void spawn(BlockState state,Vec3d p,Vec3d normal,float power,long seed) {
++        var client=MinecraftClient.getInstance();if(client.world==null||state==null||state.isAir())return;
++        if(client.world!=lastWorld)clear(client.world);
++        if(!Double.isFinite(p.x+p.y+p.z+normal.lengthSquared())||!Float.isFinite(power))return;
++        Vec3d n=normal.lengthSquared()>1e-6?normal.normalize():new Vec3d(0,1,0);
++        if(power<0) { // Preserve the existing short vehicle-push prop animation.
++            if(FALLING.size()<64)FALLING.add(new FallingProp(state,BlockPos.ofFloored(p.x,p.y+.05,p.z),(float)n.x,(float)n.z,client.world.getTime()));
++            power=Math.abs(power)*.45f;
++        }
++        var mode=client.options.getParticles().getValue();var rng=new Random(seed);
++        int count=mode==ParticlesMode.MINIMAL?0:mode==ParticlesMode.DECREASED?2:4;
++        for(int i=0;i<count&&CHIPS.size()<96&&spawnBudget>0;i++,spawnBudget--) {
++            float scale=.055f+rng.nextFloat()*.065f;
++            var vel=new Vec3d((rng.nextDouble()-.5)*.35,.15+rng.nextDouble()*.24,(rng.nextDouble()-.5)*.35).add(n.multiply(.16));
++            var chip=new Chip(state,p.add(n.multiply(.12)),vel,scale,scale*.55f,scale*.85f,(rng.nextFloat()-.5f)*24);
++            if(free(client.world,chip.box()))CHIPS.add(chip); // Invalid geometry is skipped, never pushed through a wall.
++        }
++        int dust=Math.min(spawnBudget,mode==ParticlesMode.MINIMAL?3:mode==ParticlesMode.DECREASED?8:14);
++        for(int i=0;i<dust;i++,spawnBudget--) {
++            var scatter=new Vec3d(rng.nextGaussian(),rng.nextGaussian()*.65,rng.nextGaussian());
++            if(scatter.dotProduct(n)<0)scatter=scatter.subtract(n.multiply(2*scatter.dotProduct(n)));
++            var v=scatter.multiply(.055+Math.min(3,power)*.09).add(n.multiply(.08));
++            Vec3d pos=p.add(n.multiply(.05));
++            // Small particle collision uses Minecraft's native particle bounding box.
++            if(free(client.world,new Box(pos.x-.025,pos.y-.025,pos.z-.025,pos.x+.025,pos.y+.025,pos.z+.025)))
++                client.particleManager.addParticle(new Chunk(client.world,state,pos,v,rng,power));
++        }
++    }
++    public static int settledRubbleCount(){return (int)CHIPS.stream().filter(c->c.sleeping).count();}
+ 
+     private static final class Chunk extends VoxelParticle {
+         private final float spin;
+         Chunk(ClientWorld w, BlockState state, Vec3d p, Vec3d v, java.util.Random r, float power) {
+             super(w, p.x, p.y, p.z, v.x, v.y, v.z);
+             setSprite(MinecraftClient.getInstance().getBlockRenderManager().getModels().getModelParticleSprite(state));
+-            halfSize = .022f + r.nextFloat() * (power > 1.5 ? .095f : power > .7 ? .075f : .038f);
++            halfSize = .014f + r.nextFloat() * .024f;
+             halfHeight = halfSize * (.35f + r.nextFloat() * .55f);
+             maxAge = 48 + r.nextInt(42);
+             angle = r.nextFloat() * 6.28f;
+--- baseline/src/main/java/com/bobincraft/combat/client/VoxelBlastClient.java
++++ stabilized/src/main/java/com/bobincraft/combat/client/VoxelBlastClient.java
+@@ -20,9 +20,12 @@
+     private static final int MAX_ACTIVE_SMOKE = 384;
+     private static final List<ExplosionSmokeParticle> SMOKE = new ArrayList<>();
+     private static final ExplosionVisualEventWindow SEEN = new ExplosionVisualEventWindow(512);
++    private record Pending(ExplosionVisualEvent event, WeaponExplosionLayers.Layer layer, long due) {}
++    private static final List<Pending> PENDING = new ArrayList<>();
++    private static int auxiliaryBudget = 160;
+     private static ClientWorld lastWorld;
+     private VoxelBlastClient() { }
+-    private static void reset(ClientWorld world) { lastWorld = world; SMOKE.clear(); SEEN.clear(); }
++    private static void reset(ClientWorld world) { lastWorld = world; SMOKE.clear(); PENDING.clear(); SEEN.clear(); }
+ 
+     public static void register() {
+         ParticleFactoryRegistry.getInstance().register(CombatContent.VOXEL_CLOUD, sprites -> {
+@@ -35,7 +38,16 @@
+         ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> reset(null));
+         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+             if (client.world != lastWorld) reset(client.world);
++            auxiliaryBudget = 160;
+             SMOKE.removeIf(particle -> !particle.isAlive());
++            if (client.world == null || client.isPaused()) return;
++            var it = PENDING.iterator();
++            while (it.hasNext()) {
++                var pending = it.next();
++                if (pending.due() <= client.world.getTime()) {
++                    spawnLayer(client, pending.event(), pending.layer()); it.remove();
++                }
++            }
+         });
+         ClientPlayNetworking.registerGlobalReceiver(CombatEffects.EXPLOSION_VISUAL, (client, handler, buf, sender) -> {
+             int length = buf.readableBytes();
+@@ -63,7 +75,7 @@
+         double quality = mode == ParticlesMode.MINIMAL ? .25 : mode == ParticlesMode.DECREASED ? .55 : 1;
+         double scale = profile.scale;
+         if (event.water()) {
+-            int count = Math.max(3, (int)(profile.smokeCount * quality));
++            int count = reserveAuxiliary(Math.max(3, (int)(profile.smokeCount * quality)));
+             for (int i = 0; i < count; i++) {
+                 world.addParticle(i % 2 == 0 ? ParticleTypes.SPLASH : ParticleTypes.BUBBLE,
+                         event.x(), event.y(), event.z(), (rng.nextDouble() - .5) * scale * .25,
+@@ -74,14 +86,13 @@
+ 
+         SMOKE.removeIf(particle -> !particle.isAlive());
+         if (cloudSprites != null) {
+-            int budget = Math.min(MAX_ACTIVE_SMOKE - SMOKE.size(), (int)(profile.smokeCount * quality));
++            int budget = Math.min(MAX_ACTIVE_SMOKE - SMOKE.size() - PENDING.size(), (int)(profile.smokeCount * quality));
+             for (var puff : WeaponExplosionLayers.create(profile, event.seed(), budget)) {
+-                var particle = new ExplosionSmokeParticle(world, event.x() + puff.puff().x(), event.y() + puff.puff().y(),
+-                        event.z() + puff.puff().z(), puff, cloudSprites);
+-                SMOKE.add(particle); client.particleManager.addParticle(particle);
++                if (puff.delayTicks() == 0) spawnLayer(client, event, puff);
++                else PENDING.add(new Pending(event, puff, world.getTime() + puff.delayTicks()));
+             }
+         }
+-        int streaks = (int)(profile.streakCount * quality);
++        int streaks = reserveAuxiliary((int)(profile.streakCount * quality));
+         for (int i = 0; i < streaks; i++) {
+             double angle = rng.nextDouble() * Math.PI * 2;
+             double speed = (.12 + rng.nextDouble() * .18) * scale;
+@@ -91,7 +102,8 @@
+         int dust = Math.max(3, (int)(profile.smokeCount * quality * .65));
+         var material = event.material() >= 0 ? Block.getStateFromRawId(event.material()) : null;
+         if (material != null && !material.isAir() && Block.getRawIdFromState(material) == event.material()) {
+-            for (int i = 0; i < dust; i++) {
++            int chips = reserveAuxiliary(dust);
++            for (int i = 0; i < chips; i++) {
+                 double angle = i * Math.PI * 2 / dust;
+                 world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, material),
+                         event.surfaceX(), event.surfaceY() + .06, event.surfaceZ(),
+@@ -99,12 +111,52 @@
+                         Math.sin(angle) * scale * .15 * profile.spread);
+             }
+         }
++        // Vanilla secondary layers share their own per-tick emission budget.
++        dust = reserveAuxiliary(dust);
+         // A low dust ring makes wide HE profiles distinct from concentrated breaching profiles.
+         for (int i = 0; i < dust; i++) {
+             double a = i * Math.PI * 2 / dust;
+             world.addParticle(ParticleTypes.CLOUD, event.x(), event.y() + .08, event.z(),
+                     Math.cos(a) * .16 * scale * profile.spread, .012, Math.sin(a) * .16 * scale * profile.spread);
+         }
++    }
++
++    private static int reserveAuxiliary(int requested) {
++        int n=Math.max(0,Math.min(auxiliaryBudget,requested));auxiliaryBudget-=n;return n;
++    }
++
++    private static void spawnLayer(MinecraftClient client, ExplosionVisualEvent event, WeaponExplosionLayers.Layer layer) {
++        if (client.world == null || cloudSprites == null) return;
++        // Orient a surface-local effect using a trustworthy loaded collision ray; the wire format stays v1.
++        var puff = layer.puff();
++        net.minecraft.util.math.Vec3d offset = new net.minecraft.util.math.Vec3d(puff.x(), puff.y(), puff.z());
++        net.minecraft.util.math.Vec3d velocity = new net.minecraft.util.math.Vec3d(puff.vx(), puff.vy(), puff.vz());
++        if (event.profileId().equals(ExplosionVisualProfile.GROM7_DEMOLITION.id) && client.player != null) {
++            var center = new net.minecraft.util.math.Vec3d(event.x(),event.y(),event.z());
++            var surface = new net.minecraft.util.math.Vec3d(event.surfaceX(),event.surfaceY(),event.surfaceZ());
++            if (center.squaredDistanceTo(surface) > .0001 && center.squaredDistanceTo(surface) < 16) {
++                var pos = net.minecraft.util.math.BlockPos.ofFloored(surface);
++                if (client.world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
++                    var hit = client.world.raycast(new net.minecraft.world.RaycastContext(center,
++                            surface.add(surface.subtract(center).normalize().multiply(.2)),
++                            net.minecraft.world.RaycastContext.ShapeType.COLLIDER,
++                            net.minecraft.world.RaycastContext.FluidHandling.NONE,client.player));
++                    if (hit.getType() == net.minecraft.util.hit.HitResult.Type.BLOCK) {
++                        var normal = net.minecraft.util.math.Vec3d.of(hit.getSide().getVector());
++                        var tangent = Math.abs(normal.y) > .9 ? new net.minecraft.util.math.Vec3d(1,0,0)
++                                : new net.minecraft.util.math.Vec3d(0,1,0).crossProduct(normal).normalize();
++                        var bitangent = tangent.crossProduct(normal);
++                        offset = tangent.multiply(puff.x()).add(normal.multiply(puff.y()+.12)).add(bitangent.multiply(puff.z()));
++                        velocity = tangent.multiply(puff.vx()).add(normal.multiply(puff.vy())).add(bitangent.multiply(puff.vz()));
++                    }
++                }
++            }
++        }
++        var oriented = new WeaponExplosionLayers.Layer(layer.kind(), new VoxelExplosionShape.Puff(
++                offset.x,offset.y,offset.z,velocity.x,velocity.y,velocity.z,puff.radius(),puff.life(),puff.cooling(),puff.seed()),
++                layer.intensity(),layer.expansion(),0);
++        var particle = new ExplosionSmokeParticle(client.world,event.x()+offset.x,event.y()+offset.y,event.z()+offset.z,oriented,cloudSprites);
++        SMOKE.add(particle);client.particleManager.addParticle(particle);
+     }
+ 
+     /**
+--- baseline/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
++++ stabilized/src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java
+@@ -27,6 +27,95 @@
+  */
+ public final class DestructionGameTestSuite implements FabricGameTest {
+ 
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void stabilizationPayloadPolicy(TestContext context) {
++        ensureTerrain();
++        for (var target : DestructibleStructureRegistry.all()) {
++            var cat = target.structureType().category();
++            if (cat != DestructibleStructureType.Category.REFINERY_TANK && cat != DestructibleStructureType.Category.BRIDGE_SECTION) continue;
++            for (var kind : new StructureDamageSource.Kind[]{StructureDamageSource.Kind.HAND_GRENADE,
++                    StructureDamageSource.Kind.DRONE_PAYLOAD, StructureDamageSource.Kind.HEAVY_DRONE_PAYLOAD}) {
++                var before = target.toCompactNbt().copy();
++                var point = Vec3d.ofCenter(target.originPosition());
++                var source = StructureDamageSource.explosion(kind, null, point, 20);
++                if (StructureDamageManager.applyDirectStructureDamage(null, target, source, 10000))
++                    throw new AssertionError("Forbidden direct payload damage: " + kind + target.structureId());
++                StructureDamageManager.applyDamageInternal(null, point, source, 10000);
++                StructureDamageManager.tickDelayedCollapses(context.getWorld(), context.getWorld().getTime() + 600);
++                if (!before.equals(target.toCompactNbt()))
++                    throw new AssertionError("Forbidden payload mutated HP/stage/component/fire/transition state");
++            }
++        }
++        context.complete();
++    }
++
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void stabilizationJournalRoundTrip(TestContext context) {
++        var state=new RefineryTransitionState();var ledger=new TransitionLedger();
++        long p=BlockPos.asLong(-17,77,-33);ledger.noteOwned(p,"minecraft:stone");
++        ledger.retarget(java.util.Map.of(p,"minecraft:air"));ledger.protect(p);
++        state.ledgers.put("test-tank",ledger);
++        var saved=state.writeNbt(new NbtCompound());
++        var restored=RefineryTransitionState.read(saved);
++        if(!saved.equals(restored.writeNbt(new NbtCompound())))throw new AssertionError("Journal NBT round trip changed data");
++        var l=restored.ledgers.get("test-tank");l.rebuildScheduling();
++        if(l.hasReady()||l.canApply(p,"minecraft:stone"))throw new AssertionError("Reload unprotected a player replacement");
++        var future=saved.copy();future.putInt("Version",99);future.putString("Unrecognized","preserve");
++        var frozen=RefineryTransitionState.read(future);
++        if(frozen.writable()||!future.equals(frozen.writeNbt(new NbtCompound())))throw new AssertionError("Future journal not preserved read-only");
++        context.complete();
++    }
++
++    /** Actual generated cells and registry index, not replacement geometry. Requires the Fabric runtime. */
++    @GameTest(templateName = FabricGameTest.EMPTY_STRUCTURE, tickLimit = 100)
++    public void stabilizationManagedGeometryTerrainPolicy(TestContext context) throws Exception {
++        var terrain = ensureTerrain();
++        var allowed = com.bobincraft.drone.BlastTerrain.class.getDeclaredMethod("terrainAllowed", String.class, BlockPos.class);
++        allowed.setAccessible(true);
++        int[] cells = {0}, outsideHitZones = {0};
++        java.util.function.Consumer<Blueprint> audit = blueprint -> blueprint.forEachCell((x,y,z,spec,mode) -> {
++            if (spec.isAir()) return;
++            cells[0]++;
++            var pos = new BlockPos(x,y,z);
++            var primary = DestructibleStructureRegistry.spatialIndex().findPrimaryAt(Vec3d.ofCenter(pos));
++            if (primary == null) outsideHitZones[0]++;
++            var state = com.bobincraft.warzone.BlueprintBlitter.state(spec);
++            // Forbidden profiles never enter the KAMIKAZE_BREACH / FP1-only breach or fire branches.
++            // Their remaining possible structural edits are tagged glass/soil/plant writes.
++            boolean mutable = state.isIn(com.bobincraft.drone.BlastTerrain.SHATTERABLE_GLASS)
++                    || state.isIn(com.bobincraft.drone.BlastTerrain.SCORCHABLE_SOIL)
++                    || state.isIn(com.bobincraft.drone.BlastTerrain.SCORCHABLE_PLANTS);
++            for (String source : new String[]{"hand_grenade","drone_payload","heavy_drone_payload"}) {
++                try {
++                    if ((boolean) allowed.invoke(null, source, pos) && mutable)
++                        throw new AssertionError("Unprotected mutable structural cell " + blueprint.name + " " + pos + " " + spec);
++                } catch (ReflectiveOperationException e) { throw new AssertionError(e); }
++            }
++        });
++        for (var target : DestructibleStructureRegistry.all()) {
++            if (target.structureType().category() == DestructibleStructureType.Category.REFINERY_TANK) {
++                audit.accept(StructureGeometrySnapshot.capture(terrain, target));
++                for (var stage : new StructureDamageState[]{StructureDamageState.DAMAGED, StructureDamageState.CRITICAL, StructureDamageState.DESTROYED})
++                    audit.accept(StructureGeometrySnapshot.stage(terrain, target, stage));
++            } else if (target.structureType().category() == DestructibleStructureType.Category.BRIDGE_SECTION) {
++                for (var stage : new StructureDamageState[]{StructureDamageState.INTACT, StructureDamageState.DAMAGED, StructureDamageState.CRITICAL, StructureDamageState.DESTROYED})
++                    audit.accept(StructureCollapseManager.buildBridgeSectionStage(terrain, target, stage));
++            }
++        }
++        for (var crossing : terrain.zonePlan().crossings())
++            audit.accept(com.bobincraft.warzone.ZoneInfrastructure.bridgeBlueprint(terrain, crossing));
++        if (cells[0] == 0) throw new AssertionError("No actual managed geometry audited");
++        // Outside all registered geometry: retain ordinary terrain, even for forbidden structural sources.
++        var ordinary = new BlockPos(1600, 80, 1600);
++        if (DestructibleStructureRegistry.spatialIndex().findPrimaryAt(Vec3d.ofCenter(ordinary)) != null)
++            throw new AssertionError("Ordinary-terrain fixture overlaps a managed structure");
++        for (String source : new String[]{"hand_grenade","drone_payload","heavy_drone_payload"})
++            if (!(boolean) allowed.invoke(null, source, ordinary)) throw new AssertionError("Ordinary terrain blocked");
++        System.out.println("Managed geometry terrain audit: " + cells[0] + " occupied cells; "
++                + outsideHitZones[0] + " outside primary hit zones; all forbidden-source edit gates safe");
++        context.complete();
++    }
++
+     private static WarzoneTerrain cachedTerrain;
+ 
+     private static synchronized WarzoneTerrain ensureTerrain() {
+--- baseline/src/main/java/com/bobincraft/destruction/ExplosionSoundMixer.java
++++ stabilized/src/main/java/com/bobincraft/destruction/ExplosionSoundMixer.java
+@@ -0,0 +1,56 @@
++package com.bobincraft.destruction;
++
++import java.util.*;
++
++/** Auditory-only bounded grouping. No damage/event IDs are discarded by this class. */
++public final class ExplosionSoundMixer<T> {
++    public record Emission<T>(double x, double y, double z, T sound, float volume, float pitch) {}
++    private static final class Group<T> {
++        String dimension; T sound; double x,y,z; long created,due; float volume,pitch; int count=1;
++    }
++    private record Heard<T>(String dimension,T sound,double x,double y,double z,long created,long due,long emitted) {}
++    private final List<Group<T>> groups=new ArrayList<>();
++    private final ArrayDeque<Heard<T>> recent=new ArrayDeque<>();
++    private final int capacity;
++    public ExplosionSoundMixer(int capacity) {this.capacity=Math.max(1,capacity);}
++
++    public boolean offer(String dimension,double x,double y,double z,T sound,float volume,float pitch,long tick,int delay) {
++        if(dimension==null||sound==null||!Double.isFinite(x+y+z)||!Float.isFinite(volume)||!Float.isFinite(pitch)
++                ||volume<=0||pitch<=0||delay<0||delay>200)return false;
++        long due=tick+Math.max(1,delay); // Collect a complete server tick; never truncate a voice already playing.
++        pruneRecent(dimension,tick);
++        for(var g:groups) if(g.dimension.equals(dimension)&&g.sound.equals(sound)
++                &&tick>=g.created&&tick-g.created<=2&&Math.abs(g.due-due)<=3
++                &&(x-g.x)*(x-g.x)+(y-g.y)*(y-g.y)+(z-g.z)*(z-g.z)<=64) {
++            g.count++; if(volume>g.volume){g.volume=volume;g.pitch=pitch;}
++            return true;
++        }
++        // Sympathetic charges arrive two ticks later, after initial voices have left the queue.
++        // Suppress only the matching short-window onset; never stop/replay or retroactively amplify that voice.
++        for(var h:recent) if(h.dimension().equals(dimension)&&h.sound().equals(sound)
++                &&tick>=h.created()&&tick-h.created()<=2&&Math.abs(h.due()-due)<=3
++                &&(x-h.x())*(x-h.x())+(y-h.y())*(y-h.y())+(z-h.z())*(z-h.z())<=64)return true;
++        if(groups.size()>=capacity)return false;
++        var g=new Group<T>();g.dimension=dimension;g.sound=sound;g.x=x;g.y=y;g.z=z;
++        g.volume=volume;g.pitch=pitch;g.created=tick;g.due=due;groups.add(g);return true;
++    }
++    public List<Emission<T>> drain(String dimension,long tick) {
++        pruneRecent(dimension,tick);
++        var out=new ArrayList<Emission<T>>();
++        var it=groups.iterator();while(it.hasNext()) {
++            var g=it.next();if(!g.dimension.equals(dimension)||tick<g.due)continue;
++            float gain=(float)Math.min(1.35,Math.sqrt(1+.12*(g.count-1)));
++            out.add(new Emission<>(g.x,g.y,g.z,g.sound,g.volume*gain,g.pitch));
++            while(recent.size()>=capacity)recent.removeFirst();
++            recent.addLast(new Heard<>(g.dimension,g.sound,g.x,g.y,g.z,g.created,g.due,tick));
++            it.remove();
++        }
++        return out;
++    }
++    public int size(){return groups.size();}
++    int recentSize(){return recent.size();}
++    private void pruneRecent(String dimension,long tick) {
++        recent.removeIf(h->h.dimension().equals(dimension)&&(tick<h.emitted()||tick-h.emitted()>3));
++    }
++    public void clear(){groups.clear();recent.clear();}
++}
+--- baseline/src/main/java/com/bobincraft/destruction/IndustrialSmokeBudget.java
++++ stabilized/src/main/java/com/bobincraft/destruction/IndustrialSmokeBudget.java
+@@ -0,0 +1,26 @@
++package com.bobincraft.destruction;
++
++/** Shared client smoke eligibility and the existing emission-rate calculation, without Minecraft dependencies. */
++public final class IndustrialSmokeBudget {
++    private IndustrialSmokeBudget() {}
++
++    public static boolean isEmitter(boolean industrial, boolean burning, float intensity,
++                                    boolean chunkLoaded, double distance, double farDistance) {
++        return industrial && burning && intensity > 0.0f && chunkLoaded
++                && Double.isFinite(distance) && distance <= farDistance;
++    }
++
++    public static double particlesPerSecond(double distance, float intensity, int emitters,
++                                            double nearDistance, double mediumDistance, double farDistance,
++                                            int nearRate, int mediumRate, int maximumParticles) {
++        if (!Double.isFinite(distance) || distance > farDistance || intensity <= 0.0f || emitters <= 0) return 0.0;
++        double rate;
++        if (distance <= nearDistance) rate = nearRate * (0.6 + 0.4 * intensity);
++        else if (distance <= mediumDistance) rate = mediumRate * (0.5 + 0.5 * intensity);
++        else rate = 0.65 * intensity;
++        double maximumPerSecond = maximumParticles / 4.0;
++        double total = rate * emitters;
++        if (total > maximumPerSecond && total > 0.0) rate *= maximumPerSecond / total;
++        return rate;
++    }
++}
+--- baseline/src/main/java/com/bobincraft/destruction/IndustrialSmokeColor.java
++++ stabilized/src/main/java/com/bobincraft/destruction/IndustrialSmokeColor.java
+@@ -0,0 +1,10 @@
++package com.bobincraft.destruction;
++
++/** Stateless illumination; callers always supply immutable base channels. */
++public final class IndustrialSmokeColor {
++    private IndustrialSmokeColor(){}
++    public static float warmth(double ageFraction,double heightAboveSource) {
++        return (float)(.10*Math.exp(-Math.max(0,heightAboveSource)/3.5)*(1-Math.max(0,Math.min(1,ageFraction))));
++    }
++    public static float channel(float base,float light){return Math.max(0,Math.min(1,base+light));}
++}
+--- baseline/src/main/java/com/bobincraft/destruction/RefineryTransitions.java
++++ stabilized/src/main/java/com/bobincraft/destruction/RefineryTransitions.java
+@@ -8,38 +8,54 @@
+ import net.minecraft.server.world.ServerWorld;
+ import java.util.*;
+ import java.util.concurrent.*;
+-import org.slf4j.LoggerFactory;
+ 
+-/** Tank-only, bounded server reconciliation with observational generation provenance. */
++/** Tank-only reconciliation. Unresolved/protected cells are durable but never active tick work. */
+ public final class RefineryTransitions {
+-    public static final ThreadLocal<Boolean> GENERATING=ThreadLocal.withInitial(()->false);
+-    public static final ThreadLocal<Integer> SCOPE_CALLS=ThreadLocal.withInitial(()->0);
+-    public static final ThreadLocal<Boolean> WRITING=ThreadLocal.withInitial(()->false);
++    private static final ThreadLocal<Boolean> GENERATING=ThreadLocal.withInitial(()->false);
++    private static volatile long generationEpoch;
++    private static final ThreadLocal<Long> SCOPE_EPOCH=ThreadLocal.withInitial(()->-1L);
++    public record GenerationScope(boolean generating,long epoch) {}
++    private static final ThreadLocal<Boolean> WRITING=ThreadLocal.withInitial(()->false);
+     private static final Map<String,Map<Long,String>> GENERATED=new ConcurrentHashMap<>();
+     private static final Set<Long> EXTERNALLY_CHANGED=ConcurrentHashMap.newKeySet();
+     private static final Map<String,Map<Long,String>> REQUESTS=new LinkedHashMap<>();
++    private static final ArrayDeque<String> READY=new ArrayDeque<>();
++    private static final Set<String> QUEUED=new HashSet<>();
++    private static final ArrayDeque<Long> CHUNK_WAKE=new ArrayDeque<>();
++    private static final Set<Long> CHUNK_QUEUED=new HashSet<>();
++    private static final ArrayDeque<Long> FALLBACK=new ArrayDeque<>();
++    private static final Set<Long> FALLBACK_KEYS=new HashSet<>();
+     private static RefineryTransitionState active;
+-    private static int rotation;
+-    private static int lastApplied;
+-    public static int lastApplied() {return lastApplied;}
+-    private RefineryTransitions() {}
+-    public static void reset() {GENERATED.clear();EXTERNALLY_CHANGED.clear();REQUESTS.clear();active=null;rotation=0;}
++    private static ServerWorld boundWorld;
++    private static int lastApplied,lastChecked,lastMaintenance;
++    public static int lastApplied(){return lastApplied;}
++    private RefineryTransitions(){}
++    public static void reset() {
++        generationEpoch++;GENERATED.clear();EXTERNALLY_CHANGED.clear();REQUESTS.clear();READY.clear();QUEUED.clear();
++        CHUNK_WAKE.clear();CHUNK_QUEUED.clear();FALLBACK.clear();FALLBACK_KEYS.clear();active=null;boundWorld=null;
++    }
++    /** Direct mod-owned hooks avoid fragile mixins into package-private generator methods. */
++    public static GenerationScope beginGeneration(boolean refinery) {
++        var previous=new GenerationScope(GENERATING.get(),SCOPE_EPOCH.get());
++        GENERATING.set(refinery);SCOPE_EPOCH.set(generationEpoch);return previous;
++    }
++    public static void endGeneration(GenerationScope previous){GENERATING.set(previous.generating());SCOPE_EPOCH.set(previous.epoch());}
+     private static DestructibleStructure tank(int x,int y,int z) {
+-        for(var s:DestructibleStructureRegistry.all()) if(s.structureType().category()==DestructibleStructureType.Category.REFINERY_TANK
+-                && StructureGeometrySnapshot.includes(s,x,y,z))return s;
++        for(var s:DestructibleStructureRegistry.spatialIndex().getInChunk(x>>4,z>>4))
++            if(s.structureType().category()==DestructibleStructureType.Category.REFINERY_TANK&&StructureGeometrySnapshot.includes(s,x,y,z))return s;
+         return null;
+     }
+     public static String encode(BlockState state) {
+         var props=new TreeMap<String,String>();
+         for(var e:state.getEntries().entrySet())props.put(e.getKey().getName(),e.getValue().toString());
+-        StringBuilder text=new StringBuilder(Registries.BLOCK.getId(state.getBlock()).toString());
++        var text=new StringBuilder(Registries.BLOCK.getId(state.getBlock()).toString());
+         if(!props.isEmpty()){text.append('[');boolean first=true;for(var e:props.entrySet()){
+             if(!first)text.append(',');text.append(e.getKey()).append('=').append(e.getValue());first=false;}text.append(']');}
+         return text.toString();
+     }
+     private static BlockState decode(String text) {
+         int bracket=text.indexOf('[');
+-        if(bracket>=0 && (!text.endsWith("]") || bracket+1>=text.length()-1))throw new IllegalArgumentException("Bad properties");
++        if(bracket>=0&&(!text.endsWith("]")||bracket+1>=text.length()-1))throw new IllegalArgumentException("Bad properties");
+         String id=bracket<0?text:text.substring(0,bracket);
+         var key=new Identifier(id);if(!Registries.BLOCK.containsId(key))throw new IllegalArgumentException("Missing block "+id);
+         BpSpec spec=BpSpec.of(id);
+@@ -49,93 +65,156 @@
+         if(!encode(result).equals(text))throw new IllegalArgumentException("Unresolvable state "+text);
+         return result;
+     }
+-    public static void trackScope() {
+-        if(GENERATING.get()) {int calls=SCOPE_CALLS.get()+1;SCOPE_CALLS.set(calls);if(calls>=2)GENERATING.set(false);}
+-    }
+     public static void generated(int x,int y,int z,BlockState state) {
+-        if(!GENERATING.get())return;var s=tank(x,y,z);if(s==null)return;
++        if(!GENERATING.get()||SCOPE_EPOCH.get()!=generationEpoch)return;var s=tank(x,y,z);if(s==null)return;
+         GENERATED.computeIfAbsent(s.structureId(),id->new ConcurrentHashMap<>()).put(BlockPos.asLong(x,y,z),encode(state));
+     }
++    private static boolean relevant(ServerWorld world) {
++        return world.getRegistryKey().equals(WarzoneDimension.WORLD)||world.getServer().getWorld(WarzoneDimension.WORLD)==null;
++    }
+     public static void external(ServerWorld world,BlockPos pos) {
+-        if(WRITING.get()||GENERATING.get()||!world.getRegistryKey().equals(com.bobincraft.warzone.WarzoneDimension.WORLD))return;
++        if(WRITING.get()||GENERATING.get()||!relevant(world))return;
+         var s=tank(pos.getX(),pos.getY(),pos.getZ());if(s==null)return;
+         EXTERNALLY_CHANGED.add(pos.asLong());var state=RefineryTransitionState.get(world);
+-        if(!state.writable())return;
+-        var ledger=state.ledgers.computeIfAbsent(s.structureId(),id->new TransitionLedger());ledger.protect(pos.asLong());state.markDirty();
++        if(!state.writable()||state.frozen(s.structureId()))return;
++        var ledger=state.ledgers.computeIfAbsent(s.structureId(),id->new TransitionLedger());
++        long before=ledger.mutations();ledger.protect(pos.asLong());if(before!=ledger.mutations())state.markDirty();
+     }
+     public static void bind(ServerWorld world) {
+-        active=RefineryTransitionState.get(world);if(!active.writable())return;
++        if(!relevant(world)||boundWorld==world)return;
++        boundWorld=world;active=RefineryTransitionState.get(world);READY.clear();QUEUED.clear();
++        CHUNK_WAKE.clear();CHUNK_QUEUED.clear();FALLBACK.clear();FALLBACK_KEYS.clear();
++        if(!active.writable())return;
++        for(var e:active.ledgers.entrySet())if(e.getValue().revision==StructureGeometrySnapshot.REVISION) {
++            e.getValue().rebuildScheduling();schedule(e.getKey(),e.getValue());
++        }
++    }
++    private static void schedule(String id,TransitionLedger ledger) {
++        if(ledger.hasReady()&&QUEUED.add(id))READY.add(id);
++    }
++    public static void chunkLoaded(ServerWorld world,int x,int z) {
++        if(world!=boundWorld)return;
++        long key=((long)x&0xffffffffL)|((long)z<<32);
++        boolean waiting=active!=null&&active.ledgers.values().stream().anyMatch(l->l.deferredChunks().contains(key));
++        if(waiting&&CHUNK_QUEUED.add(key))CHUNK_WAKE.add(key);
++    }
++    private static int ingestGenerated(int budget,Set<String> changed) {
++        int work=0;
+         for(var e:GENERATED.entrySet()) {
+             if(active.frozen(e.getKey()))continue;
+-            var ledger=active.ledgers.computeIfAbsent(e.getKey(),id->new TransitionLedger());
+-            if(ledger.revision!=StructureGeometrySnapshot.REVISION)continue;
+-            for(var cell:new ArrayList<>(e.getValue().entrySet())) {
+-                if(!EXTERNALLY_CHANGED.contains(cell.getKey()) && !ledger.protectedCells.contains(cell.getKey())) {
+-                    ledger.owned.putIfAbsent(cell.getKey(),cell.getValue());ledger.conflicts.remove(cell.getKey());
+-                }
+-                e.getValue().remove(cell.getKey(),cell.getValue());
+-            }
+-        }
+-        active.markDirty();
++            var l=active.ledgers.computeIfAbsent(e.getKey(),id->new TransitionLedger());
++            if(l.revision!=StructureGeometrySnapshot.REVISION)continue;
++            var it=e.getValue().entrySet().iterator();
++            while(it.hasNext()&&work<budget) {
++                var cell=it.next();long p=cell.getKey();String state=cell.getValue();work++;
++                if(!EXTERNALLY_CHANGED.contains(p)&&l.noteOwned(p,state))changed.add(e.getKey());
++                e.getValue().remove(p,state);
++            }
++            schedule(e.getKey(),l);if(work>=budget)break;
++        }
++        return work;
++    }
++    /** Graceful shutdown drains the finite generation backlog before persistent-state saving.
++     * Normal gameplay ingestion remains bounded; an interrupted crash still falls back conservatively. */
++    public static void flushProvenance(ServerWorld world) {
++        bind(world);if(world!=boundWorld||active==null||!active.writable())return;
++        var changed=new LinkedHashSet<String>();
++        while(ingestGenerated(256,changed)>0) { /* finite, coalesced tank cells; no block writes */ }
++        if(!changed.isEmpty())active.markDirty();
+     }
+     public static synchronized void enqueue(WarzoneTerrain terrain,DestructibleStructure s,StructureDamageState target) {
+         var bp=StructureCollapseManager.getStageBlueprint(terrain,s,target);
+         Map<Long,String> desired=new LinkedHashMap<>();
+         bp.forEachCell((x,y,z,spec,mode)->desired.put(BlockPos.asLong(x,y,z),encode(BlueprintBlitter.state(spec))));
+-        REQUESTS.put(s.structureId(),desired);
+-        s.setTransitionProgress(target,1); // HP/stage are preserved; geometry completion is independently journaled.
++        REQUESTS.put(s.structureId(),desired);s.setTransitionProgress(target,1);
++    }
++    private static int wakeChunks(ServerWorld world,int budget) {
++        int work=0;
++        // Bounded fallback over chunk keys, never all parked cells. Pinned tank geometry has a finite chunk footprint.
++        if(world.getTime()%40==0) {
++            int checks=Math.min(16,FALLBACK.size());
++            while(checks-->0) {
++                long key=FALLBACK.poll();
++                boolean waiting=active.ledgers.values().stream().anyMatch(l->l.deferredChunks().contains(key));
++                if(waiting) {
++                    if(world.isChunkLoaded((int)key,(int)(key>>32))&&CHUNK_QUEUED.add(key))CHUNK_WAKE.add(key);
++                    FALLBACK.add(key);
++                } else FALLBACK_KEYS.remove(key);
++            }
++        }
++        int notifications=Math.min(8,CHUNK_WAKE.size());
++        while(!CHUNK_WAKE.isEmpty()&&work<budget&&notifications-->0) {
++            long key=CHUNK_WAKE.poll();CHUNK_QUEUED.remove(key);boolean remaining=false;
++            for(var e:active.ledgers.entrySet()) {
++                var l=e.getValue();if(l.revision!=StructureGeometrySnapshot.REVISION)continue;
++                work+=l.wakeChunk(key,Math.max(0,budget-work));schedule(e.getKey(),l);
++                remaining|=l.deferredChunks().contains(key);
++            }
++            if(remaining&&CHUNK_QUEUED.add(key))CHUNK_WAKE.add(key);
++        }
++        return work;
+     }
+     public static synchronized int tick(ServerWorld world,int budget) {
+-        lastApplied=0;bind(world);if(!active.writable() || !StructurePersistentState.get(world).supportsTransitions())return 0;
++        lastApplied=lastChecked=lastMaintenance=0;bind(world);
++        if(world!=boundWorld||active==null||!active.writable()||!StructurePersistentState.get(world).supportsTransitions())return 0;
++        var changed=new LinkedHashSet<String>();
++        lastMaintenance=ingestGenerated(256,changed);
+         for(var e:REQUESTS.entrySet()) {
+-            if(active.frozen(e.getKey()))continue;
+-            var s=DestructibleStructureRegistry.get(e.getKey());if(s==null)continue;
+-            var ledger=active.ledgers.computeIfAbsent(e.getKey(),id->new TransitionLedger());
+-            if(ledger.revision!=StructureGeometrySnapshot.REVISION)continue;
+-            ledger.variant=s.destroyedVariantIndex();ledger.stage=s.targetStage().index;ledger.retarget(e.getValue());
+-            if(ledger.owned.isEmpty())LoggerFactory.getLogger("bobin_craft/destruction").warn("LEGACY_UNRESOLVED {}: no generation provenance; preserving world blocks",e.getKey());
+-        }
+-        REQUESTS.clear();int work=0;
+-        var tasks=new ArrayList<>(active.ledgers.entrySet());
+-        if(!tasks.isEmpty())Collections.rotate(tasks,Math.floorMod(rotation++,tasks.size()));
+-        for(var entry:tasks) {
+-            var l=entry.getValue();if(l.revision!=StructureGeometrySnapshot.REVISION)continue;
+-            var positions=new ArrayList<>(l.pending.keySet());
+-            // Start from high cells; rotate candidates to prevent unloaded chunks from starving loaded work.
+-            positions.sort(Comparator.comparingInt((Long value)->-BlockPos.fromLong(value).getY()));
+-            if(!positions.isEmpty())Collections.rotate(positions,Math.floorMod(rotation* Math.max(1,budget),positions.size()));
+-            int share=Math.max(1,budget/Math.max(1,tasks.size()));int local=0;
+-            for(long packed:positions) {
+-                if(work>=budget||local>=share)break;work++;local++;
++            if(active.frozen(e.getKey()))continue;var s=DestructibleStructureRegistry.get(e.getKey());if(s==null)continue;
++            var l=active.ledgers.computeIfAbsent(e.getKey(),id->new TransitionLedger());
++            if(l.revision!=StructureGeometrySnapshot.REVISION)continue;
++            l.variant=s.destroyedVariantIndex();l.stage=s.targetStage().index;l.retarget(e.getValue());
++            changed.add(e.getKey());schedule(e.getKey(),l);
++        }
++        REQUESTS.clear();lastMaintenance+=wakeChunks(world,64);
++        while(lastChecked<Math.max(0,budget)&&!READY.isEmpty()) {
++            String id=READY.poll();QUEUED.remove(id);var l=active.ledgers.get(id);
++            if(l==null)continue;Long packed=l.poll();lastChecked++;
++            if(packed==null){continue;}
++            long before=l.mutations();
++            if(l.actionable(packed)) {
+                 BlockPos pos=BlockPos.fromLong(packed);
+-                if(!world.isChunkLoaded(pos.getX()>>4,pos.getZ()>>4))continue;
+-                if(!world.isInBuildLimit(pos)) {l.protect(packed);continue;}
+-                BlockState current=world.getBlockState(pos);
+-                if(current.hasBlockEntity()) {
+-                    var blockEntity=world.getBlockEntity(pos);
+-                    boolean emptyOriginalHopper=current.isOf(Blocks.HOPPER) && blockEntity instanceof net.minecraft.inventory.Inventory inventory && inventory.isEmpty();
+-                    if(!emptyOriginalHopper){l.protect(packed);continue;}
++                if(!world.isChunkLoaded(pos.getX()>>4,pos.getZ()>>4)) {
++                    l.defer(packed);long key=TransitionLedger.chunk(packed);
++                    if(FALLBACK_KEYS.add(key))FALLBACK.add(key);
+                 }
+-                if(!l.canApply(packed,encode(current)))continue;
+-                final BlockState next;
+-                try {next=decode(l.pending.get(packed));}
+-                catch(RuntimeException invalidState) {l.protect(packed);continue;}
+-                WRITING.set(true);
+-                try {world.setBlockState(pos,next,Block.NOTIFY_LISTENERS);} finally {WRITING.set(false);}
+-                if(world.getBlockState(pos).equals(next)){l.applied(packed);lastApplied++;}
+-            }
+-            var s=DestructibleStructureRegistry.get(entry.getKey());
+-            if(s!=null) {
+-                boolean done=l.pending.isEmpty()&&l.conflicts.isEmpty();
+-                s.setTransitionProgress(s.targetStage(),done?0:1);
+-                StructurePersistentState.get(world).recordStructure(s);
+-            }
+-        }
+-        active.markDirty();return work;
++                else if(!world.isInBuildLimit(pos))l.protect(packed);
++                else {
++                    BlockState current=world.getBlockState(pos);
++                    if(current.hasBlockEntity()) {
++                        var be=world.getBlockEntity(pos);
++                        boolean originalEmptyHopper=current.isOf(Blocks.HOPPER)&&be instanceof net.minecraft.inventory.Inventory inv&&inv.isEmpty();
++                        if(!originalEmptyHopper)l.protect(packed);
++                    }
++                    if(l.actionable(packed)&&l.canApply(packed,encode(current))) {
++                        try {
++                            BlockState next=decode(l.pending.get(packed));boolean previous=WRITING.get();WRITING.set(true);
++                            try {world.setBlockState(pos,next,Block.NOTIFY_LISTENERS);} finally {WRITING.set(previous);}
++                            if(world.getBlockState(pos).equals(next)){l.applied(packed);lastApplied++;}
++                            else l.protect(packed); // A rejected write is a conflict, not a hot retry loop.
++                        } catch(IllegalArgumentException invalid){l.protect(packed);}
++                    }
++                }
++            }
++            if(before!=l.mutations())changed.add(id);
++            schedule(id,l); // Round-robin one candidate per structure.
++        }
++        if(!changed.isEmpty()) {
++            active.markDirty();
++            for(String id:changed) {
++                var s=DestructibleStructureRegistry.get(id);var l=active.ledgers.get(id);
++                if(s!=null&&l!=null) {
++                    boolean done=l.pending.isEmpty()&&l.conflicts.isEmpty();
++                    s.setTransitionProgress(s.targetStage(),done?0:1);StructurePersistentState.get(world).recordStructure(s);
++                }
++            }
++        }
++        return lastChecked;
+     }
+     public static String status(String id) {
+-        if(active!=null && active.frozen(id))return "UNSUPPORTED_GEOMETRY_REVISION: original entry preserved";
++        if(active!=null&&active.frozen(id))return "UNSUPPORTED_GEOMETRY_REVISION: original entry preserved";
+         if(active==null||!active.ledgers.containsKey(id))return "LEGACY_UNRESOLVED: no ownership journal";
+-        var l=active.ledgers.get(id);return "revision="+l.revision+" pending="+l.pending.size()+" conflicts="+l.conflicts.size()+" owned="+l.owned.size();
++        var l=active.ledgers.get(id);return "revision="+l.revision+" pending="+l.pending.size()+" conflicts="+l.conflicts.size()
++                +" owned="+l.owned.size()+l.counts()+" last_checks="+lastChecked+" last_writes="+lastApplied+" maintenance="+lastMaintenance;
+     }
+ }
+--- baseline/src/main/java/com/bobincraft/destruction/StructureDamageManager.java
++++ stabilized/src/main/java/com/bobincraft/destruction/StructureDamageManager.java
+@@ -229,6 +229,8 @@
+                 || !Float.isFinite(effectiveDamage) || effectiveDamage <= 0.0f) {
+             return false;
+         }
++        // Shared policy boundary covers normal, direct, delayed and fire damage entry points.
++        if (source != null && !StructureDamagePolicy.allows(source.kind().id, structure.structureType().category().name())) return false;
+         long tick = serverWorld != null ? serverWorld.getTime() : 0L;
+         float previousHealth = structure.currentHealth();
+         StructureDamageState previousStage = structure.damageStage().templateStage();
+@@ -509,36 +511,31 @@
+         }
+     }
+ 
++    private record DebrisSurface(net.minecraft.block.BlockState state, Vec3d point, Vec3d normal) {}
++    private static DebrisSurface debrisSurface(ServerWorld world, DestructibleStructure structure, Vec3d impact) {
++        BlockPos center=BlockPos.ofFloored(impact);
++        for(BlockPos p:BlockPos.iterate(center.add(-1,-1,-1),center.add(1,1,1))) {
++            if(!world.isChunkLoaded(p.getX()>>4,p.getZ()>>4)||!world.isInBuildLimit(p))continue;
++            var state=world.getBlockState(p);
++            if(state.isAir()||state.getCollisionShape(world,p).isEmpty()
++                    ||structure.hitZoneAt(Vec3d.ofCenter(p),.75)==DestructibleStructure.HitZone.NONE)continue;
++            Vec3d delta=impact.subtract(Vec3d.ofCenter(p));
++            Vec3d normal=Math.abs(delta.y)>=Math.max(Math.abs(delta.x),Math.abs(delta.z))
++                    ?new Vec3d(0,delta.y<0?-1:1,0):Math.abs(delta.x)>Math.abs(delta.z)
++                    ?new Vec3d(delta.x<0?-1:1,0,0):new Vec3d(0,0,delta.z<0?-1:1);
++            return new DebrisSurface(state,Vec3d.ofCenter(p).add(normal.multiply(.56)),normal);
++        }
++        return null;
++    }
+     private static void spawnLocalHitDebris(ServerWorld world, DestructibleStructure structure, Vec3d impact, StructureDamageState stage) {
+-        BlockPos origin = structure.originPosition();
+-        if (!world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4)) return;
+-        var cat = structure.structureType().category();
+-        net.minecraft.block.BlockState debrisState = switch (cat) {
+-            case BRIDGE_SECTION -> Blocks.COBBLESTONE.getDefaultState();
+-            case SUBSTATION_TRANSFORMER, SUBSTATION_EQUIPMENT -> Blocks.BROWN_TERRACOTTA.getDefaultState();
+-            default -> Blocks.GRAY_TERRACOTTA.getDefaultState();
+-        };
+-        ImpactDebris.send(world, debrisState, impact.add(0, 0.35, 0), new Vec3d(0, 1, 0), 1.35f, null);
+-    }
+-
++        var surface=debrisSurface(world,structure,impact);
++        if(surface!=null)ImpactDebris.send(world,surface.state(),surface.point(),surface.normal(),1.35f,null);
++    }
+     private static void spawnTransitionDebris(ServerWorld world, DestructibleStructure structure, Vec3d impact, StructureDamageState newStage) {
+-        BlockPos origin = structure.originPosition();
+-        if (!world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4)) return;
+-        var cat = structure.structureType().category();
+-        int bursts = 8;
+-        for (int i = 0; i < bursts; i++) {
+-            double angle = (i * 2.0 * Math.PI) / bursts;
+-            Vec3d dir = cat == DestructibleStructureType.Category.BRIDGE_SECTION
+-                    ? new Vec3d(Math.cos(angle) * 0.55, 0.45, Math.sin(angle) * 0.55).normalize()
+-                    : new Vec3d(Math.cos(angle) * 0.65, 0.75, Math.sin(angle) * 0.65).normalize();
+-            net.minecraft.block.BlockState debrisState = switch (cat) {
+-                case BRIDGE_SECTION -> (i % 2 == 0) ? Blocks.COBBLESTONE.getDefaultState() : Blocks.STONE_BRICKS.getDefaultState();
+-                case SUBSTATION_TRANSFORMER, SUBSTATION_EQUIPMENT -> (i % 2 == 0) ? Blocks.BROWN_TERRACOTTA.getDefaultState() : Blocks.GRAY_TERRACOTTA.getDefaultState();
+-                default -> (i % 2 == 0) ? Blocks.GRAY_TERRACOTTA.getDefaultState() : Blocks.LIGHT_GRAY_TERRACOTTA.getDefaultState();
+-            };
+-            ImpactDebris.send(world, debrisState,
+-                    impact.add(Math.cos(angle) * 1.4, 0.6, Math.sin(angle) * 1.4),
+-                    dir, 2.35f, null);
++        for(int i=0;i<4;i++) {
++            double a=i*Math.PI*.5;
++            var surface=debrisSurface(world,structure,impact.add(Math.cos(a)*1.2,.2,Math.sin(a)*1.2));
++            if(surface!=null)ImpactDebris.send(world,surface.state(),surface.point(),surface.normal(),2.35f,null);
+         }
+     }
+ 
+--- baseline/src/main/java/com/bobincraft/destruction/StructureDamagePolicy.java
++++ stabilized/src/main/java/com/bobincraft/destruction/StructureDamagePolicy.java
+@@ -0,0 +1,14 @@
++package com.bobincraft.destruction;
++
++/** Structural-only policy. Stable source IDs are supplied by StructureDamageSource.Kind.
++ * Entity pressure/shrapnel and ordinary terrain are deliberately outside this decision. */
++public final class StructureDamagePolicy {
++    private StructureDamagePolicy() {}
++
++    public static boolean allows(String sourceId, String category) {
++        boolean protectedTarget = "BRIDGE_SECTION".equals(category) || "REFINERY_TANK".equals(category);
++        boolean droppedOrHandPayload = "hand_grenade".equals(sourceId)
++                || "drone_payload".equals(sourceId) || "heavy_drone_payload".equals(sourceId);
++        return !protectedTarget || !droppedOrHandPayload;
++    }
++}
+--- baseline/src/main/java/com/bobincraft/destruction/StructureDamageSource.java
++++ stabilized/src/main/java/com/bobincraft/destruction/StructureDamageSource.java
+@@ -58,7 +58,8 @@
+     }
+ 
+     public static StructureDamageSource fromDroneBlast(Entity source, UUID ownerUuid, DroneBlastType blastType, Vec3d center) {
+-        Kind kind = switch (blastType) {
++        // GROM-7 reuses the HE terrain envelope; its actual source must not become a dropped payload.
++        Kind kind = source instanceof com.bobincraft.weapon.grom7.Grom7ChargeEntity ? Kind.DEMOLITION_CHARGE : switch (blastType) {
+             case ARMOR_HIGH_EXPLOSIVE -> Kind.ARMOR_SHELL;
+             case KAMIKAZE, KAMIKAZE_FRAGMENTATION, KAMIKAZE_BREACH -> Kind.KAMIKAZE_DRONE;
+             case DROPPED_GRENADE -> Kind.HAND_GRENADE;
+--- baseline/src/main/java/com/bobincraft/destruction/StructureFireManager.java
++++ stabilized/src/main/java/com/bobincraft/destruction/StructureFireManager.java
+@@ -161,25 +161,9 @@
+      * scaled by the global budget across all simultaneously burning structures (Section 8.2).
+      */
+     public static double budgetedParticlesPerSecond(double distanceBlocks, float intensity, int activeBurningCount) {
+-        if (!Double.isFinite(distanceBlocks) || distanceBlocks > farLodDistance || intensity <= 0.0f || activeBurningCount <= 0) {
+-            return 0.0;
+-        }
+-        double baseRate;
+-        if (distanceBlocks <= nearLodDistance) {
+-            baseRate = nearSmokeParticlesPerSecond * (0.6 + 0.4 * intensity);
+-        } else if (distanceBlocks <= mediumLodDistance) {
+-            baseRate = mediumSmokeParticlesPerSecond * (0.5 + 0.5 * intensity);
+-        } else {
+-            // 96-192 blocks: minimal single column pulse
+-            baseRate = 0.65 * intensity;
+-        }
+-        // Global budget scaling so N concurrent fires never exceed maxStructureFireParticles
+-        double maxTotalPerSecond = maxStructureFireParticles / 4.0; // assuming ~4s average particle lifetime
+-        double unscaledTotal = baseRate * activeBurningCount;
+-        if (unscaledTotal > maxTotalPerSecond && unscaledTotal > 0.0) {
+-            baseRate *= (maxTotalPerSecond / unscaledTotal);
+-        }
+-        return baseRate;
++        return IndustrialSmokeBudget.particlesPerSecond(distanceBlocks, intensity, activeBurningCount,
++                nearLodDistance, mediumLodDistance, farLodDistance,
++                nearSmokeParticlesPerSecond, mediumSmokeParticlesPerSecond, maxStructureFireParticles);
+     }
+ 
+     public static synchronized void clear() {
+--- baseline/src/main/java/com/bobincraft/destruction/StructureNetworkSync.java
++++ stabilized/src/main/java/com/bobincraft/destruction/StructureNetworkSync.java
+@@ -96,17 +96,8 @@
+             Vec3d impactPoint
+     ) {}
+ 
+-    private record ScheduledSound(
+-            RegistryKey<World> worldKey,
+-            BlockPos pos,
+-            SoundEvent sound,
+-            SoundCategory category,
+-            float volume,
+-            float pitch,
+-            long playAtTick
+-    ) {}
+-
+-    private static final Queue<ScheduledSound> SCHEDULED_SOUNDS = new ConcurrentLinkedQueue<>();
++    private record SoundLayer(SoundEvent event, SoundCategory category) {}
++    private static final ExplosionSoundMixer<SoundLayer> SOUND_MIXER = new ExplosionSoundMixer<>(128);
+     private static boolean registered = false;
+     private static volatile boolean debugBoundsEnabled = false;
+ 
+@@ -124,30 +115,16 @@
+                                             float pitch,
+                                             int delayTicks) {
+         if (world == null || pos == null || sound == null) return;
+-        if (SCHEDULED_SOUNDS.size() > 128) return;
+-        SCHEDULED_SOUNDS.add(new ScheduledSound(
+-                world.getRegistryKey(),
+-                BlockPos.ofFloored(pos),
+-                sound,
+-                category != null ? category : SoundCategory.BLOCKS,
+-                volume,
+-                pitch,
+-                world.getTime() + Math.max(1, delayTicks)
+-        ));
++        SOUND_MIXER.offer(world.getRegistryKey().getValue().toString(),pos.x,pos.y,pos.z,
++                new SoundLayer(sound,category != null ? category : SoundCategory.BLOCKS),volume,pitch,world.getTime(),delayTicks);
+     }
+ 
+     private static void tickScheduledSounds(ServerWorld world) {
+-        if (SCHEDULED_SOUNDS.isEmpty()) return;
+-        long now = world.getTime();
+-        RegistryKey<World> key = world.getRegistryKey();
+-        SCHEDULED_SOUNDS.removeIf(s -> {
+-            if (!s.worldKey.equals(key)) return false;
+-            if (now < s.playAtTick) return false;
+-            if (world.isChunkLoaded(s.pos.getX() >> 4, s.pos.getZ() >> 4)) {
+-                world.playSound(null, s.pos, s.sound, s.category, s.volume, s.pitch);
+-            }
+-            return true;
+-        });
++        for (var s : SOUND_MIXER.drain(world.getRegistryKey().getValue().toString(),world.getTime())) {
++            BlockPos pos=BlockPos.ofFloored(s.x(),s.y(),s.z());
++            if(world.isChunkLoaded(pos.getX() >> 4,pos.getZ() >> 4))
++                world.playSound(null,pos,s.sound().event(),s.sound().category(),s.volume(),s.pitch());
++        }
+     }
+ 
+     public static void register() {
+@@ -156,7 +133,7 @@
+ 
+         ServerLifecycleEvents.SERVER_STARTING.register(server -> RefineryTransitions.reset());
+         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
+-            SCHEDULED_SOUNDS.clear();
++            SOUND_MIXER.clear();
+             ServerWorld warzone = server.getWorld(WarzoneDimension.WORLD);
+             ServerWorld targetWorld = warzone != null ? warzone : server.getOverworld();
+             WarzoneTerrain terrain = StructureDamageManager.resolveTerrain(targetWorld);
+@@ -171,11 +148,15 @@
+         });
+ 
+         ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+-            SCHEDULED_SOUNDS.clear();
++            SOUND_MIXER.clear();
+             ServerWorld warzone = server.getWorld(WarzoneDimension.WORLD);
+             ServerWorld targetWorld = warzone != null ? warzone : server.getOverworld();
++            RefineryTransitions.flushProvenance(targetWorld);
+             StructurePersistentState.get(targetWorld).captureFromRegistry();
+         });
++
++        net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents.CHUNK_LOAD.register(
++                (world,chunk)->RefineryTransitions.chunkLoaded(world,chunk.getPos().x,chunk.getPos().z));
+ 
+         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+             server.execute(() -> sendFullSnapshotToPlayer(handler.player));
+@@ -341,10 +322,10 @@
+         BlockPos pos = structure.originPosition();
+         Vec3d impact = impactPoint != null ? impactPoint : Vec3d.ofCenter(pos);
+         if (world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+-            world.playSound(null, BlockPos.ofFloored(impact),
+-                    SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 1.25f, 0.68f);
+-            world.playSound(null, BlockPos.ofFloored(impact),
+-                    Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 0.95f, 0.85f);
++            scheduleLayeredSound(world, impact,
++                    SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 1.25f, 0.68f, 0);
++            scheduleLayeredSound(world, impact,
++                    Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 0.95f, 0.85f, 0);
+         }
+         StructureHitPacket pkt = new StructureHitPacket(
+                 structure.structureId(), pos, oldStage, newStage, componentId, hitZone, impact);
+@@ -368,14 +349,14 @@
+         if (world.isChunkLoaded(pos.getX() >> 4, pos.getZ() >> 4)) {
+             if (newStage.isTerminalOrDestroying()) {
+                 // Multi-stage structural collapse audio: initial fracture blast -> girder shear -> heavy collapse impact
+-                world.playSound(null, pos, Grom7Content.GROM7_DETONATE_SUB_SOUND, SoundCategory.BLOCKS, 2.35f, 0.62f);
+-                world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 2.10f, 0.58f);
++                scheduleLayeredSound(world, center, Grom7Content.GROM7_DETONATE_SUB_SOUND, SoundCategory.BLOCKS, 2.35f, 0.62f, 0);
++                scheduleLayeredSound(world, center, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 2.10f, 0.58f, 0);
+                 scheduleLayeredSound(world, center, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 1.95f, 0.66f, 8);
+                 scheduleLayeredSound(world, center, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.15f, 0.50f, 16);
+                 scheduleLayeredSound(world, center, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 1.75f, 0.52f, 26);
+                 scheduleLayeredSound(world, center, SoundEvents.BLOCK_DEEPSLATE_BRICKS_BREAK, SoundCategory.BLOCKS, 1.60f, 0.55f, 34);
+             } else {
+-                world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.3f, 0.75f);
++                scheduleLayeredSound(world, center, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.3f, 0.75f, 0);
+             }
+         }
+         for (ServerPlayerEntity player : world.getPlayers()) {
+--- baseline/src/main/java/com/bobincraft/destruction/TransitionLedger.java
++++ stabilized/src/main/java/com/bobincraft/destruction/TransitionLedger.java
+@@ -2,32 +2,90 @@
+ 
+ import java.util.*;
+ 
+-/** Persistent operation core. Exact expected states and conflicts survive target replacement. */
++/** Persistent expected/target records plus rebuildable, non-persistent runnable/chunk indexes.
++ * Version-1 journals retain their existing representation; scheduling never establishes ownership. */
+ public final class TransitionLedger {
+     public final Map<Long,String> owned=new LinkedHashMap<>();
+     public final Map<Long,String> pending=new LinkedHashMap<>();
+     public final Set<Long> protectedCells=new HashSet<>();
+     public final Set<Long> conflicts=new HashSet<>();
+     public UUID operation=UUID.randomUUID();
+-    public int revision=StructureGeometryRevision.VALUE, variant, stage;
+-    // Kept independent from Minecraft so recovery/retarget semantics can be tested directly.
+-    private static final class StructureGeometryRevision { static final int VALUE=2; }
++    public int revision=2, variant, stage;
++    private final ArrayDeque<Long> ready=new ArrayDeque<>();
++    private final Set<Long> queued=new HashSet<>();
++    private final Map<Long,LinkedHashSet<Long>> unloaded=new LinkedHashMap<>();
++    private long mutations;
++
++    public long mutations(){return mutations;}
++    public static long chunk(long packed) {
++        int x=(int)(packed>>38),z=(int)(packed<<26>>38);
++        return ((long)(x>>4)&0xffffffffL)|((long)(z>>4)<<32);
++    }
++    public void rebuildScheduling() {
++        ready.clear();queued.clear();unloaded.clear();
++        var ordered=new ArrayList<>(pending.keySet());
++        ordered.sort(Comparator.comparingInt(p->-(int)(p<<52>>52)));
++        for(long p:ordered)wake(p);
++    }
++    private void wake(long pos) {
++        if(pending.containsKey(pos)&&owned.containsKey(pos)&&!protectedCells.contains(pos)&&queued.add(pos))ready.add(pos);
++    }
++    public boolean hasReady(){return !ready.isEmpty();}
++    /** A stale candidate costs one check, rather than an unbounded discard loop. */
++    public Long poll(){Long p=ready.poll();if(p!=null)queued.remove(p);return p;}
++    public boolean actionable(long p){return pending.containsKey(p)&&owned.containsKey(p)&&!protectedCells.contains(p);}
++    public void defer(long pos){unloaded.computeIfAbsent(chunk(pos),k->new LinkedHashSet<>()).add(pos);}
++    public Set<Long> deferredChunks(){return Collections.unmodifiableSet(unloaded.keySet());}
++    public int wakeChunk(long key,int budget) {
++        var cells=unloaded.get(key);if(cells==null)return 0;
++        int work=0;var it=cells.iterator();
++        while(it.hasNext()&&work<budget){long pos=it.next();it.remove();wake(pos);work++;}
++        if(cells.isEmpty())unloaded.remove(key);return work;
++    }
++    public void retry(long pos){wake(pos);}
++    public boolean noteOwned(long pos,String state) {
++        if(protectedCells.contains(pos)||owned.containsKey(pos))return false;
++        owned.put(pos,state);conflicts.remove(pos);mutations++;wake(pos);return true;
++    }
+     public void retarget(Map<Long,String> target) {
++        // Full target maps retain unfinished removals. Protected targets are retained for diagnosis/recovery.
+         for(var e:target.entrySet()) {
+-            if(protectedCells.contains(e.getKey())) {conflicts.add(e.getKey());continue;}
+-            if(!owned.containsKey(e.getKey())) {pending.put(e.getKey(),e.getValue());conflicts.add(e.getKey());continue;}
+-            if(Objects.equals(owned.get(e.getKey()),e.getValue())) pending.remove(e.getKey());
+-            else pending.put(e.getKey(),e.getValue());
++            long p=e.getKey();String next=e.getValue();
++            if(!protectedCells.contains(p)&&owned.containsKey(p)&&Objects.equals(owned.get(p),next)) {
++                if(pending.remove(p)!=null)mutations++;
++                if(conflicts.remove(p))mutations++;
++            } else {
++                if(!Objects.equals(pending.put(p,next),next))mutations++;
++                if((protectedCells.contains(p)||!owned.containsKey(p))&&conflicts.add(p))mutations++;
++            }
+         }
++        rebuildScheduling(); // Once per retarget, never per tick.
+     }
+     public boolean canApply(long pos,String current) {
+         if(!pending.containsKey(pos))return false;
+-        if(protectedCells.contains(pos) || !owned.containsKey(pos)) {conflicts.add(pos);return false;}
+-        String target=pending.get(pos);
+-        if(Objects.equals(current,target)) {owned.put(pos,current);pending.remove(pos);return false;}
+-        if(!Objects.equals(current,owned.get(pos))) {conflicts.add(pos);protectedCells.add(pos);return false;}
++        if(protectedCells.contains(pos)||!owned.containsKey(pos)) {
++            if(conflicts.add(pos))mutations++;return false;
++        }
++        if(Objects.equals(current,pending.get(pos))) {applied(pos);return false;}
++        if(!Objects.equals(current,owned.get(pos))) {protect(pos);return false;}
+         return true;
+     }
+-    public void applied(long pos) {owned.put(pos,pending.remove(pos));conflicts.remove(pos);}
+-    public void protect(long pos) {protectedCells.add(pos);if(pending.containsKey(pos)) conflicts.add(pos);}
++    public void applied(long pos) {
++        String result=pending.remove(pos);if(result==null)return;
++        owned.put(pos,result);conflicts.remove(pos);queued.remove(pos);mutations++;
++    }
++    public void protect(long pos) {
++        if(protectedCells.add(pos))mutations++;
++        queued.remove(pos);
++        if(pending.containsKey(pos)&&conflicts.add(pos))mutations++;
++    }
++    public String counts() {
++        int provenance=0,protectedCount=0,completed=0,deferred=0,actionable=0;
++        for(long p:pending.keySet())if(protectedCells.contains(p))protectedCount++;
++            else if(!owned.containsKey(p))provenance++;else actionable++;
++        for(var cells:unloaded.values())for(long p:cells)if(actionable(p))deferred++;
++        for(long p:owned.keySet())if(!pending.containsKey(p))completed++;
++        return " active="+Math.max(0,actionable-deferred)+" deferred="+deferred+" awaiting_provenance="+provenance
++                +" protected_conflict="+protectedCount+" completed="+completed;
++    }
+ }
+--- baseline/src/main/java/com/bobincraft/destruction/client/DestructionKeyframeAnimator.java
++++ stabilized/src/main/java/com/bobincraft/destruction/client/DestructionKeyframeAnimator.java
+@@ -563,7 +563,10 @@
+         if ("cracked_concrete".equals(mat)) return com.bobincraft.warzone.CombatZoneBlocks.CRACKED_CONCRETE.getDefaultState();
+         if ("mossy_concrete".equals(mat)) return com.bobincraft.warzone.CombatZoneBlocks.MOSSY_CONCRETE.getDefaultState();
+         if ("rusted_sheet_metal".equals(mat)) return com.bobincraft.warzone.CombatZoneBlocks.RUSTED_SHEET_METAL.getDefaultState();
+-        return Blocks.COBBLESTONE.getDefaultState();
++        if ("pipe_iron".equals(mat)) return com.bobincraft.warzone.CombatZoneBlocks.UTILITY_PIPE.getDefaultState();
++        if ("busbar_metal".equals(mat)) return com.bobincraft.warzone.CombatZoneBlocks.BUSBAR.getDefaultState();
++        // Unknown visual material is not permission to invent a cobblestone structural fragment.
++        return Blocks.AIR.getDefaultState();
+     }
+ 
+     public static synchronized void clear() {
+--- baseline/src/main/java/com/bobincraft/destruction/client/IndustrialSmokeParticle.java
++++ stabilized/src/main/java/com/bobincraft/destruction/client/IndustrialSmokeParticle.java
+@@ -41,9 +41,22 @@
+         ELECTRIC_ARC
+     }
+ 
++    private static ClientWorld budgetWorld;
++    private static long pruneTick = Long.MIN_VALUE;
++    private static final java.util.List<IndustrialSmokeParticle> ACTIVE = new java.util.ArrayList<>();
++    public static void clearBudget() { ACTIVE.clear(); budgetWorld=null; pruneTick=Long.MIN_VALUE; }
++    public static int activeCount(ClientWorld world) {
++        if (world != budgetWorld) { clearBudget(); budgetWorld=world; }
++        if (world != null && world.getTime() != pruneTick) {
++            ACTIVE.removeIf(p->!p.isAlive()); pruneTick=world.getTime();
++        }
++        return ACTIVE.size();
++    }
++
+     private final LayerProfile profile;
+     private final SpriteProvider sprites;
+     private final float baseScale;
++    private final float baseRed, baseGreen, baseBlue;
+     private final float spinSpeed;
+     private final float shadeJitter;
+     private final double sourceY, motionPhase;
+@@ -142,6 +155,7 @@
+             }
+         }
+ 
++        baseRed = red; baseGreen = green; baseBlue = blue;
+         this.scale = this.baseScale * 0.68f;
+         if (sprites != null) {
+             setSpriteForAge(sprites);
+@@ -216,8 +230,12 @@
+             scale *= (float)com.bobincraft.destruction.IndustrialSmokeMotion.variation(motionPhase, age);
+             // Warm reflected source light is restricted to the lower core, not the whole column.
+             float warmth = profile == LayerProfile.SMOKE_LOWER_CORE
+-                    ? (float)(.10*Math.exp(-Math.max(0,y-sourceY)/3.5)*(1-t)) : 0;
+-            red += warmth; green += warmth*.25f;
++                    ? com.bobincraft.destruction.IndustrialSmokeColor.warmth(t,y-sourceY) : 0;
++            if (profile == LayerProfile.SMOKE_LOWER_CORE) {
++                red = com.bobincraft.destruction.IndustrialSmokeColor.channel(baseRed,warmth);
++                green = com.bobincraft.destruction.IndustrialSmokeColor.channel(baseGreen,warmth*.25f);
++                blue = com.bobincraft.destruction.IndustrialSmokeColor.channel(baseBlue,0);
++            }
+         }
+     }
+ 
+@@ -337,7 +355,10 @@
+     }
+ 
+     public static ParticleFactory<DefaultParticleType> factory(LayerProfile profile, SpriteProvider sprites) {
+-        return (type, world, x, y, z, vx, vy, vz) ->
+-                new IndustrialSmokeParticle(world, x, y, z, vx, vy, vz, profile, sprites);
++        return (type, world, x, y, z, vx, vy, vz) -> {
++            if (activeCount(world) >= com.bobincraft.destruction.StructureFireManager.maxStructureFireParticles) return null;
++            var particle = new IndustrialSmokeParticle(world,x,y,z,vx,vy,vz,profile,sprites);
++            ACTIVE.add(particle); return particle;
++        };
+     }
+ }
+--- baseline/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
++++ stabilized/src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java
+@@ -5,6 +5,7 @@
+ import com.bobincraft.destruction.RefinerySmokeConfig;
+ import com.bobincraft.destruction.StructureDamageState;
+ import com.bobincraft.destruction.StructureFireManager;
++import com.bobincraft.destruction.IndustrialSmokeBudget;
+ import com.bobincraft.destruction.StructureNetworkSync;
+ import com.bobincraft.drone.client.DroneClient;
+ import com.bobincraft.weapon.grom7.Grom7Content;
+@@ -104,6 +105,7 @@
+             DestructionKeyframeAnimator.clear();
+             debugRender = false;
+             activeClientParticlesEstimate = 0;
++            IndustrialSmokeParticle.clearBudget();
+         });
+ 
+         ClientTickEvents.END_CLIENT_TICK.register(StructureDestructionClient::tickClientEffects);
+@@ -145,25 +147,33 @@
+         debugRender = enabled;
+     }
+ 
++    private static boolean isSmokeEmitter(StructureNetworkSync.ClientStructureView view,
++                                          ClientWorld world, Vec3d observer) {
++        BlockPos origin = view.origin();
++        Vec3d center = new Vec3d(origin.getX() + 0.5, origin.getY() + view.height() * 0.70, origin.getZ() + 0.5);
++        return IndustrialSmokeBudget.isEmitter(
++                view.category() != DestructibleStructureType.Category.BRIDGE_SECTION,
++                view.isBurning(), view.fireIntensity(),
++                world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4),
++                observer.distanceTo(center), StructureFireManager.farLodDistance);
++    }
++
+     private static void tickClientEffects(MinecraftClient client) {
+         ClientWorld world = client.world;
+         if (world == null || client.isPaused() || CLIENT_STRUCTURES.isEmpty()) return;
+ 
+-        activeClientParticlesEstimate = Math.max(0, activeClientParticlesEstimate - Math.max(3, activeClientParticlesEstimate / 28));
++        activeClientParticlesEstimate = IndustrialSmokeParticle.activeCount(world);
+ 
+         Vec3d observer = client.gameRenderer != null && client.gameRenderer.getCamera() != null
+                 ? client.gameRenderer.getCamera().getPos()
+                 : (DroneClient.isActive() && DroneClient.getDrone() != null ? DroneClient.getDrone().getPos()
+                 : (client.player != null ? client.player.getEyePos() : Vec3d.ZERO));
+ 
+-        int activeEffectStructures = 0;
++        int activeSmokeEmitters = 0;
+         for (StructureNetworkSync.ClientStructureView v : CLIENT_STRUCTURES.values()) {
+-            if (v.category() == DestructibleStructureType.Category.BRIDGE_SECTION) continue;
+-            if (v.isBurning() || v.stage() == StructureDamageState.DAMAGED || v.stage() == StructureDamageState.CRITICAL) {
+-                activeEffectStructures++;
+-            }
++            if (isSmokeEmitter(v, world, observer)) activeSmokeEmitters++;
+         }
+-        if (activeEffectStructures == 0) return;
++        // Non-burning substations still own electrical arcs; they do not share the smoke allocation.
+ 
+         float hMult = Math.max(1.0f, RefinerySmokeConfig.smokeHeightMultiplier);
+         float densityMult = Math.max(1.0f, RefinerySmokeConfig.columnDensity);
+@@ -200,12 +210,11 @@
+                 }
+             }
+ 
+-            float effectiveIntensity = v.isBurning() ? v.fireIntensity()
+-                    : (v.stage() == StructureDamageState.DAMAGED ? 0.25f : 0.0f);
+-            if (effectiveIntensity <= 0.0f) continue;
++            if (!isSmokeEmitter(v, world, observer)) continue;
++            float effectiveIntensity = v.fireIntensity();
+ 
+             boolean isRefineryTank = v.category() == DestructibleStructureType.Category.REFINERY_TANK;
+-            double ratePerSecond = StructureFireManager.budgetedParticlesPerSecond(dist, effectiveIntensity, activeEffectStructures);
++            double ratePerSecond = StructureFireManager.budgetedParticlesPerSecond(dist, effectiveIntensity, activeSmokeEmitters);
+             double pulseMultiplier = (isRefineryTank && v.isBurning()) ? (3.2 * densityMult) : 1.4;
+             double ratePerTick = (ratePerSecond * pulseMultiplier) / 20.0;
+             double acc = PARTICLE_ACCUMULATORS.getOrDefault(v.structureId(), 0.0) + ratePerTick;
+@@ -271,7 +280,7 @@
+                                 0.045 + world.random.nextDouble() * 0.03,
+                                 (world.random.nextDouble() - 0.5) * 0.03);
+                     }
+-                    activeClientParticlesEstimate += 5;
++                    activeClientParticlesEstimate += dist <= StructureFireManager.mediumLodDistance ? 6 : 4;
+                 } else if (dist <= StructureFireManager.nearLodDistance) {
+                     world.addImportantParticle(DestructionParticles.SMOKE_CORE, true,
+                             px, py + 0.4, pz,
+@@ -307,136 +316,53 @@
+         }
+     }
+ 
++    private static boolean electrical(DestructibleStructureType.Category cat) {
++        return cat == DestructibleStructureType.Category.SUBSTATION_TRANSFORMER
++                || cat == DestructibleStructureType.Category.SUBSTATION_EQUIPMENT;
++    }
++
++    private static BlockState hitMaterial(ClientWorld world, Vec3d point) {
++        BlockPos center = BlockPos.ofFloored(point);
++        for (BlockPos p : new BlockPos[]{center, center.down(), center.north(), center.south(), center.east(), center.west()}) {
++            if (!world.isChunkLoaded(p.getX() >> 4, p.getZ() >> 4)) continue;
++            BlockState state = world.getBlockState(p);
++            if (!state.isAir() && !state.getCollisionShape(world, p).isEmpty()) return state;
++        }
++        return null; // Never invent concrete/metal from unknown source geometry.
++    }
++
++    private static void transientBurst(ClientWorld world, Vec3d point, DestructibleStructureType.Category cat, int count, double spread) {
++        BlockState material = hitMaterial(world, point);
++        // Short-lived impact dust, independent from the industrial fire budget and factories.
++        for (int i = 0; i < count; i++) {
++            double x = point.x + (world.random.nextDouble() - .5) * spread;
++            double y = point.y + world.random.nextDouble() * .8;
++            double z = point.z + (world.random.nextDouble() - .5) * spread;
++            world.addParticle(ParticleTypes.POOF, x, y, z, (world.random.nextDouble()-.5)*.10, .025, (world.random.nextDouble()-.5)*.10);
++            if (material != null) world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, material),
++                    x, y, z, (world.random.nextDouble()-.5)*.18, .06, (world.random.nextDouble()-.5)*.18);
++            if (electrical(cat) && i % 4 == 0) world.addParticle(ParticleTypes.ELECTRIC_SPARK, x, y, z, 0, .06, 0);
++        }
++    }
++
+     private static void playLocalHitEffect(MinecraftClient client, StructureNetworkSync.StructureHitPacket pkt) {
+         ClientWorld world = client.world;
+-        BlockPos origin = pkt.origin();
+-        if (world == null || !world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4)) return;
+-
+-        StructureNetworkSync.ClientStructureView view = CLIENT_STRUCTURES.get(pkt.structureId());
+-        DestructibleStructureType.Category cat = view != null ? view.category() : inferCategory(pkt.structureId());
+-        Vec3d impact = pkt.impactPoint();
+-        BlockState fragState = switch (cat) {
+-            case BRIDGE_SECTION -> Blocks.COBBLESTONE.getDefaultState();
+-            case SUBSTATION_TRANSFORMER, SUBSTATION_EQUIPMENT -> Blocks.BROWN_TERRACOTTA.getDefaultState();
+-            default -> Blocks.GRAY_TERRACOTTA.getDefaultState();
+-        };
+-
+-        int count = pkt.newStage() != pkt.oldStage() ? 14 : 8;
+-        for (int i = 0; i < count && activeClientParticlesEstimate < StructureFireManager.maxStructureFireParticles; i++) {
+-            double ox = impact.x + (world.random.nextDouble() - 0.5) * 2.5;
+-            double oy = impact.y + (world.random.nextDouble() - 0.5) * 1.6;
+-            double oz = impact.z + (world.random.nextDouble() - 0.5) * 2.5;
+-            world.addImportantParticle(DestructionParticles.CONCRETE_DUST, true,
+-                    ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.08, 0.03, (world.random.nextDouble() - 0.5) * 0.08);
+-            world.addImportantParticle(DestructionParticles.SMOKE_CORE, true,
+-                    ox, oy + 0.3, oz, (world.random.nextDouble() - 0.5) * 0.04, 0.06, (world.random.nextDouble() - 0.5) * 0.04);
+-            world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, fragState),
+-                    ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.22, 0.06, (world.random.nextDouble() - 0.5) * 0.22);
+-            if (i % 3 == 0) {
+-                world.addParticle(ParticleTypes.ELECTRIC_SPARK, ox, oy, oz,
+-                        (world.random.nextDouble() - 0.5) * 0.14, 0.06, (world.random.nextDouble() - 0.5) * 0.14);
+-            }
+-            activeClientParticlesEstimate += 4;
+-        }
+-        world.playSound(impact.x, impact.y, impact.z, SoundEvents.BLOCK_STONE_BREAK, SoundCategory.BLOCKS, 1.15f, 0.72f, false);
+-        world.playSound(impact.x, impact.y, impact.z, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 0.85f, 0.82f, false);
+-    }
+-
+-    private static void playTransitionBurst(MinecraftClient client,
+-                                            String id,
+-                                            BlockPos origin,
+-                                            StructureDamageState oldStage,
+-                                            StructureDamageState newStage) {
++        if (world == null || !world.isChunkLoaded(pkt.origin().getX() >> 4, pkt.origin().getZ() >> 4)) return;
++        var view = CLIENT_STRUCTURES.get(pkt.structureId());
++        var cat = view != null ? view.category() : inferCategory(pkt.structureId());
++        transientBurst(world, pkt.impactPoint(), cat, pkt.oldStage() == pkt.newStage() ? 8 : 14, 2.5);
++        // Structural hit sounds have one server owner (StructureNetworkSync).
++    }
++
++    private static void playTransitionBurst(MinecraftClient client, String id, BlockPos origin,
++                                            StructureDamageState oldStage, StructureDamageState newStage) {
+         ClientWorld world = client.world;
+         if (world == null || !world.isChunkLoaded(origin.getX() >> 4, origin.getZ() >> 4)) return;
+-
+-        StructureNetworkSync.ClientStructureView view = CLIENT_STRUCTURES.get(id);
+-        DestructibleStructureType.Category cat = view != null ? view.category() : inferCategory(id);
+-        double cx = origin.getX() + 0.5;
+-        double cy = origin.getY() + 0.5;
+-        double cz = origin.getZ() + 0.5;
+-
+-        if (cat == DestructibleStructureType.Category.BRIDGE_SECTION) {
+-            int count = 24;
+-            BlockState concreteState = Blocks.COBBLESTONE.getDefaultState();
+-            BlockState stoneState = Blocks.STONE_BRICKS.getDefaultState();
+-            for (int i = 0; i < count && activeClientParticlesEstimate < StructureFireManager.maxStructureFireParticles; i++) {
+-                double ox = cx + (world.random.nextDouble() - 0.5) * 9.5;
+-                double oy = cy + (world.random.nextDouble() - 0.5) * 2.8;
+-                double oz = cz + (world.random.nextDouble() - 0.5) * 9.5;
+-                world.addImportantParticle(DestructionParticles.CONCRETE_DUST, true,
+-                        ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.09, 0.03, (world.random.nextDouble() - 0.5) * 0.09);
+-                world.addImportantParticle(DestructionParticles.SMOKE_CORE, true,
+-                        ox, oy + 0.4, oz, (world.random.nextDouble() - 0.5) * 0.04, 0.075, (world.random.nextDouble() - 0.5) * 0.04);
+-                world.addImportantParticle(DestructionParticles.SMOKE_COLUMN, true,
+-                        ox, oy + 1.2, oz, (world.random.nextDouble() - 0.5) * 0.05, 0.11, (world.random.nextDouble() - 0.5) * 0.05);
+-                BlockState frag = (i % 2 == 0) ? concreteState : stoneState;
+-                world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, frag),
+-                        ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.25, -0.12, (world.random.nextDouble() - 0.5) * 0.25);
+-                if (i % 4 == 0) {
+-                    world.addParticle(DestructionParticles.ELECTRIC_ARC, ox, oy, oz,
+-                            (world.random.nextDouble() - 0.5) * 0.12, 0.06, (world.random.nextDouble() - 0.5) * 0.12);
+-                }
+-                activeClientParticlesEstimate += 5;
+-            }
+-            world.playSound(cx, cy, cz, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 1.55f, 0.62f, false);
+-            world.playSound(cx, cy, cz, SoundEvents.BLOCK_DEEPSLATE_BRICKS_BREAK, SoundCategory.BLOCKS, 1.35f, 0.60f, false);
+-            world.playSound(cx, cy, cz, SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 0.80f, 0.50f, false);
+-            return;
+-        }
+-
+-        if (cat == DestructibleStructureType.Category.SUBSTATION_TRANSFORMER
+-                || cat == DestructibleStructureType.Category.SUBSTATION_EQUIPMENT) {
+-            int count = 20;
+-            BlockState ceramicState = Blocks.BROWN_TERRACOTTA.getDefaultState();
+-            for (int i = 0; i < count && activeClientParticlesEstimate < StructureFireManager.maxStructureFireParticles; i++) {
+-                double ox = cx + (world.random.nextDouble() - 0.5) * 6.0;
+-                double oy = cy + 1.5 + world.random.nextDouble() * 4.5;
+-                double oz = cz + (world.random.nextDouble() - 0.5) * 6.0;
+-                world.addImportantParticle(DestructionParticles.ELECTRIC_ARC, true, ox, oy, oz,
+-                        (world.random.nextDouble() - 0.5) * 0.18, 0.10, (world.random.nextDouble() - 0.5) * 0.18);
+-                world.addImportantParticle(DestructionParticles.FIRE_PLUME, true, ox, oy, oz,
+-                        (world.random.nextDouble() - 0.5) * 0.05, 0.08, (world.random.nextDouble() - 0.5) * 0.05);
+-                world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, ceramicState),
+-                        ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.2, 0.05, (world.random.nextDouble() - 0.5) * 0.2);
+-                world.addImportantParticle(DestructionParticles.SMOKE_CORE, true,
+-                        ox, oy + 0.5, oz, (world.random.nextDouble() - 0.5) * 0.04, 0.07, (world.random.nextDouble() - 0.5) * 0.04);
+-                world.addImportantParticle(DestructionParticles.SMOKE_COLUMN, true,
+-                        ox, oy + 1.5, oz, (world.random.nextDouble() - 0.5) * 0.04, 0.12, (world.random.nextDouble() - 0.5) * 0.04);
+-                activeClientParticlesEstimate += 5;
+-            }
+-            world.playSound(cx, cy + 2.0, cz, SoundEvents.BLOCK_GLASS_BREAK, SoundCategory.BLOCKS, 1.1f, 0.70f, false);
+-            world.playSound(cx, cy + 2.0, cz, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 1.35f, 0.68f, false);
+-            return;
+-        }
+-
+-        // Industrial Refinery Tank Rupture Eruption: 3-layer smoke + rolling fire plume
+-        int burstCount = 24;
+-        BlockState steelState = Blocks.GRAY_TERRACOTTA.getDefaultState();
+-        for (int i = 0; i < burstCount && activeClientParticlesEstimate < StructureFireManager.maxStructureFireParticles; i++) {
+-            double ox = cx + (world.random.nextDouble() - 0.5) * 7.5;
+-            double oy = cy + 2.5 + world.random.nextDouble() * 6.5;
+-            double oz = cz + (world.random.nextDouble() - 0.5) * 7.5;
+-            world.addImportantParticle(DestructionParticles.FIRE_PLUME, true,
+-                    ox, oy, oz,
+-                    (world.random.nextDouble() - 0.5) * 0.06,
+-                    0.11 + world.random.nextDouble() * 0.06,
+-                    (world.random.nextDouble() - 0.5) * 0.06);
+-            world.addImportantParticle(DestructionParticles.SMOKE_CORE, true,
+-                    ox, oy + 0.8, oz,
+-                    (world.random.nextDouble() - 0.5) * 0.04, 0.095, (world.random.nextDouble() - 0.5) * 0.04);
+-            world.addImportantParticle(DestructionParticles.SMOKE_COLUMN, true,
+-                    ox, oy + 2.5, oz,
+-                    (world.random.nextDouble() - 0.5) * 0.05, 0.165, (world.random.nextDouble() - 0.5) * 0.05);
+-            world.addImportantParticle(DestructionParticles.SMOKE_CANOPY, true,
+-                    ox, oy + 5.0, oz,
+-                    (world.random.nextDouble() - 0.5) * 0.06, 0.13, (world.random.nextDouble() - 0.5) * 0.06);
+-            world.addParticle(new BlockStateParticleEffect(ParticleTypes.BLOCK, steelState),
+-                    ox, oy, oz, (world.random.nextDouble() - 0.5) * 0.25, 0.12, (world.random.nextDouble() - 0.5) * 0.25);
+-            activeClientParticlesEstimate += 5;
+-        }
+-        world.playSound(cx, cy + 4.0, cz, SoundEvents.BLOCK_NETHERITE_BLOCK_BREAK, SoundCategory.BLOCKS, 1.45f, 0.55f, false);
+-        world.playSound(cx, cy + 4.0, cz, Grom7Content.GROM7_DEBRIS_CRUMBLE_SOUND, SoundCategory.BLOCKS, 1.50f, 0.60f, false);
++        var view = CLIENT_STRUCTURES.get(id);
++        var cat = view != null ? view.category() : inferCategory(id);
++        transientBurst(world, Vec3d.ofCenter(origin).add(0, .5, 0), cat, 24,
++                cat == DestructibleStructureType.Category.BRIDGE_SECTION ? 8 : 5);
++        // Persistent smoke/fire comes only from tickClientEffects and authoritative burning state.
+     }
+ 
+     private static DestructibleStructureType.Category inferCategory(String id) {
+--- baseline/src/main/java/com/bobincraft/drone/BlastTerrain.java
++++ stabilized/src/main/java/com/bobincraft/drone/BlastTerrain.java
+@@ -49,12 +49,14 @@
+     /** Capture visibility before any edits, so breaking one window cannot expose a hidden soil layer. */
+     public static Plan collect(ServerWorld world, Entity source, ServerPlayerEntity owner,
+                                Vec3d center, DroneBlastType type, boolean underwater) {
++        String sourceKind = com.bobincraft.destruction.StructureDamageSource
++                .fromDroneBlast(source, owner != null ? owner.getUuid() : null, type, center).kind().id;
+         List<BlockPos> windows = new ArrayList<>();
+         List<Scorch> soil = new ArrayList<>();
+         List<BlockPos> breach = new ArrayList<>();
+         List<BlockPos> fires = new ArrayList<>();
+         if (TERRAIN_DAMAGE != null && world.getGameRules() != null && !world.getGameRules().getBoolean(TERRAIN_DAMAGE)) {
+-            return new Plan(windows, soil, breach, fires);
++            return new Plan(windows, soil, breach, fires, sourceKind);
+         }
+         boolean megaStrike = type == DroneBlastType.FP1_DEEP_STRIKE;
+         double maxBreachDist = megaStrike ? 5.8 : 1.8;
+@@ -66,6 +68,7 @@
+             BlockPos pos = mutable.toImmutable();
+             if (!world.isInBuildLimit(pos) || !world.isChunkLoaded(pos) || !world.getWorldBorder().contains(pos)
+                     || owner != null && !world.canPlayerModifyAt(owner, pos)) continue;
++            if (!terrainAllowed(sourceKind, pos)) continue;
+             BlockState state = world.getBlockState(pos);
+             double distSq = Vec3d.ofCenter(pos).squaredDistanceTo(center);
+ 
+@@ -109,20 +112,30 @@
+         breach.sort(Comparator.comparingDouble(pos -> Vec3d.ofCenter(pos).squaredDistanceTo(center)));
+         return new Plan(windows, soil,
+                 List.copyOf(breach.subList(0, Math.min(maxBreachCount, breach.size()))),
+-                List.copyOf(fires.subList(0, Math.min(12, fires.size()))));
++                List.copyOf(fires.subList(0, Math.min(12, fires.size()))), sourceKind);
+     }
+ 
+     public record Scorch(BlockPos pos, boolean fully) { }
+ 
+-    public record Plan(List<BlockPos> windows, List<Scorch> soil, List<BlockPos> breach, List<BlockPos> fires) {
++    private static boolean terrainAllowed(String sourceKind, BlockPos pos) {
++        var target = DestructibleStructureRegistry.spatialIndex().findPrimaryAt(Vec3d.ofCenter(pos));
++        return target == null || com.bobincraft.destruction.StructureDamagePolicy
++                .allows(sourceKind, target.structureType().category().name());
++    }
++
++    public record Plan(List<BlockPos> windows, List<Scorch> soil, List<BlockPos> breach, List<BlockPos> fires, String sourceKind) {
++        public Plan(List<BlockPos> windows, List<Scorch> soil, List<BlockPos> breach, List<BlockPos> fires) {
++            this(windows, soil, breach, fires, "generic_explosion");
++        }
+         public Plan(List<BlockPos> windows, List<Scorch> soil, List<BlockPos> breach) {
+-            this(windows, soil, breach, List.of());
++            this(windows, soil, breach, List.of(), "generic_explosion");
+         }
+ 
+         public void apply(ServerWorld world, Entity source) {
+-            for (BlockPos pos : windows) if (world.getBlockState(pos).isIn(SHATTERABLE_GLASS)) world.breakBlock(pos, false, source);
++            for (BlockPos pos : windows) if (world.isChunkLoaded(pos) && terrainAllowed(sourceKind, pos) && world.getBlockState(pos).isIn(SHATTERABLE_GLASS)) world.breakBlock(pos, false, source);
+             int debrisSent = 0;
+             for (BlockPos pos : breach) {
++                if (!world.isChunkLoaded(pos) || !terrainAllowed(sourceKind, pos)) continue;
+                 BlockState st = world.getBlockState(pos);
+                 if (!st.isAir() && !st.hasBlockEntity()) {
+                     if (debrisSent++ < 14) {
+@@ -134,6 +147,8 @@
+                 }
+             }
+             for (Scorch mark : soil) {
++                if (!world.isChunkLoaded(mark.pos()) || !world.isChunkLoaded(mark.pos().up())
++                        || !terrainAllowed(sourceKind, mark.pos()) || !terrainAllowed(sourceKind, mark.pos().up())) continue;
+                 if (!world.getBlockState(mark.pos()).isIn(SCORCHABLE_SOIL)) continue;
+                 BlockPos above = mark.pos().up();
+                 if (world.getBlockState(above).isIn(SCORCHABLE_PLANTS)) world.breakBlock(above, false, source);
+@@ -141,6 +156,7 @@
+                         : CombatContent.PARTIALLY_SCORCHED_GRASS).getDefaultState(), Block.NOTIFY_ALL);
+             }
+             for (BlockPos firePos : fires) {
++                if (!world.isChunkLoaded(firePos) || !terrainAllowed(sourceKind, firePos)) continue;
+                 if (world.getBlockState(firePos).isAir() && world.getBlockState(firePos.down()).isSolidBlock(world, firePos.down())) {
+                     world.setBlockState(firePos, Blocks.FIRE.getDefaultState(), Block.NOTIFY_ALL);
+                 }
+--- baseline/src/main/java/com/bobincraft/drone/DroneContent.java
++++ stabilized/src/main/java/com/bobincraft/drone/DroneContent.java
+@@ -21,6 +21,8 @@
+ import net.minecraft.util.Identifier;
+ 
+ public final class DroneContent {
++    public static final Identifier FPV_MOTOR_ID = id("fpv_motor_loop");
++    public static final SoundEvent FPV_MOTOR_SOUND = SoundEvent.of(FPV_MOTOR_ID);
+     public static final Identifier FP1_ENGINE_ID = id("fp1_engine_loop");
+     public static final SoundEvent FP1_ENGINE_SOUND = SoundEvent.of(FP1_ENGINE_ID);
+     public static final Identifier FP1_MEGA_EXPLOSION_ID = id("fp1_mega_explosion");
+@@ -74,6 +76,8 @@
+     public static boolean isController(ItemStack stack) { return stack.getItem() instanceof DroneItem || stack.isOf(DRONE_CONTROLLER); }
+ 
+     public static void register() {
++        if (!Registries.SOUND_EVENT.containsId(FPV_MOTOR_ID))
++            Registry.register(Registries.SOUND_EVENT, FPV_MOTOR_ID, FPV_MOTOR_SOUND);
+         if (!Registries.SOUND_EVENT.containsId(FP1_ENGINE_ID)) {
+             Registry.register(Registries.SOUND_EVENT, FP1_ENGINE_ID, FP1_ENGINE_SOUND);
+         }
+--- baseline/src/main/java/com/bobincraft/drone/DroneExplosionEffects.java
++++ stabilized/src/main/java/com/bobincraft/drone/DroneExplosionEffects.java
+@@ -24,9 +24,10 @@
+                                            boolean water, BlockState material, Vec3d surface) {
+         send(world, owner, eventId, center, ExplosionVisualProfile.GROM7_DEMOLITION, water, material, surface);
+         // Retain the existing demolition material-debris event (no industrial particles).
+-        if (!water) {
+-            BlockState debris = material != null && !material.isAir() ? material : Blocks.COBBLESTONE.getDefaultState();
+-            ImpactDebris.send(world, debris, surface.add(0, .35, 0), new Vec3d(0, 1, 0), 2.15f, owner);
++        if (!water && material != null && !material.isAir()) {
++            Vec3d outward = center.subtract(surface);
++            outward = outward.lengthSquared() > .0001 ? outward.normalize() : new Vec3d(0,1,0);
++            ImpactDebris.send(world, material, surface.add(outward.multiply(.12)), outward, 2.15f, owner);
+         }
+     }
+     private static void send(ServerWorld world, ServerPlayerEntity owner, UUID id, Vec3d center,
+--- baseline/src/main/java/com/bobincraft/drone/client/DroneRotorSound.java
++++ stabilized/src/main/java/com/bobincraft/drone/client/DroneRotorSound.java
+@@ -20,7 +20,7 @@
+  *   with throttle, terminal dive RPM boost, and Doppler shift for ground observers.
+  */
+ final class DroneRotorSound extends MovingSoundInstance {
+-    static final double OBSERVER_RANGE_SQUARED = 48 * 48;
++    static final double OBSERVER_RANGE_SQUARED = 64 * 64;
+     static final double FIXED_WING_OBSERVER_RANGE_SQUARED = 160 * 160;
+     private final DroneEntity drone;
+     private final boolean pilot;
+@@ -28,7 +28,7 @@
+     DroneRotorSound(DroneEntity drone, boolean pilot) {
+         super(drone.getDroneType() == DroneType.FIXED_WING
+                         ? DroneContent.FP1_ENGINE_SOUND
+-                        : SoundEvents.ENTITY_BEE_LOOP,
++                        : DroneContent.FPV_MOTOR_SOUND,
+                 SoundCategory.NEUTRAL, Random.create());
+         this.drone = drone;
+         this.pilot = pilot;
+@@ -37,7 +37,7 @@
+         relative = pilot;
+         attenuationType = pilot ? SoundInstance.AttenuationType.NONE : SoundInstance.AttenuationType.LINEAR;
+         boolean fixedWing = drone.getDroneType() == DroneType.FIXED_WING;
+-        volume = pilot ? (fixedWing ? 0.28f : 0.10f) : (fixedWing ? 1.45f : 0.35f);
++        volume = pilot ? (fixedWing ? 0.28f : 0.24f) : (fixedWing ? 1.45f : 0.55f);
+         pitch = fixedWing ? 0.95f : 1.2f;
+         updatePosition();
+     }
+@@ -77,11 +77,12 @@
+             return;
+         }
+ 
+-        float volMult = heavy ? 1.35f : 1.0f;
+-        float targetVolume = (pilot ? 0.10f + power * 0.28f : 0.35f + power * 0.40f) * volMult;
++        power = MathHelper.clamp(power, 0.0f, 1.0f);
++        float volMult = heavy ? 1.12f : 1.0f;
++        float targetVolume = (pilot ? 0.24f + power * 0.34f : 0.55f + power * 0.45f) * volMult;
+         volume = MathHelper.lerp(0.18f, volume, targetVolume);
+-        float basePitch = heavy ? 0.58f : 0.8f;
+-        float pitchSpan = heavy ? 0.72f : 1.05f;
++        float basePitch = heavy ? 0.68f : 0.84f;
++        float pitchSpan = heavy ? 0.48f : 0.76f;
+         pitch = MathHelper.lerp(0.15f, pitch, basePitch + power * pitchSpan);
+     }
+ 
+--- baseline/src/main/java/com/bobincraft/mixin/RefineryBlueprintScopeMixin.java
++++ stabilized/src/main/java/com/bobincraft/mixin/RefineryBlueprintScopeMixin.java
+@@ -1,22 +0,0 @@
+-package com.bobincraft.mixin;
+-
+-import com.bobincraft.destruction.RefineryTransitions;
+-import com.bobincraft.warzone.Blueprint;
+-import com.bobincraft.warzone.BlueprintBlitter;
+-import org.spongepowered.asm.mixin.Mixin;
+-import org.spongepowered.asm.mixin.injection.*;
+-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+-
+-/** Observational scope only: no generation coordinates, materials or placement decisions are changed. */
+-@Mixin(BlueprintBlitter.class)
+-public abstract class RefineryBlueprintScopeMixin {
+-    @Inject(method="blit",at=@At("HEAD"),remap=false)
+-    private static void bobin$begin(Blueprint blueprint,@Coerce Object writer,CallbackInfo ci) {
+-        RefineryTransitions.SCOPE_CALLS.set(0);
+-        RefineryTransitions.GENERATING.set(blueprint.name.endsWith("_refinery"));
+-    }
+-    @Inject(method="blit",at=@At("RETURN"),remap=false)
+-    private static void bobin$end(Blueprint blueprint,@Coerce Object writer,CallbackInfo ci) {
+-        RefineryTransitions.GENERATING.set(false);
+-    }
+-}
+--- baseline/src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java
++++ stabilized/src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java
+@@ -12,7 +12,7 @@
+ /** Protects externally changed tank cells, including same-material replacements via remove/place. */
+ @Mixin(WorldChunk.class)
+ public abstract class RefineryExternalEditMixin {
+-    @Inject(method="setBlockState",at=@At("RETURN"))
++    @Inject(method="setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;Z)Lnet/minecraft/block/BlockState;",at=@At("RETURN"))
+     private void bobin$observe(BlockPos pos,BlockState state,boolean moved,CallbackInfoReturnable<BlockState> cir) {
+         if(cir.getReturnValue()!=null && ((WorldChunk)(Object)this).getWorld() instanceof ServerWorld world)
+             RefineryTransitions.external(world,pos);
+--- baseline/src/main/java/com/bobincraft/mixin/RefineryGeneratedCellMixin.java
++++ stabilized/src/main/java/com/bobincraft/mixin/RefineryGeneratedCellMixin.java
+@@ -1,20 +0,0 @@
+-package com.bobincraft.mixin;
+-
+-import com.bobincraft.destruction.RefineryTransitions;
+-import net.minecraft.block.BlockState;
+-import org.spongepowered.asm.mixin.Mixin;
+-import org.spongepowered.asm.mixin.injection.*;
+-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+-
+-@Mixin(targets="com.bobincraft.warzone.ChunkWriter",remap=false)
+-public abstract class RefineryGeneratedCellMixin {
+-    // BlueprintBlitter disables connection tracking on entry and restores it in its finally block.
+-    // Clear observation there as well, including exceptional exits from the blitter.
+-    @Inject(method="setTrackConnectables",at=@At("HEAD"),remap=false)
+-    private void bobin$finallyBoundary(boolean value,CallbackInfo ci) {RefineryTransitions.trackScope();}
+-    @Inject(method="set",at=@At("RETURN"),remap=false)
+-    private void bobin$observe(int x,int y,int z,BlockState state,CallbackInfoReturnable<Boolean> cir) {
+-        if(cir.getReturnValue())RefineryTransitions.generated(x,y,z,state);
+-    }
+-}
+--- baseline/src/main/java/com/bobincraft/warzone/BlueprintBlitter.java
++++ stabilized/src/main/java/com/bobincraft/warzone/BlueprintBlitter.java
+@@ -26,6 +26,7 @@
+ 
+     public static void blit(Blueprint bp, ChunkWriter w) {
+         if (!bp.intersectsChunk(w.minX, w.minZ)) return;
++        var previousObservation = com.bobincraft.destruction.RefineryTransitions.beginGeneration(bp.name.endsWith("_refinery"));
+         boolean wasTracking = w.isTrackingConnectables();
+         w.setTrackConnectables(false);
+         try {
+@@ -51,6 +52,7 @@
+             }
+         } finally {
+             w.setTrackConnectables(wasTracking);
++            com.bobincraft.destruction.RefineryTransitions.endGeneration(previousObservation);
+         }
+     }
+ 
+--- baseline/src/main/java/com/bobincraft/warzone/ChunkWriter.java
++++ stabilized/src/main/java/com/bobincraft/warzone/ChunkWriter.java
+@@ -90,6 +90,8 @@
+         }
+         oceanFloor.trackUpdate(x & 15, y, z & 15, state);
+         worldSurface.trackUpdate(x & 15, y, z & 15, state);
++        if (chunk.getBlockState(pos).equals(state))
++            com.bobincraft.destruction.RefineryTransitions.generated(x,y,z,state);
+         return true;
+     }
+ 
+--- baseline/src/main/java/com/bobincraft/weapon/grom7/Grom7ChargeEntity.java
++++ stabilized/src/main/java/com/bobincraft/weapon/grom7/Grom7ChargeEntity.java
+@@ -347,6 +347,12 @@
+         boolean water = world.getFluidState(BlockPos.ofFloored(center)).isIn(FluidTags.WATER);
+         var surface = world.raycast(new RaycastContext(center, center.add(0, -2.0, 0),
+                 RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
++        if (priorState == Grom7State.ATTACHED) {
++            Vec3d faceNormal = Vec3d.of(getAttachmentFace().getVector());
++            var attachedHit = world.raycast(new RaycastContext(center, center.subtract(faceNormal.multiply(1.0)),
++                    RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE, this));
++            if (attachedHit.getType() == HitResult.Type.BLOCK && attachedHit.getBlockPos().equals(getAttachmentBlockPos())) surface = attachedHit;
++        }
+         BlockState material = surface.getType() == HitResult.Type.BLOCK ? world.getBlockState(surface.getBlockPos()) : null;
+         if (material == null && priorState == Grom7State.ATTACHED) {
+             material = world.getBlockState(getAttachmentBlockPos());
+@@ -388,12 +394,12 @@
+         // Layered realistic demolition sound choreography:
+         // Layer 1 (Tick 0): Sharp high-energy detonation crack + heavy low-end seismic sub-bass thump
+         BlockPos soundPos = BlockPos.ofFloored(center);
+-        world.playSound(null, soundPos, Grom7Content.GROM7_DETONATE_CRACK_SOUND,
+-                SoundCategory.BLOCKS, 1.95f, 0.88f + world.random.nextFloat() * 0.08f);
+-        world.playSound(null, soundPos, Grom7Content.GROM7_DETONATE_SUB_SOUND,
+-                SoundCategory.BLOCKS, 2.25f, 0.66f + world.random.nextFloat() * 0.06f);
+-        world.playSound(null, soundPos, SoundEvents.ENTITY_GENERIC_EXPLODE,
+-                SoundCategory.BLOCKS, 1.45f, 0.62f);
++        StructureNetworkSync.scheduleLayeredSound(world, center, Grom7Content.GROM7_DETONATE_CRACK_SOUND,
++                SoundCategory.BLOCKS, 1.95f, 0.88f + world.random.nextFloat() * 0.08f, 0);
++        StructureNetworkSync.scheduleLayeredSound(world, center, Grom7Content.GROM7_DETONATE_SUB_SOUND,
++                SoundCategory.BLOCKS, 2.25f, 0.66f + world.random.nextFloat() * 0.06f, 0);
++        StructureNetworkSync.scheduleLayeredSound(world, center, SoundEvents.ENTITY_GENERIC_EXPLODE,
++                SoundCategory.BLOCKS, 1.45f, 0.62f, 0);
+ 
+         // Layer 2 (Tick 5): Secondary structural shear & masonry fracture roar
+         StructureNetworkSync.scheduleLayeredSound(world, center,
+--- baseline/src/main/resources/assets/bobin_craft/lang/en_us.json
++++ stabilized/src/main/resources/assets/bobin_craft/lang/en_us.json
+@@ -391,5 +391,6 @@
+   "subtitles.bobin_craft.grom7_click": "Detonator channel switched",
+   "subtitles.bobin_craft.grom7_detonate_crack": "GROM-7 demolition charge detonates",
+   "subtitles.bobin_craft.grom7_detonate_sub": "Heavy demolition shockwave",
+-  "subtitles.bobin_craft.grom7_debris_crumble": "Structural masonry crumbles"
++  "subtitles.bobin_craft.grom7_debris_crumble": "Structural masonry crumbles",
++  "subtitles.bobin_craft.fpv_motor_loop": "FPV motors whir"
+ }
+--- baseline/src/main/resources/assets/bobin_craft/lang/ru_ru.json
++++ stabilized/src/main/resources/assets/bobin_craft/lang/ru_ru.json
+@@ -391,5 +391,6 @@
+   "subtitles.bobin_craft.grom7_click": "Переключение канала заряда",
+   "subtitles.bobin_craft.grom7_detonate_crack": "Детонация подрывного заряда «ГРОМ-7»",
+   "subtitles.bobin_craft.grom7_detonate_sub": "Ударная волна подрывного заряда",
+-  "subtitles.bobin_craft.grom7_debris_crumble": "Обрушение бетонных конструкций"
++  "subtitles.bobin_craft.grom7_debris_crumble": "Обрушение бетонных конструкций",
++  "subtitles.bobin_craft.fpv_motor_loop": "Шум моторов FPV"
+ }
+--- baseline/src/main/resources/assets/bobin_craft/lang/uk_ua.json
++++ stabilized/src/main/resources/assets/bobin_craft/lang/uk_ua.json
+@@ -391,5 +391,6 @@
+   "subtitles.bobin_craft.grom7_click": "Перемикання каналу заряду",
+   "subtitles.bobin_craft.grom7_detonate_crack": "Детонація підривного заряду «ГРІМ-7»",
+   "subtitles.bobin_craft.grom7_detonate_sub": "Ударна хвиля підривного заряду",
+-  "subtitles.bobin_craft.grom7_debris_crumble": "Обвалення бетонних конструкцій"
++  "subtitles.bobin_craft.grom7_debris_crumble": "Обвалення бетонних конструкцій",
++  "subtitles.bobin_craft.fpv_motor_loop": "Шум моторів FPV"
+ }
+--- baseline/src/main/resources/assets/bobin_craft/sounds.json
++++ stabilized/src/main/resources/assets/bobin_craft/sounds.json
+@@ -360,7 +360,7 @@
+       },
+       {
+         "name": "bobin_craft:armor/impact",
+-        "pitch": 0.90,
++        "pitch": 0.9,
+         "volume": 1.0,
+         "attenuation_distance": 140
+       }
+@@ -389,8 +389,17 @@
+       {
+         "name": "bobin_craft:armor/impact",
+         "pitch": 0.52,
+-        "volume": 0.90,
++        "volume": 0.9,
+         "attenuation_distance": 120
++      }
++    ]
++  },
++  "fpv_motor_loop": {
++    "subtitle": "subtitles.bobin_craft.fpv_motor_loop",
++    "sounds": [
++      {
++        "name": "bobin_craft:drone/fpv_motor_loop",
++        "attenuation_distance": 64
+       }
+     ]
+   }
+--- baseline/src/main/resources/bobin_craft.mixins.json
++++ stabilized/src/main/resources/bobin_craft.mixins.json
+@@ -13,8 +13,6 @@
+     "LivingInjuryMixin",
+     "ArmorCollisionMixin",
+     "DroneEntityTrackerMixin",
+-    "RefineryBlueprintScopeMixin",
+-    "RefineryGeneratedCellMixin",
+     "RefineryExternalEditMixin"
+   ],
+   "client": [
+--- baseline/src/main/resources/fabric.mod.json
++++ stabilized/src/main/resources/fabric.mod.json
+@@ -11,6 +11,9 @@
+     ],
+     "client": [
+       "com.bobincraft.BobinCraftClient"
++    ],
++    "fabric-gametest": [
++      "com.bobincraft.destruction.DestructionGameTestSuite"
+     ]
+   },
+   "mixins": [
+--- baseline/src/test/java/com/bobincraft/destruction/RefineryTransitionContract.java
++++ stabilized/src/test/java/com/bobincraft/destruction/RefineryTransitionContract.java
+@@ -27,7 +27,7 @@
+   legacy.owned.put(1L,"roof");legacy.conflicts.remove(1L);
+   require(legacy.canApply(1,"roof"),"newly generated chunk must retain its pending target");legacy.applied(1);
+   var replacement=new TransitionLedger();replacement.owned.put(1L,"metal");replacement.protect(1L);
+-  replacement.retarget(Map.of(1L,"air"));require(replacement.pending.isEmpty(),"same-material replacement protected");
++  replacement.retarget(Map.of(1L,"air"));require(replacement.pending.containsKey(1L) && !replacement.canApply(1,"metal"),"same-material replacement target retained but protected");
+   System.out.println("PASS Stage 4: all 4 tank sizes x 4 variants; roof bounds, interrupted retarget, crash reconciliation, idempotence, legacy and player conflicts");
+  }
+ }
+--- baseline/src/test/java/com/bobincraft/destruction/StabilizationContract.java
++++ stabilized/src/test/java/com/bobincraft/destruction/StabilizationContract.java
+@@ -0,0 +1,165 @@
++package com.bobincraft.destruction;
++
++import com.bobincraft.combat.*;
++import com.bobincraft.drone.DroneBlastType;
++import java.util.*;
++
++/** Executes production kernels with Java 17, also called by JUnit; not a substitute for Fabric runtime. */
++public final class StabilizationContract {
++    private static int checks;
++    private static void check(boolean b,String message){checks++;if(!b)throw new AssertionError(message);}
++    private static long pos(int x,int y,int z){return ((long)x&0x3ffffffL)<<38|((long)z&0x3ffffffL)<<12|((long)y&0xfffL);}
++    public static void runAll() {
++        checks=0;
++        String[] forbidden={"hand_grenade","drone_payload","heavy_drone_payload"};
++        String[] allowed={"armor_shell","fixed_wing_strike","rpg_projectile","kamikaze_drone","demolition_charge","fire_tick","admin_command","generic_explosion"};
++        for(String cat:new String[]{"BRIDGE_SECTION","REFINERY_TANK","SUBSTATION_TRANSFORMER","SUBSTATION_EQUIPMENT"}) {
++            for(String source:forbidden)check(StructureDamagePolicy.allows(source,cat)==cat.startsWith("SUBSTATION"),"source/category policy "+cat+source);
++            for(String source:allowed)check(StructureDamagePolicy.allows(source,cat),"allowed heavy/source preserved");
++        }
++        for(int age=0;age<=600;age++) {
++            float light=IndustrialSmokeColor.warmth(age/600.,age/25.);
++            for(int repeat=0;repeat<20;repeat++) {
++                float red=IndustrialSmokeColor.channel(.15f,light),green=IndustrialSmokeColor.channel(.13f,light*.25f);
++                check(red>=.14999&&red<=.251&&green>=.12999&&green<=.156,"bounded immutable-base illumination");
++                check(red==IndustrialSmokeColor.channel(.15f,light),"no accumulation between repeated updates");
++            }
++        }
++        for(var p:ExplosionVisualProfile.values())for(int budget:new int[]{0,1,3,12,64}) {
++            var a=WeaponExplosionLayers.create(p,277,budget);
++            check(a.size()<=budget&&a.equals(WeaponExplosionLayers.create(p,277,budget)),"choreography bound/determinism");
++            for(var layer:a)check(layer.delayTicks()>=0&&layer.delayTicks()<=20,"bounded phase delay");
++        }
++        var fp=WeaponExplosionLayers.create(ExplosionVisualProfile.FP1_STRIKE,7,64);
++        var gr=WeaponExplosionLayers.create(ExplosionVisualProfile.GROM7_DEMOLITION,7,64);
++        check(fp.stream().anyMatch(l->l.delayTicks()>=14&&l.puff().y()>5),"FP-1 separate elevated late cloud");
++        check(gr.stream().allMatch(l->l.delayTicks()<8&&l.puff().y()<1),"GROM local short demolition crown");
++        check(fp.stream().anyMatch(l->l.kind()==WeaponExplosionLayers.Kind.DUST&&l.puff().vx()>.2),"FP-1 pressure skirt");
++        for(int charges:new int[]{1,3,10}) {
++            var mixer=new ExplosionSoundMixer<String>(128);
++            for(int i=0;i<charges;i++)for(int layer=0;layer<7;layer++)
++                check(mixer.offer("zone",i*.1,64,0,"layer"+layer,1,.9f,100,layer==0?0:layer*4),"audio submitted");
++            var out=new ArrayList<ExplosionSoundMixer.Emission<String>>();
++            for(int t=100;t<140;t++)out.addAll(mixer.drain("zone",t));
++            check(out.size()==7,"cluster preserves one complete seven-layer identity");
++            for(var e:out)check(e.volume()>=1&&e.volume()<=1.35f,"sublinear bounded auditory gain");
++            if(charges==1)check(out.stream().allMatch(e->e.volume()==1),"single charge exact gain");
++            check(mixer.size()==0,"finished sounds removed");
++        }
++        // Actual GROM-7 sympathetic charges fire two ticks after the initiating charge.
++        // Drain between events: a simultaneous-only test misses already-played duplicate onsets.
++        for(int charges:new int[]{2,3,10}) {
++            var chainMixer=new ExplosionSoundMixer<String>(128);
++            var chainVoices=new ArrayList<ExplosionSoundMixer.Emission<String>>();
++            int[] delays={0,0,0,5,6,14,22};
++            for(int tick=100;tick<140;tick++) {
++                int detonations=tick==100?1:tick==102?charges-1:0;
++                for(int charge=0;charge<detonations;charge++)for(int layer=0;layer<delays.length;layer++)
++                    check(chainMixer.offer("zone",charge*.1,64,0,"layer"+layer,1,.9f,tick,delays[layer]),"two-tick chain audio accepted");
++                chainVoices.addAll(chainMixer.drain("zone",tick));
++            }
++            check(chainVoices.size()==7,"two-tick GROM chain must not replay heard onset layers; actual="+chainVoices.size());
++        }
++
++        var mixer=new ExplosionSoundMixer<String>(2);
++        mixer.offer("a",0,0,0,"x",1,1,0,0);mixer.offer("a",30,0,0,"x",1,1,0,0);
++        check(!mixer.offer("a",60,0,0,"x",1,1,0,0),"sound queue bounded");
++        check(mixer.drain("b",10).isEmpty(),"sound dimensions isolated");
++        check(mixer.drain("a",10).size()==2,"distant explosions independent");
++        mixer.offer("a",0,0,0,"x",1,1,100,0);mixer.offer("a",0,0,0,"x",1,1,110,0);
++        check(mixer.drain("a",200).size()==2,"sequential explosions independent");
++        // Played-voice history must not hide distant, other-dimension or later detonations.
++        var heardMixer=new ExplosionSoundMixer<String>(2);
++        heardMixer.offer("a",0,0,0,"crack",1,1,100,0);
++        var firstVoice=heardMixer.drain("a",101);
++        check(firstVoice.size()==1&&firstVoice.get(0).volume()==1,"single onset unchanged");
++        check(heardMixer.offer("a",0,0,0,"crack",1,1,102,0),"late matching onset accepted by auditory grouping");
++        check(heardMixer.size()==0&&heardMixer.drain("a",103).isEmpty(),"late matching onset not replayed");
++        heardMixer.offer("a",30,0,0,"crack",1,1,102,0);
++        heardMixer.offer("b",0,0,0,"crack",1,1,102,0);
++        check(heardMixer.drain("a",103).size()==1,"heard history preserves distant onset");
++        check(heardMixer.drain("b",103).size()==1,"heard history preserves other dimension");
++        heardMixer.offer("a",0,0,0,"crack",1,1,110,0);
++        check(heardMixer.drain("a",111).size()==1,"heard history expires for later onset");
++        heardMixer.clear();check(heardMixer.size()==0&&heardMixer.recentSize()==0,"world reset clears queue and played history");
++        for(int i=0;i<64;i++) {
++            String dim="dimension"+i;
++            heardMixer.offer(dim,0,0,0,"crack",1,1,200+i*10,0);
++            check(heardMixer.drain(dim,201+i*10).size()==1,"independent dimension emits once");
++            check(heardMixer.recentSize()<=2,"played history bounded across inactive dimensions");
++        }
++        heardMixer.clear();heardMixer.offer("a",0,0,0,"crack",1,1,100,0);heardMixer.drain("a",101);
++        heardMixer.offer("a",0,0,0,"crack",1,1,10,0);
++        check(heardMixer.drain("a",11).size()==1,"clock rollback cannot suppress a new session onset");
++
++        var l=new TransitionLedger();
++        var target=new LinkedHashMap<Long,String>();
++        for(int i=0;i<10000;i++)target.put(pos(i,100,0),"air");
++        l.retarget(target);
++        check(l.pending.size()==10000&&!l.hasReady(),"legacy backlog parked, not active");
++        long before=l.mutations();for(int i=0;i<10000;i++)check(l.poll()==null,"idle legacy queue costs no candidates");
++        check(l.mutations()==before,"idle queue does not dirty journal");
++        long cell=pos(-17,77,-33);l.noteOwned(cell,"roof");l.retarget(Map.of(cell,"air"));
++        check(l.poll()==cell,"provenance wakes work");l.defer(cell);
++        check(!l.hasReady()&&l.deferredChunks().contains(TransitionLedger.chunk(cell)),"unloaded work parked");
++        check((int)TransitionLedger.chunk(cell)==-2&&(int)(TransitionLedger.chunk(cell)>>32)==-3,"negative chunk packing");
++        check(l.wakeChunk(TransitionLedger.chunk(cell),1)==1&&l.poll()==cell,"chunk event wakes exactly bounded work");
++        check(l.canApply(cell,"roof"),"owned expected write");l.applied(cell);
++        check(!l.canApply(cell,"air")&&!l.pending.containsKey(cell),"completion idempotent");
++        l.retarget(Map.of(cell,"rust"));l.protect(cell);l.rebuildScheduling();
++        check(!l.hasReady()&&l.pending.containsKey(cell),"protected target retained outside active queue");
++        check(!l.canApply(cell,"air"),"same-material replacement cannot bypass protection");
++        smokeAllocation();
++        collision();
++        System.out.println("PASS stabilization production kernels: "+checks+" checks; policy, smoke color/allocation, phase schedules, audio clusters, parked ledger, swept cosmetic collision");
++    }
++    private static void smokeAllocation() {
++        record View(String stage, boolean industrial, boolean burning, float intensity, boolean loaded, double distance) {
++            boolean emits() { return IndustrialSmokeBudget.isEmitter(industrial, burning, intensity, loaded, distance, 192); }
++        }
++        View refinery = new View("CRITICAL", true, true, .9f, true, 16);
++        for (double distance : new double[]{0, 32, 32.01, 96, 96.01, 192}) {
++            double alone = IndustrialSmokeBudget.particlesPerSecond(distance, .9f, 1, 32, 96, 192, 8, 2, 200);
++            var views = new ArrayList<View>(); views.add(refinery);
++            for (int added = 0; added <= 256; added++) {
++                if (added > 0) views.add(new View(added % 2 == 0 ? "DAMAGED" : "CRITICAL", true, false, .9f, true, 16));
++                int emitters = (int) views.stream().filter(View::emits).count();
++                check(emitters == 1, "non-burning damaged/critical structures consume no refinery smoke allocation");
++                check(IndustrialSmokeBudget.particlesPerSecond(distance, .9f, emitters, 32, 96, 192, 8, 2, 200) == alone,
++                        "burning refinery rate unchanged after adding non-burning damaged structures at every LOD");
++            }
++        }
++        for (View excluded : List.of(new View("INTACT",true,false,1,true,16),
++                new View("CRITICAL",true,true,0,true,16), new View("CRITICAL",true,true,1,false,16),
++                new View("CRITICAL",true,true,1,true,192.01), new View("CRITICAL",false,true,1,true,16),
++                new View("CRITICAL",true,true,1,true,Double.NaN)))
++            check(!excluded.emits(), "only eligible active industrial emitters share allocation");
++        check(new View("CRITICAL",true,true,1,true,192).emits(), "existing inclusive far LOD boundary preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(16,1,8,32,96,192,8,2,200)==6.25, "multiple real fires retain global cap scaling");
++        check(IndustrialSmokeBudget.particlesPerSecond(16,1,1,32,96,192,8,2,200)==8, "near appearance rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(64,1,1,32,96,192,8,2,200)==2, "medium LOD rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(128,1,1,32,96,192,8,2,200)==.65, "far LOD rate preserved");
++        check(IndustrialSmokeBudget.particlesPerSecond(193,1,1,32,96,192,8,2,200)==0, "outside far LOD emits nothing");
++    }
++
++    private static void collision() {
++        var floor=new TransientDebrisCollision.Bounds(-10,0,-10,10,.5,10);
++        var wall=new TransientDebrisCollision.Bounds(1,-2,-10,1.1,10,10);
++        var ceiling=new TransientDebrisCollision.Bounds(-10,2,-10,10,2.25,10);
++        for(int i=1;i<=100;i++) {
++            double r=.015+i*.001;
++            var box=new TransientDebrisCollision.Bounds(-r,1-r,-r,r,1+r,r);
++            var down=TransientDebrisCollision.move(box,0,-4,0,List.of(floor));
++            check(down.supported()&&Math.abs(box.y0()+down.y()-.5)<1e-8,"swept floor/slab landing, no tunneling");
++            var side=TransientDebrisCollision.move(box,4,0,0,List.of(wall));
++            check(Math.abs(box.x1()+side.x()-1)<1e-8,"thin lateral wall clips entire volume");
++            var up=TransientDebrisCollision.move(box,0,4,0,List.of(ceiling));
++            check(!up.supported()&&Math.abs(box.y1()+up.y()-2)<1e-8,"overhead hit never becomes support");
++            var noFloor=TransientDebrisCollision.move(box,0,-.03,0,List.of());
++            check(!noFloor.supported()&&noFloor.y()==-.03,"support loss resumes movement without teleport");
++            var corner=TransientDebrisCollision.move(box,4,-4,4,List.of(floor,wall,ceiling));
++            check(!box.offset(corner.x(),corner.y(),corner.z()).overlaps(wall),"diagonal volume does not enter wall");
++        }
++    }
++    public static void main(String[] args){runAll();}
++}
+--- baseline/src/test/java/com/bobincraft/destruction/StabilizationTest.java
++++ stabilized/src/test/java/com/bobincraft/destruction/StabilizationTest.java
+@@ -0,0 +1,5 @@
++package com.bobincraft.destruction;
++import org.junit.jupiter.api.Test;
++final class StabilizationTest {
++    @Test void productionKernelContract(){StabilizationContract.runAll();}
++}

@@ -1,0 +1,81 @@
+[
+  {
+    "name": "java-checks",
+    "command": [
+      "java",
+      "docs/Stabilization/Verify.java"
+    ],
+    "exit_code": 0,
+    "status": "PASS",
+    "executed_in_revision": 1
+  },
+  {
+    "name": "gradle-build",
+    "command": [
+      "bash",
+      "gradlew",
+      "clean",
+      "build",
+      "-x",
+      "test"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION",
+    "executed_in_revision": 1
+  },
+  {
+    "name": "gradle-test",
+    "command": [
+      "bash",
+      "gradlew",
+      "test"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION",
+    "executed_in_revision": 1
+  },
+  {
+    "name": "gametest-launch",
+    "command": [
+      "bash",
+      "gradlew",
+      "runGametest"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION",
+    "executed_in_revision": 0
+  },
+  {
+    "name": "client-launch",
+    "command": [
+      "bash",
+      "gradlew",
+      "runClient"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION",
+    "executed_in_revision": 0
+  },
+  {
+    "name": "server-launch",
+    "command": [
+      "bash",
+      "gradlew",
+      "runServer"
+    ],
+    "exit_code": 1,
+    "status": "BLOCKED BEFORE COMPILATION",
+    "executed_in_revision": 0
+  },
+  {
+    "name": "resources-and-scope",
+    "command": [
+      "python",
+      "docs/Stabilization/check_resources.py",
+      "../../upload/Bobin_craft(1).zip"
+    ],
+    "exit_code": 0,
+    "status": "PASS",
+    "executed_in_revision": 1
+  }
+]

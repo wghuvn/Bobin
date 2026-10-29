@@ -1,0 +1,35 @@
+{
+  "stage": "Stage4",
+  "baseline": "stage3",
+  "added": [
+    "docs/Stage4/FILES.json",
+    "docs/Stage4/REVIEW.md",
+    "docs/Stage4/build.log",
+    "docs/Stage4/gradle-test.log",
+    "docs/Stage4/java-syntax.log",
+    "docs/Stage4/java-tests-initial-failure.log",
+    "docs/Stage4/java-tests.log",
+    "docs/Stage4/json.log",
+    "docs/Stage4/scope.log",
+    "src/main/java/com/bobincraft/destruction/RefineryGeometryRules.java",
+    "src/main/java/com/bobincraft/destruction/RefineryTransitionState.java",
+    "src/main/java/com/bobincraft/destruction/RefineryTransitions.java",
+    "src/main/java/com/bobincraft/destruction/StructureGeometrySnapshot.java",
+    "src/main/java/com/bobincraft/destruction/TransitionLedger.java",
+    "src/main/java/com/bobincraft/mixin/RefineryBlueprintScopeMixin.java",
+    "src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java",
+    "src/main/java/com/bobincraft/mixin/RefineryGeneratedCellMixin.java",
+    "src/main/java/com/bobincraft/warzone/StructureGeometryAccess.java",
+    "src/test/java/com/bobincraft/destruction/RefineryTransitionContract.java",
+    "src/test/java/com/bobincraft/destruction/RefineryTransitionTest.java"
+  ],
+  "modified": [
+    "src/main/java/com/bobincraft/destruction/DestructibleStructure.java",
+    "src/main/java/com/bobincraft/destruction/StructureCollapseManager.java",
+    "src/main/java/com/bobincraft/destruction/StructureNetworkSync.java",
+    "src/main/java/com/bobincraft/destruction/StructurePersistentState.java",
+    "src/main/java/com/bobincraft/destruction/StructureUpdateQueue.java",
+    "src/main/resources/bobin_craft.mixins.json"
+  ],
+  "deleted": []
+}

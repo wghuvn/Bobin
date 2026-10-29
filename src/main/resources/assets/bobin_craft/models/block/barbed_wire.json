@@ -1,0 +1,77 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "bobin_craft:block/barbed_wire",
+    "wire": "bobin_craft:block/barbed_wire"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        10,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "south": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "east": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "west": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "up": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        },
+        "down": {
+          "texture": "#wire",
+          "uv": [
+            0,
+            0,
+            16,
+            10
+          ]
+        }
+      }
+    }
+  ]
+}

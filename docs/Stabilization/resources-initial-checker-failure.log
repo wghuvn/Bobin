@@ -1,0 +1,7 @@
+PASS JSON: 1512
+PARTICLE_SPRITE_REFERENCES 25 MISSING ['bobin_craft:blood_droplet', 'bobin_craft:voxel_cloud', 'bobin_craft:industrial_smoke_core_0', 'bobin_craft:industrial_smoke_core_1', 'bobin_craft:industrial_smoke_core_2', 'bobin_craft:industrial_smoke_core_3', 'bobin_craft:industrial_fire_plume_0', 'bobin_craft:industrial_fire_plume_1', 'bobin_craft:industrial_fire_plume_2', 'bobin_craft:industrial_fire_plume_3', 'bobin_craft:industrial_smoke_column_0', 'bobin_craft:industrial_smoke_column_1', 'bobin_craft:industrial_smoke_column_2', 'bobin_craft:industrial_smoke_column_3', 'bobin_craft:industrial_smoke_canopy_0', 'bobin_craft:industrial_smoke_canopy_1', 'bobin_craft:industrial_smoke_canopy_2', 'bobin_craft:industrial_smoke_canopy_3', 'bobin_craft:concrete_dust_0', 'bobin_craft:concrete_dust_1', 'bobin_craft:concrete_dust_2', 'bobin_craft:concrete_dust_3', 'bobin_craft:electric_arc_0', 'bobin_craft:electric_arc_1', 'bobin_craft:electric_arc_2']
+Traceback (most recent call last):
+  File "/workspace/scratch/2ff31e30e9dc/stabilization/Bobin_craft/docs/Stabilization/check_resources.py", line 16, in <module>
+    print('PARTICLE_SPRITE_REFERENCES',sprites,'MISSING',missing);assert not missing
+                                                                         ^^^^^^^^^^^
+AssertionError

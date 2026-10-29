@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:sockets:1",
+  "title": "Bobin Craft armament sockets v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "rig_id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "sockets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          },
+          "node": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          },
+          "transform": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/transform"
+          }
+        },
+        "required": [
+          "name",
+          "node",
+          "transform"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "rig_id",
+    "sockets"
+  ],
+  "additionalProperties": false
+}

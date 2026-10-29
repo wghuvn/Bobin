@@ -1,0 +1,3 @@
+SHA256 e8c88dcef0dc8b659a460e367f9c9352d1b16c68d66a5b300240844cba89393a  build/libs/bobin_craft-2.7.0.jar
+JAR bytes 5576592
+Source and resources built for Minecraft 1.20.1 / Fabric / Java 17.

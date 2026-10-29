@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:grass",
+    "minecraft:tall_grass",
+    "minecraft:fern",
+    "minecraft:large_fern",
+    "minecraft:dead_bush",
+    "minecraft:snow",
+    "#minecraft:flowers",
+    "bobin_craft:forest_grass",
+    "bobin_craft:tall_forest_grass",
+    "bobin_craft:pale_sedge",
+    "bobin_craft:dry_undergrowth",
+    "bobin_craft:needle_undergrowth",
+    "bobin_craft:low_forest_bush"
+  ]
+}

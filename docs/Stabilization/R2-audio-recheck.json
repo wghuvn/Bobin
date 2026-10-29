@@ -1,0 +1,7 @@
+{
+  "sha256": "aeeadaf131616d52ec6b4bb69c616a418e86c749dd264c129dba4bff4c121487",
+  "decoded_samples": 384000,
+  "decoded_peak": 0.5869046449661255,
+  "decoded_rms": 0.11208509653806686,
+  "status": "PASS asset preserved and decoded; listening/runtime NOT EXECUTED"
+}

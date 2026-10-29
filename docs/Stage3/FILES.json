@@ -1,0 +1,22 @@
+{
+  "stage": "Stage3",
+  "baseline": "stage21",
+  "added": [
+    "docs/Stage3/FILES.json",
+    "docs/Stage3/REVIEW.md",
+    "docs/Stage3/build.log",
+    "docs/Stage3/gradle-test.log",
+    "docs/Stage3/java-syntax.log",
+    "docs/Stage3/java-tests.log",
+    "docs/Stage3/json.log",
+    "docs/Stage3/scope.log",
+    "src/main/java/com/bobincraft/destruction/IndustrialSmokeMotion.java",
+    "src/test/java/com/bobincraft/destruction/SmokeMotionContract.java",
+    "src/test/java/com/bobincraft/destruction/SmokeMotionTest.java"
+  ],
+  "modified": [
+    "src/main/java/com/bobincraft/destruction/client/IndustrialSmokeParticle.java",
+    "src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java"
+  ],
+  "deleted": []
+}

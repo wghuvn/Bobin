@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:weapon:1",
+  "title": "Bobin Craft armament weapon v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+      },
+      "minItems": 0,
+      "maxItems": 64,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "actions"
+  ],
+  "additionalProperties": false
+}

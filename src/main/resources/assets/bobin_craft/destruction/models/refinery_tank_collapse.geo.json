@@ -1,0 +1,158 @@
+{
+  "format_version": "1.12.0",
+  "minecraft:geometry": [
+    {
+      "description": {
+        "identifier": "geometry.bobin_craft.refinery_tank_collapse",
+        "texture_width": 64,
+        "texture_height": 64,
+        "visible_bounds_width": 18,
+        "visible_bounds_height": 14,
+        "visible_bounds_offset": [
+          0,
+          5,
+          0
+        ]
+      },
+      "bones": [
+        {
+          "name": "root",
+          "pivot": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "roof_plate_north",
+          "parent": "root",
+          "pivot": [
+            0,
+            128,
+            -24
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -64,
+                120,
+                -64
+              ],
+              "size": [
+                128,
+                10,
+                64
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "material": "rusted_sheet_metal"
+            }
+          ]
+        },
+        {
+          "name": "roof_plate_south",
+          "parent": "root",
+          "pivot": [
+            0,
+            128,
+            24
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -64,
+                120,
+                0
+              ],
+              "size": [
+                128,
+                10,
+                64
+              ],
+              "uv": [
+                0,
+                0
+              ],
+              "material": "rusted_sheet_metal"
+            }
+          ]
+        },
+        {
+          "name": "upper_shell_ring",
+          "parent": "root",
+          "pivot": [
+            0,
+            88,
+            0
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -72,
+                64,
+                -72
+              ],
+              "size": [
+                144,
+                52,
+                16
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "material": "rusted_sheet_metal"
+            },
+            {
+              "origin": [
+                -72,
+                64,
+                56
+              ],
+              "size": [
+                144,
+                52,
+                16
+              ],
+              "uv": [
+                0,
+                16
+              ],
+              "material": "rusted_sheet_metal"
+            }
+          ]
+        },
+        {
+          "name": "side_manifold_pipe",
+          "parent": "root",
+          "pivot": [
+            0,
+            32,
+            80
+          ],
+          "cubes": [
+            {
+              "origin": [
+                -12,
+                16,
+                68
+              ],
+              "size": [
+                24,
+                48,
+                20
+              ],
+              "uv": [
+                0,
+                32
+              ],
+              "material": "pipe_iron"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

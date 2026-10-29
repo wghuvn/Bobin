@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:animation-events:1",
+  "title": "Bobin Craft armament animation-events v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1
+    },
+    "id": {
+      "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+    },
+    "clips": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+          },
+          "duration_seconds": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "maximum": 3600
+          },
+          "markers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "$ref": "urn:bobincraft:armament:common:1#/$defs/name"
+                },
+                "time_seconds": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 3600
+                },
+                "kind": {
+                  "const": "cosmetic",
+                  "type": "string"
+                },
+                "event": {
+                  "$ref": "urn:bobincraft:armament:common:1#/$defs/id"
+                }
+              },
+              "required": [
+                "name",
+                "time_seconds",
+                "kind",
+                "event"
+              ],
+              "additionalProperties": false
+            },
+            "minItems": 0,
+            "maxItems": 1024,
+            "uniqueItems": true
+          }
+        },
+        "required": [
+          "name",
+          "duration_seconds",
+          "markers"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 128,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "schema_version",
+    "id",
+    "clips"
+  ],
+  "additionalProperties": false
+}

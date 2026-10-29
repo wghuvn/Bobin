@@ -1,0 +1,41 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "particle": "bobin_craft:block/rusted_sheet_metal",
+    "sheet": "bobin_craft:block/rusted_sheet_metal"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        2,
+        16
+      ],
+      "faces": {
+        "north": {
+          "texture": "#sheet"
+        },
+        "south": {
+          "texture": "#sheet"
+        },
+        "east": {
+          "texture": "#sheet"
+        },
+        "west": {
+          "texture": "#sheet"
+        },
+        "up": {
+          "texture": "#sheet"
+        },
+        "down": {
+          "texture": "#sheet"
+        }
+      }
+    }
+  ]
+}

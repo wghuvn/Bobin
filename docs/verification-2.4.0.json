@@ -1,0 +1,23 @@
+{
+  "release": "2.4.0",
+  "date": "2026-10-23",
+  "seed": 19860426,
+  "arena_size": 2048,
+  "generation_profile": 10,
+  "junit": {
+    "passed": 325,
+    "failed": 0,
+    "skipped": 0,
+    "classes": 64
+  },
+  "native_chunk_positions": 102,
+  "native_generation_orders": 2,
+  "native_checkpoint_trench_walks": 11,
+  "resource_validation_commands": 6,
+  "static_vehicle_geometry_tests": 8,
+  "mixin_audit": "MIXIN_REMAP_PASS mixins=21 selectors=34 shadows=4 invocationTargets=3 constantTargets=1",
+  "jar_bytes": 4399383,
+  "jar_sha256": "ad57280d0b8276322b9a24669dd7f3db587af2e18dd36e35bb364386b84d489d",
+  "live_client_playtest": false,
+  "live_dedicated_server_playtest": false
+}

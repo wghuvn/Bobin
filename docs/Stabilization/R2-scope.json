@@ -1,0 +1,34 @@
+{
+  "revision": 2,
+  "supersedes_full_source_sha256": "f70cc0784321a020627eeef0b520e1c5f065bc8fd51e73c57148cbb77919d3a0",
+  "production_and_test_changes_vs_R1": [
+    {
+      "path": "src/main/java/com/bobincraft/destruction/DestructionGameTestSuite.java",
+      "before_sha256": "becb33af8ad4578b3cb2fbb99f890931fc020405cbbafe084d87ba0ef10e6505",
+      "after_sha256": "4b32cf2827c09e478c39b006fffbfe545c001ff4015aa83a03229d6132997c2c"
+    },
+    {
+      "path": "src/main/java/com/bobincraft/destruction/IndustrialSmokeBudget.java",
+      "before_sha256": null,
+      "after_sha256": "9676f73ca7ff4ecb6cd438641479a26c6c5fcd28573c5cd3920b42dce4591388"
+    },
+    {
+      "path": "src/main/java/com/bobincraft/destruction/StructureFireManager.java",
+      "before_sha256": "0ce774f4226c32df84c4656b5d3e8053f518627b09dbee11eb3a68269aa03cb8",
+      "after_sha256": "0a1cc13688da6be9d71f1a5ece182c43cfa8ff4a3f40cecb0e279bebf264ab04"
+    },
+    {
+      "path": "src/main/java/com/bobincraft/destruction/client/StructureDestructionClient.java",
+      "before_sha256": "9de8ac35bc9ffa425c61f5e1ff8442440596166d3d20f7c0e15527372de21a04",
+      "after_sha256": "0f6a8afe505431baa395b520bc33bd97d3a5fccf0b18a2d19a2be39b81afd126"
+    },
+    {
+      "path": "src/test/java/com/bobincraft/destruction/StabilizationContract.java",
+      "before_sha256": "6c9b05c5eb8c339799403581cb1c67b37b6f69736f3cab3fa969b261e3eb0fc7",
+      "after_sha256": "8427dc146add2b75d2f54f331c64ae8922251b7083e596924ff6181709950c31"
+    }
+  ],
+  "all_other_R1_src_files_byte_identical": true,
+  "terrainAllowed_and_spatial_index_unchanged": true,
+  "stage5_started": false
+}

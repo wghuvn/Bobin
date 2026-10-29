@@ -1,0 +1,44 @@
+@echo off
+echo Removing retired Bobin Craft files...
+del /f /q "src\main\java\com\bobincraft\camera\BobinCameraState.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\input\ControlMath.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\input\RaycastHelper.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\mixin\ChunkRendererRegionMixin.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\mixin\EntityRenderDispatcherMixin.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\movement\BobinMovementController.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\movement\PathFinder.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\render\BuildingCutawayManager.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\render\FogOfWarManager.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\render\FoliageCutawayManager.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\render\WorldRenderHandler.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\screen\BobinScreen.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\siege\SiegeManager.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\AK47Item.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\BobinWeaponHandler.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\GunItem.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\GunServer.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\GunType.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\SniperRifleItem.java" 2>nul
+del /f /q "src\main\java\com\bobincraft\weapon\WeaponStats.java" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\ak47.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\breacher.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\cryo_carbine.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\medic_gun.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\sniper_rifle.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\models\item\spotter.json" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\ak47.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\breacher.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\cryo_carbine.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\gun_parts.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\medic_gun.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\sniper_rifle.png" 2>nul
+del /f /q "src\main\resources\assets\bobin_craft\textures\item\spotter.png" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\ak47.json" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\breacher.json" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\cryo_carbine.json" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\medic_gun.json" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\sniper_rifle.json" 2>nul
+del /f /q "src\main\resources\data\bobin_craft\recipes\spotter.json" 2>nul
+del /f /q "src\test\java\com\bobincraft\input\ControlMathTest.java" 2>nul
+del /f /q "src\test\java\com\bobincraft\weapon\WeaponTimingTest.java" 2>nul
+echo Done.

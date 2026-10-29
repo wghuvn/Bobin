@@ -1,0 +1,2882 @@
+[
+  {
+    "name": "weapon valid",
+    "schema": "weapon",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "visual valid",
+    "schema": "visual",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "rig valid",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "sockets valid",
+    "schema": "sockets",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events valid",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "weapon unknown field",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": [
+        "test:inspect"
+      ],
+      "unknown": true
+    }
+  },
+  {
+    "name": "weapon missing id",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "weapon null id",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": null,
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "weapon version 2",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 2,
+      "id": "test:fixture",
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "weapon version string",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": "1",
+      "id": "test:fixture",
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "weapon invalid namespace",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "Test:fixture",
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "weapon traversal",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:a/../b",
+      "actions": [
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "visual unknown field",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      },
+      "unknown": true
+    }
+  },
+  {
+    "name": "visual missing id",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "visual null id",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": null,
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "visual version 2",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 2,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "visual version string",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": "1",
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "visual invalid namespace",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "Test:fixture",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "visual traversal",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:a/../b",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "rig unknown field",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      },
+      "unknown": true
+    }
+  },
+  {
+    "name": "rig missing id",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "rig null id",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": null,
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "rig version 2",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 2,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "rig version string",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": "1",
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "rig invalid namespace",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "Test:fixture",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "rig traversal",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:a/../b",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "sockets unknown field",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ],
+      "unknown": true
+    }
+  },
+  {
+    "name": "sockets missing id",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "sockets null id",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": null,
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "sockets version 2",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 2,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "sockets version string",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": "1",
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "sockets invalid namespace",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "Test:fixture",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "sockets traversal",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:a/../b",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events unknown field",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ],
+      "unknown": true
+    }
+  },
+  {
+    "name": "animation-events missing id",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events null id",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": null,
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events version 2",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 2,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events version string",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": "1",
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events invalid namespace",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "Test:fixture",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "animation-events traversal",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:a/../b",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "duplicate actions",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": [
+        "test:inspect",
+        "test:inspect"
+      ]
+    }
+  },
+  {
+    "name": "string as actions",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": "test:inspect"
+    }
+  },
+  {
+    "name": "actions excessive",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": [
+        "test:a0",
+        "test:a1",
+        "test:a2",
+        "test:a3",
+        "test:a4",
+        "test:a5",
+        "test:a6",
+        "test:a7",
+        "test:a8",
+        "test:a9",
+        "test:a10",
+        "test:a11",
+        "test:a12",
+        "test:a13",
+        "test:a14",
+        "test:a15",
+        "test:a16",
+        "test:a17",
+        "test:a18",
+        "test:a19",
+        "test:a20",
+        "test:a21",
+        "test:a22",
+        "test:a23",
+        "test:a24",
+        "test:a25",
+        "test:a26",
+        "test:a27",
+        "test:a28",
+        "test:a29",
+        "test:a30",
+        "test:a31",
+        "test:a32",
+        "test:a33",
+        "test:a34",
+        "test:a35",
+        "test:a36",
+        "test:a37",
+        "test:a38",
+        "test:a39",
+        "test:a40",
+        "test:a41",
+        "test:a42",
+        "test:a43",
+        "test:a44",
+        "test:a45",
+        "test:a46",
+        "test:a47",
+        "test:a48",
+        "test:a49",
+        "test:a50",
+        "test:a51",
+        "test:a52",
+        "test:a53",
+        "test:a54",
+        "test:a55",
+        "test:a56",
+        "test:a57",
+        "test:a58",
+        "test:a59",
+        "test:a60",
+        "test:a61",
+        "test:a62",
+        "test:a63",
+        "test:a64"
+      ]
+    }
+  },
+  {
+    "name": "actions empty allowed",
+    "schema": "weapon",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture",
+      "actions": []
+    }
+  },
+  {
+    "name": "gltf visual allowed",
+    "schema": "visual",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.gltf",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "unsafe model URI",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "https://example.com/model.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "wrong model format",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:model.obj",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "missing NPC view",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown view",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "local": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown transform member",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ],
+          "euler": [
+            0,
+            0,
+            0
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "string vector component",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            "0",
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "short vector",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "negative scale",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            -1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "non-unit quaternion",
+    "schema": "visual",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            0.5
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        }
+      }
+    }
+  },
+  {
+    "name": "nested null transform",
+    "schema": "visual",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:visual",
+      "model": "test:armament/fixture.glb",
+      "rig_id": "test:rig",
+      "sockets_id": "test:sockets",
+      "events_id": "test:events",
+      "views": {
+        "first_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "third_person": {
+          "translation": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "scale": [
+            1,
+            1,
+            1
+          ]
+        },
+        "npc": null
+      }
+    }
+  },
+  {
+    "name": "missing root role",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "unknown node role",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "unknown"
+      }
+    }
+  },
+  {
+    "name": "unknown parent",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "unknown"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "no root",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0,
+          "parent": "part"
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "second root",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "self cycle with root",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "part"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "role must select root",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "part",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "duplicate node name",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "root",
+          "node_index": 1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "duplicate node index",
+    "schema": "rig",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 0,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "fractional node index",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1.5,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "negative node index",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": -1,
+          "parent": "root"
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "null parent",
+    "schema": "rig",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:rig",
+      "nodes": [
+        {
+          "name": "root",
+          "node_index": 0
+        },
+        {
+          "name": "part",
+          "node_index": 1,
+          "parent": null
+        }
+      ],
+      "roles": {
+        "weapon_root": "root",
+        "part": "part"
+      }
+    }
+  },
+  {
+    "name": "empty sockets allowed",
+    "schema": "sockets",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": []
+    }
+  },
+  {
+    "name": "duplicate socket name",
+    "schema": "sockets",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        },
+        {
+          "name": "grip",
+          "node": "root",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              0,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "missing socket transform",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part"
+        }
+      ]
+    }
+  },
+  {
+    "name": "socket quaternion component too large",
+    "schema": "sockets",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:sockets",
+      "rig_id": "test:rig",
+      "sockets": [
+        {
+          "name": "grip",
+          "node": "part",
+          "transform": {
+            "translation": [
+              0,
+              0,
+              0
+            ],
+            "rotation": [
+              2,
+              0,
+              0,
+              1
+            ],
+            "scale": [
+              1,
+              1,
+              1
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "name": "gameplay marker forbidden",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "gameplay",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "executable marker payload forbidden",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue",
+              "script": "arbitrary"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "marker out of duration",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 3,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "duplicate marker name",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            },
+            {
+              "name": "cue",
+              "time_seconds": 1.5,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "unsorted markers",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            },
+            {
+              "name": "earlier",
+              "time_seconds": 0.5,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "negative marker time",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": -1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "zero duration",
+    "schema": "animation-events",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 0,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "duplicate clip name",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": [
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": [
+            {
+              "name": "cue",
+              "time_seconds": 1,
+              "kind": "cosmetic",
+              "event": "test:cue"
+            }
+          ]
+        },
+        {
+          "name": "fixture_clip",
+          "duration_seconds": 2,
+          "markers": []
+        }
+      ]
+    }
+  },
+  {
+    "name": "empty events allowed",
+    "schema": "animation-events",
+    "structural_valid": true,
+    "valid": true,
+    "document": {
+      "schema_version": 1,
+      "id": "test:events",
+      "clips": []
+    }
+  },
+  {
+    "name": "namespace traversal",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "..:fixture",
+      "actions": []
+    }
+  },
+  {
+    "name": "namespace empty segment",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test..part:fixture",
+      "actions": []
+    }
+  },
+  {
+    "name": "trailing newline ID",
+    "schema": "weapon",
+    "structural_valid": false,
+    "valid": false,
+    "document": {
+      "schema_version": 1,
+      "id": "test:fixture\n",
+      "actions": []
+    }
+  }
+]

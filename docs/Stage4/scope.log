@@ -1,0 +1,20 @@
+PASS: no deletions; all original-file edits match the stage allowlist.
+MODIFIED
+src/main/java/com/bobincraft/destruction/DestructibleStructure.java
+src/main/java/com/bobincraft/destruction/StructureCollapseManager.java
+src/main/java/com/bobincraft/destruction/StructureNetworkSync.java
+src/main/java/com/bobincraft/destruction/StructurePersistentState.java
+src/main/java/com/bobincraft/destruction/StructureUpdateQueue.java
+src/main/resources/bobin_craft.mixins.json
+ADDED
+src/main/java/com/bobincraft/destruction/RefineryGeometryRules.java
+src/main/java/com/bobincraft/destruction/RefineryTransitionState.java
+src/main/java/com/bobincraft/destruction/RefineryTransitions.java
+src/main/java/com/bobincraft/destruction/StructureGeometrySnapshot.java
+src/main/java/com/bobincraft/destruction/TransitionLedger.java
+src/main/java/com/bobincraft/mixin/RefineryBlueprintScopeMixin.java
+src/main/java/com/bobincraft/mixin/RefineryExternalEditMixin.java
+src/main/java/com/bobincraft/mixin/RefineryGeneratedCellMixin.java
+src/main/java/com/bobincraft/warzone/StructureGeometryAccess.java
+src/test/java/com/bobincraft/destruction/RefineryTransitionContract.java
+src/test/java/com/bobincraft/destruction/RefineryTransitionTest.java

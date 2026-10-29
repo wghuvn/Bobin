@@ -1,0 +1,24 @@
+COMMAND: python apply_stabilization_patch.py Bobin_craft
+EXIT: 0
+Applied and byte-verified: 49 added, 29 modified, 2 deleted.
+Original modified/deleted files backed up at: /tmp/bobin-patch-validation-jo2pe1an/valid/Bobin_before_stabilization_7sjkhyvp
+Build/runtime verification is still required. Stage 5 not started.
+
+PASS overlay reproduces all final project files byte for byte
+COMMAND: python apply_stabilization_patch.py Bobin_craft
+EXIT: 0
+This exact stabilization checkpoint is already applied.
+
+PASS idempotent second application
+COMMAND: python apply_stabilization_patch.py Bobin_craft
+EXIT: 1
+Baseline differs. Nothing changed. Use the full source ZIP or reconcile first:
+gradle.properties
+
+PASS divergent baseline rejected before mutation
+COMMAND: python apply_stabilization_patch.py Bobin_craft
+EXIT: 1
+Patch payload is missing/invalid: build.gradle
+
+PASS corrupt payload rejected before mutation
+PASS injected mid-apply failure restores all baseline source bytes

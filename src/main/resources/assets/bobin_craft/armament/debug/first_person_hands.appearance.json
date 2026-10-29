@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "profiles": {
+    "default": "bobin_craft:armament/debug/first_person_fixture.profile.json",
+    "slim": "bobin_craft:armament/debug/first_person_fixture_slim.profile.json"
+  },
+  "materials": {
+    "base_right": "player_skin_right",
+    "base_left": "player_skin_left",
+    "sleeve_right": "player_sleeve_right",
+    "sleeve_left": "player_sleeve_left"
+  }
+}

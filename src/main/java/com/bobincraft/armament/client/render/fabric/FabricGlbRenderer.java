@@ -40,10 +40,12 @@ public final class FabricGlbRenderer implements WeaponRenderer<RigFrame,GlbRende
                 return ta?Double.compare(distance(b,asset,pose,context),distance(a,asset,pose,context)):0;
             });
             for(var primitive:order){
+                if(context.bindings()!=null&&!context.bindings().visible(primitive.material()))continue;
                 var material=asset.materials().get(primitive.material());
                 RenderSystem.depthMask(material.alpha()!=GlbModelAsset.Alpha.BLEND);
                 if(material.doubleSided())RenderSystem.disableCull();else RenderSystem.enableCull();
-                RenderSystem.setShaderTexture(0,context.gpu().texture(material.texture()));
+                var texture=context.gpu().texture(material.texture());
+                RenderSystem.setShaderTexture(0,context.bindings()==null?texture:context.bindings().texture(primitive.material(),texture));
                 var color=material.baseColor();
                 program.getUniformOrDefault("BaseColorFactor").set(color.r(),color.g(),color.b(),color.a());
                 program.getUniformOrDefault("AlphaMode").set(material.alpha().ordinal());

@@ -38,7 +38,7 @@ final class FirstPersonBlenderTest {
         assertEquals(10,platePlanes.size(),"convex octagonal plate: eight sides and two caps");
     }
     @Test void twoRealArmsAndOriginalTechnicalMeshesArePresent(){
-        assertEquals(7,asset.model().rig().meshes().size());assertEquals(36,asset.model().rig().skins().get(0).size());assertEquals(5,asset.model().rig().clips().size());
+        assertEquals(9,asset.model().rig().meshes().size());assertEquals(36,asset.model().rig().skins().get(0).size());assertEquals(5,asset.model().rig().clips().size());
         for(String node:List.of("upper_right","upper_left","forearm_right","forearm_left","hand_right","hand_left","thumb_1_right","little_3_left"))assertTrue(asset.model().rig().node(node)>=0);
     }
     @TestFactory Stream<DynamicTest> importedPosesMatchBlenderAndBothGripContacts(){
@@ -95,8 +95,9 @@ final class FirstPersonBlenderTest {
             for(int m=0;m<bind.model().meshes().size();m++)if(bind.model().nodes().get(bind.model().meshes().get(m).node()).name().equals(name))mesh=m;
             assertTrue(mesh>=0,name);var data=bind.model().meshes().get(mesh);
             for(var v:primitive.vertices()){
-                double best=Double.POSITIVE_INFINITY;for(int p=0;p<data.vertexCount();p++)best=Math.min(best,Math.max(Math.abs(v.x()-bind.vertex(mesh,p,0)),Math.max(Math.abs(v.y()-bind.vertex(mesh,p,1)),Math.abs(v.z()-bind.vertex(mesh,p,2)))));
-                assertTrue(best<3e-5,name+" changed size/orientation: "+best);
+                double metres=reference.get("handheld_metres").getAsDouble();
+                double best=Double.POSITIVE_INFINITY;for(int p=0;p<data.vertexCount();p++)best=Math.min(best,Math.max(Math.abs(v.x()*metres-bind.vertex(mesh,p,0)),Math.max(Math.abs(v.y()*metres-bind.vertex(mesh,p,1)),Math.abs(v.z()*metres-bind.vertex(mesh,p,2)))));
+                assertTrue(best<3e-5,name+" differs from the documented Blender handheld calibration: "+best);
             }
         }
         assertEquals(1,original.bounds().width(),1e-6);assertEquals(1,original.bounds().height(),1e-6);
@@ -106,21 +107,26 @@ final class FirstPersonBlenderTest {
         for(double fov:List.of(30.0,70.0,110.0))for(double aspect:List.of(4.0/3,16.0/9,9.0/16)){
             double[] projection=new double[16],identity=FirstPersonMathTest.identity(),hand=FirstPersonMathTest.identity();PresentationMath.perspective(fov,aspect,0.05,256,projection);hand[13]=0.015;
             assertTrue(presenter.sample(20,0.5f,hand,projection,identity));assertTrue(presenter.contactMetres()<1e-5);
-            float[] actual=new float[16];presenter.copyProjection(actual);assertEquals(projection[0],actual[0],1e-5);assertEquals(projection[5],actual[5],1e-5);
-            assertEquals(0,presenter.cameraInModel(0),1e-12);assertEquals(1.15,presenter.cameraInModel(2),1e-12);
+            double[] trs={0,0,0,0,0,0,1,1,1,1},root=new double[16],view=new double[16],expected=new double[16],inverse=new double[16];
+            for(int i=0;i<3;i++)trs[i]=asset.profile().cameraOffset().get(i);for(int i=0;i<4;i++)trs[i+3]=asset.profile().cameraRotation().get(i);
+            RigMath.compose(trs,0,root,0);RigMath.multiply(hand,0,root,0,view,0);RigMath.multiply(projection,0,view,0,expected,0);RigMath.inverseAffine(view,0,inverse,0);
+            float[] actual=new float[16];presenter.copyProjection(actual);for(int i=0;i<16;i++)assertEquals(expected[i],actual[i],1e-5);
+            for(int i=0;i<3;i++)assertEquals(inverse[12+i],presenter.cameraInModel(i),1e-12);
         }
     }
     @Test void presenterReusesPoseAndBuffersAfterWarmup(){
         var presenter=new FirstPersonWeaponPresenter(asset);presenter.animation("idle",0);var identity=FirstPersonMathTest.identity();double[] projection=new double[16];PresentationMath.perspective(70,1.7,0.05,100,projection);
-        for(int i=0;i<1000;i++)assertTrue(presenter.sample(i,0.5f,identity,projection,identity));
+        // The additional arm/sleeve meshes need the same fully warmed JVM as the
+        // rig benchmark. Keep the zero-allocation assertion; exclude JIT startup.
+        for(int i=0;i<10000;i++)assertTrue(presenter.sample(i,0.5f,identity,projection,identity));
         var bean=(com.sun.management.ThreadMXBean)java.lang.management.ManagementFactory.getThreadMXBean();bean.setThreadAllocatedMemoryEnabled(true);long thread=Thread.currentThread().getId();
-        long best=Long.MAX_VALUE;int stable=0;long nanos=0;
+        long best=Long.MAX_VALUE;int stable=0;long nanos=0;long[] windows=new long[6];Arrays.fill(windows,-1);
         for(int pass=0;pass<6&&stable<2;pass++){
             long before=bean.getThreadAllocatedBytes(thread),start=System.nanoTime();
             for(int i=0;i<300;i++)presenter.sample(2000+pass*300+i,0.5f,identity,projection,identity);
-            nanos=System.nanoTime()-start;long bytes=bean.getThreadAllocatedBytes(thread)-before;best=Math.min(best,bytes);stable=bytes==0?stable+1:0;
+            nanos=System.nanoTime()-start;long bytes=bean.getThreadAllocatedBytes(thread)-before;windows[pass]=bytes;best=Math.min(best,bytes);stable=bytes==0?stable+1:0;
         }
-        System.out.println("first_person_cpu_benchmark samples=300 stable_zero_windows="+stable+" best_bytes="+best+" ns_per_sample="+(nanos/300));
+        System.out.println("first_person_cpu_benchmark samples=300 stable_zero_windows="+stable+" best_bytes="+best+" windows="+Arrays.toString(windows)+" ns_per_sample="+(nanos/300));
         assertEquals(2,stable,"require two consecutive allocation-free steady-state windows, excluding JVM warmup/deoptimization");
     }
     @Test void attachmentRotationMetricDoesNotTreatFloatScaleNoiseAsWristRotation(){

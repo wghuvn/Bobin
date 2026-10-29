@@ -1,0 +1,74 @@
+[
+  {
+    "file": "art/armament/first_person_fixture.blend",
+    "blender": "4.3.2",
+    "bones": 36,
+    "fps": 96,
+    "packed_images": {
+      "diagnostic_player_skin_default": [
+        64,
+        64
+      ],
+      "uv_checker": [
+        64,
+        64
+      ]
+    },
+    "meshes": {
+      "view_arm_right": {
+        "vertices": 220,
+        "nonmanifold_edges": 0,
+        "weighted_bones": 18
+      },
+      "view_arm_left": {
+        "vertices": 220,
+        "nonmanifold_edges": 0,
+        "weighted_bones": 18
+      }
+    },
+    "nla_tracks": [
+      "idle",
+      "inspect",
+      "raise",
+      "lower",
+      "move"
+    ],
+    "preview_samples": 128
+  },
+  {
+    "file": "art/armament/first_person_fixture_slim.blend",
+    "blender": "4.3.2",
+    "bones": 36,
+    "fps": 96,
+    "packed_images": {
+      "diagnostic_player_skin_slim": [
+        64,
+        64
+      ],
+      "uv_checker": [
+        64,
+        64
+      ]
+    },
+    "meshes": {
+      "view_arm_right": {
+        "vertices": 220,
+        "nonmanifold_edges": 0,
+        "weighted_bones": 18
+      },
+      "view_arm_left": {
+        "vertices": 220,
+        "nonmanifold_edges": 0,
+        "weighted_bones": 18
+      }
+    },
+    "nla_tracks": [
+      "idle",
+      "inspect",
+      "raise",
+      "lower",
+      "move"
+    ],
+    "preview_samples": 128
+  }
+]

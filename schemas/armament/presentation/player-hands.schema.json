@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:bobincraft:armament:player-hands:1",
+  "title": "Blender-authored player hands and borrowed skin material roles",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "profiles", "materials"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "profiles": {
+      "type": "object", "additionalProperties": false,
+      "required": ["default", "slim"],
+      "properties": {
+        "default": {"$ref": "#/$defs/profile"},
+        "slim": {"$ref": "#/$defs/profile"}
+      }
+    },
+    "materials": {
+      "type": "object", "additionalProperties": false,
+      "required": ["base_right", "base_left", "sleeve_right", "sleeve_left"],
+      "properties": {
+        "base_right": {"$ref": "#/$defs/material"},
+        "base_left": {"$ref": "#/$defs/material"},
+        "sleeve_right": {"$ref": "#/$defs/material"},
+        "sleeve_left": {"$ref": "#/$defs/material"}
+      }
+    }
+  },
+  "$defs": {
+    "profile": {"allOf": [{"$ref": "urn:bobincraft:armament:common:1#/$defs/id"}, {"pattern": "\\.profile\\.json$"}]},
+    "material": {"$ref": "urn:bobincraft:armament:common:1#/$defs/name"}
+  }
+}

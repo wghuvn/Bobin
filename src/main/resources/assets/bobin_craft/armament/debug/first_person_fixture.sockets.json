@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "id": "bobin_craft:debug/first_person_sockets",
+  "id": "bobin_craft:debug/first_person_fixture_sockets",
   "rig_id": "bobin_craft:debug/first_person_rig",
   "sockets": [
     {

@@ -1,0 +1,8 @@
+{
+  "java_release": 17,
+  "classes": 79,
+  "class_major_versions": [
+    61
+  ],
+  "scope": "armament CPU target; Minecraft backend excluded"
+}

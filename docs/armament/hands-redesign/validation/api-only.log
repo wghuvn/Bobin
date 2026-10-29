@@ -1,0 +1,23 @@
+openjdk version "17.0.21" 2026-10-20
+OpenJDK Runtime Environment Temurin-17.0.21+9 (build 17.0.21+9)
+OpenJDK 64-Bit Server VM Temurin-17.0.21+9 (build 17.0.21+9, mixed mode, sharing)
+javac 17.0.21
+Isolated check outputs: /workspace/validation/armament-hands-redesign/api-only/run-MrEMUDOV
+
+Thanks for using JUnit! Support its development at https://junit.org/sponsoring
+
+
+Test run finished after 439 ms
+[        13 containers found      ]
+[         0 containers skipped    ]
+[        13 containers started    ]
+[         0 containers aborted    ]
+[        13 containers successful ]
+[         0 containers failed     ]
+[       164 tests found           ]
+[         0 tests skipped         ]
+[       164 tests started         ]
+[         0 tests aborted         ]
+[       164 tests successful      ]
+[         0 tests failed          ]
+

@@ -5,15 +5,15 @@
   "rig": "bobin_craft:armament/debug/first_person_fixture.rig.json",
   "sockets": "bobin_craft:armament/debug/first_person_fixture.sockets.json",
   "camera_offset": [
-    0,
-    -0.38,
-    -1.15
+    0.34,
+    -0.07,
+    -0.9
   ],
   "camera_rotation": [
-    0,
-    0,
-    0,
-    1
+    0.0,
+    0.0,
+    0.13052617013454437,
+    0.9914448857307434
   ],
   "camera_clearance": 0.075,
   "transition_seconds": 0.2,

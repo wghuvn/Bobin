@@ -1,0 +1,136 @@
+{
+  "jdk": "Temurin 17.0.21+9",
+  "suites": 15,
+  "tests": 492,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "jvm_verification_option": "-Xbatch",
+  "benchmarks": [
+    "first_person_cpu_benchmark samples=300 stable_zero_windows=2 best_bytes=0 windows=[0, 0, -1, -1, -1, -1] ns_per_sample=144987",
+    "animation_runtime_benchmark samples=2000 bytes=0 ns_per_sample=10649"
+  ],
+  "scope": "CPU armament API, GLB, presentation and asset checks; Minecraft backend excluded",
+  "details": [
+    {
+      "name": "com.bobincraft.armament.ApiBoundaryTest",
+      "tests": "1",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.066"
+    },
+    {
+      "name": "com.bobincraft.armament.ApiContractTest",
+      "tests": "28",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.497"
+    },
+    {
+      "name": "com.bobincraft.armament.DefinitionValidationTest",
+      "tests": "109",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.467"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonBlenderTest",
+      "tests": "54",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "3.468"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonMathTest",
+      "tests": "38",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.039"
+    },
+    {
+      "name": "com.bobincraft.armament.FirstPersonProfileTest",
+      "tests": "33",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.059"
+    },
+    {
+      "name": "com.bobincraft.armament.GlbLoaderTest",
+      "tests": "25",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.251"
+    },
+    {
+      "name": "com.bobincraft.armament.GlbResourceCacheTest",
+      "tests": "2",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.006"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfBlenderTest",
+      "tests": "53",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.178"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfImportTest",
+      "tests": "30",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "1.205"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfMathTest",
+      "tests": "17",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.031"
+    },
+    {
+      "name": "com.bobincraft.armament.GltfRuntimeTest",
+      "tests": "20",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.172"
+    },
+    {
+      "name": "com.bobincraft.armament.PlayerHandSkinTest",
+      "tests": "56",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.731"
+    },
+    {
+      "name": "com.bobincraft.armament.StrictJsonTest",
+      "tests": "23",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.007"
+    },
+    {
+      "name": "com.bobincraft.armament.VisualContractTest",
+      "tests": "3",
+      "failures": "0",
+      "errors": "0",
+      "skipped": "0",
+      "time": "0.027"
+    }
+  ]
+}

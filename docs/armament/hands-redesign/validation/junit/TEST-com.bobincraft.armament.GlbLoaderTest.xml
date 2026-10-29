@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GlbLoaderTest" tests="25" skipped="0" failures="0" errors="0" timestamp="2026-10-29T20:17:25" hostname="e8d722c6862b" time="1.251">
+  <properties/>
+  <testcase name="genuineBlenderExportMatchesIndependentBlenderWorldVertices()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.088"/>
+  <testcase name="inverseTransposeAndReflectionsHaveCorrectOrientation()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.037"/>
+  <testcase name="sourceStreamsCloseOnSuccessAndFailure()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.08"/>
+  <testcase name="textureAndMaterialDataAreActuallyRead()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.131"/>
+  <testcase name="truncatedHeaderAndLengthMismatchAreRejected()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <testcase name="corruptBinaryAccessorsAndImagePayloadAreRejected()" classname="com.bobincraft.armament.GlbLoaderTest" time="0.341"/>
+  <testcase name="external buffer URI" classname="com.bobincraft.armament.GlbLoaderTest" time="0.006"/>
+  <testcase name="embedded data URI" classname="com.bobincraft.armament.GlbLoaderTest" time="0.176"/>
+  <testcase name="accessor outside buffer" classname="com.bobincraft.armament.GlbLoaderTest" time="0.002"/>
+  <testcase name="accessor allocation limit" classname="com.bobincraft.armament.GlbLoaderTest" time="0.003"/>
+  <testcase name="fractional count" classname="com.bobincraft.armament.GlbLoaderTest" time="0.005"/>
+  <testcase name="invalid component" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <testcase name="sparse not supported" classname="com.bobincraft.armament.GlbLoaderTest" time="0.044"/>
+  <testcase name="missing POSITION" classname="com.bobincraft.armament.GlbLoaderTest" time="0.044"/>
+  <testcase name="missing NORMAL" classname="com.bobincraft.armament.GlbLoaderTest" time="0.033"/>
+  <testcase name="wrong mode" classname="com.bobincraft.armament.GlbLoaderTest" time="0.005"/>
+  <testcase name="unsupported required extension" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <testcase name="skinning not supported" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <testcase name="animations not supported" classname="com.bobincraft.armament.GlbLoaderTest" time="0.004"/>
+  <testcase name="bad scene" classname="com.bobincraft.armament.GlbLoaderTest" time="0.18"/>
+  <testcase name="cycle" classname="com.bobincraft.armament.GlbLoaderTest" time="0.005"/>
+  <testcase name="zero scale" classname="com.bobincraft.armament.GlbLoaderTest" time="0.01"/>
+  <testcase name="bad image MIME" classname="com.bobincraft.armament.GlbLoaderTest" time="0.019"/>
+  <testcase name="non-unit quaternion" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <testcase name="string translation" classname="com.bobincraft.armament.GlbLoaderTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

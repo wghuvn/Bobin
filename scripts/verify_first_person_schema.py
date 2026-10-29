@@ -39,7 +39,21 @@ def main():
     for kind, schema_id in [('rig', 'urn:bobincraft:armament:rig:1'), ('sockets', 'urn:bobincraft:armament:sockets:1')]:
         data = json.loads((root / 'src/main/resources/assets/bobin_craft/armament/debug' / f'first_person_fixture.{kind}.json').read_text())
         Draft202012Validator(schemas[schema_id], registry=registry).validate(data)
-    print(f'PASS: first-person profile schema, {len(cases)} structural cases; rig/sockets sidecars')
+    assets = root / 'src/main/resources/assets/bobin_craft/armament/debug'
+    for kind, schema_id in [('profile', 'urn:bobincraft:armament:first-person:1'), ('rig', 'urn:bobincraft:armament:rig:1'), ('sockets', 'urn:bobincraft:armament:sockets:1')]:
+        Draft202012Validator(schemas[schema_id], registry=registry).validate(json.loads((assets / f'first_person_fixture_slim.{kind}.json').read_text()))
+    hands = json.loads((assets / 'first_person_hands.appearance.json').read_text())
+    hand_validator = Draft202012Validator(schemas['urn:bobincraft:armament:player-hands:1'], registry=registry)
+    hand_validator.validate(hands)
+    bad_hands = []
+    bad = copy.deepcopy(hands);bad['scale'] = .5;bad_hands.append(bad)
+    bad = copy.deepcopy(hands);bad['schema_version'] = 2;bad_hands.append(bad)
+    bad = copy.deepcopy(hands);del bad['profiles']['slim'];bad_hands.append(bad)
+    bad = copy.deepcopy(hands);bad['profiles']['default'] = 'https://example.invalid/hands.glb';bad_hands.append(bad)
+    bad = copy.deepcopy(hands);bad['materials']['sleeve_left'] = 'Bad Material';bad_hands.append(bad)
+    for bad in bad_hands:
+        assert list(hand_validator.iter_errors(bad)), bad
+    print(f'PASS: first-person profile schema, {len(cases)} structural cases; Steve/Alex sidecars; appearance: 1 positive + {len(bad_hands)} negative')
 
 
 if __name__ == '__main__':

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GltfImportTest" tests="30" skipped="0" failures="0" errors="0" timestamp="2026-10-29T20:17:27" hostname="e8d722c6862b" time="1.205">
+  <properties/>
+  <testcase name="duplicate joint" classname="com.bobincraft.armament.GltfImportTest" time="0.002"/>
+  <testcase name="unknown joint" classname="com.bobincraft.armament.GltfImportTest" time="0.004"/>
+  <testcase name="empty joints" classname="com.bobincraft.armament.GltfImportTest" time="0.003"/>
+  <testcase name="bad inverse bind type" classname="com.bobincraft.armament.GltfImportTest" time="0.008"/>
+  <testcase name="short inverse bind count" classname="com.bobincraft.armament.GltfImportTest" time="0.036"/>
+  <testcase name="non-finite inverse bind" classname="com.bobincraft.armament.GltfImportTest" time="0.062"/>
+  <testcase name="projective inverse bind" classname="com.bobincraft.armament.GltfImportTest" time="0.241"/>
+  <testcase name="wrong skeleton ancestor" classname="com.bobincraft.armament.GltfImportTest" time="0.006"/>
+  <testcase name="input type" classname="com.bobincraft.armament.GltfImportTest" time="0.002"/>
+  <testcase name="input normalized" classname="com.bobincraft.armament.GltfImportTest" time="0.026"/>
+  <testcase name="input time NaN" classname="com.bobincraft.armament.GltfImportTest" time="0.045"/>
+  <testcase name="duplicate timestamps" classname="com.bobincraft.armament.GltfImportTest" time="0.143"/>
+  <testcase name="negative timestamp" classname="com.bobincraft.armament.GltfImportTest" time="0.014"/>
+  <testcase name="output count" classname="com.bobincraft.armament.GltfImportTest" time="0.033"/>
+  <testcase name="non-unit rotation key" classname="com.bobincraft.armament.GltfImportTest" time="0.061"/>
+  <testcase name="duplicate channel" classname="com.bobincraft.armament.GltfImportTest" time="0.001"/>
+  <testcase name="unsupported weights channel" classname="com.bobincraft.armament.GltfImportTest" time="0.001"/>
+  <testcase name="animation matrix node" classname="com.bobincraft.armament.GltfImportTest" time="0.044"/>
+  <testcase name="missing weights" classname="com.bobincraft.armament.GltfImportTest" time="0.006"/>
+  <testcase name="signed joints" classname="com.bobincraft.armament.GltfImportTest" time="0.036"/>
+  <testcase name="normalized joints" classname="com.bobincraft.armament.GltfImportTest" time="0.091"/>
+  <testcase name="joint outside palette" classname="com.bobincraft.armament.GltfImportTest" time="0.167"/>
+  <testcase name="zero weights" classname="com.bobincraft.armament.GltfImportTest" time="0.012"/>
+  <testcase name="negative weights" classname="com.bobincraft.armament.GltfImportTest" time="0.04"/>
+  <testcase name="non-finite weights" classname="com.bobincraft.armament.GltfImportTest" time="0.01"/>
+  <testcase name="extra influence set" classname="com.bobincraft.armament.GltfImportTest" time="0.041"/>
+  <testcase name="reloadingProducesIndependentRigAndPoseStorage()" classname="com.bobincraft.armament.GltfImportTest" time="0.01"/>
+  <testcase name="missingInverseBindDefaultsToIdentity()" classname="com.bobincraft.armament.GltfImportTest" time="0.006"/>
+  <testcase name="weights component 5121" classname="com.bobincraft.armament.GltfImportTest" time="0.01"/>
+  <testcase name="weights component 5123" classname="com.bobincraft.armament.GltfImportTest" time="0.015"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

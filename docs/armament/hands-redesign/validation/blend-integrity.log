@@ -1,0 +1,6 @@
+PASS: both Blender sources, 36 bones each, packed 64x64 skins, closed hands, 128 sample previews
+Blender 4.3.2
+Read blend: "/workspace/Bobin/art/armament/first_person_fixture.blend"
+Read blend: "/workspace/Bobin/art/armament/first_person_fixture_slim.blend"
+
+Blender quit

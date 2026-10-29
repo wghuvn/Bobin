@@ -1,0 +1,14 @@
+{
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.profile.json": "64daa468b98e9f1a23ec0515766cabb4f12ace1954eb34741a68b63af9640a2e",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.glb": "9fc37b205676ea386a7bfae4192763cd779afec6e8196494640b23c27565e4d5",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.sockets.json": "d9241f9c138a5136614e479768b904477a2b6bb886e52e2dba8a9b2b1a8d2122",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture_slim.sockets.json": "8c72580661ed46cd7bad0227ae37601a83b602c5d98b39e9a0e1f7bccad4317e",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture_slim.glb": "30b3f3e849b06f92768a77bffd67dc989b28fb592f4aac964d10498528a1b272",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture_slim.profile.json": "e9b788513d32e0ff39a60a166c7c2662c1be09767eda6171b4190e52f976a681",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture_slim.rig.json": "7b0c8334ffda7b47a1d522d6cef3c05be3be7f8dddb68e5503634cb84e12c2d8",
+  "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.rig.json": "f45f6d20da21120ffa1d7cf59ee1008c7167fd4ae9a4e30594bd41296679d839",
+  "art/armament/first_person_fixture.framing.json": "a0c2cf5d4b65611bb86433e8d6c498ed329e13831697ffd3b3cdb198ecef8885",
+  "art/armament/first_person_fixture_slim.framing.json": "984244a00621ae735002faf2c5de98d0ac344d82dd999f1f1a18838a7c4ef424",
+  "art/armament/first_person_fixture.reference.json": "01ceb408df67e4626041eea8fa1ac85a8f7650c2e62e29f467bec101fa633617",
+  "art/armament/first_person_fixture_slim.reference.json": "692cc240c573aa408f5ff79939ee40e3905a84d7fba58a047b8a89ffa31f5fdb"
+}

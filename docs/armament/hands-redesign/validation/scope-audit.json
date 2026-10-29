@@ -1,0 +1,27 @@
+{
+  "baseline_commit": "4cd9ec85f4ec61e3b6d9174ae6903a98181f07fb",
+  "tracked_baseline_files": 2582,
+  "changed_existing": [
+    "README.md",
+    "art/armament/first_person_fixture.blend",
+    "art/armament/first_person_fixture.blender-preview.png",
+    "art/armament/first_person_fixture.reference.json",
+    "scripts/armament/export_first_person_fixture.py",
+    "scripts/test_armament_api.sh",
+    "scripts/verify_first_person_schema.py",
+    "src/main/java/com/bobincraft/armament/client/presentation/fabric/FirstPersonDiagnostic.java",
+    "src/main/java/com/bobincraft/armament/client/presentation/fabric/FirstPersonResources.java",
+    "src/main/java/com/bobincraft/armament/client/render/fabric/FabricGlbRenderer.java",
+    "src/main/java/com/bobincraft/armament/client/render/fabric/GlbRenderContext.java",
+    "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.glb",
+    "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.profile.json",
+    "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.rig.json",
+    "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.sockets.json",
+    "src/test/java/com/bobincraft/armament/FirstPersonBlenderTest.java"
+  ],
+  "deleted": [],
+  "unexpected": [],
+  "build_gradle_unchanged": true,
+  "original_technical_fixture_unchanged": true,
+  "non_armament_java_changed": []
+}

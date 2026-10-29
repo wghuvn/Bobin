@@ -158,62 +158,62 @@
       "parent": "hand_left"
     },
     {
-      "name": "index_3_left",
-      "node_index": 31,
-      "parent": "index_2_left"
-    },
-    {
-      "name": "index_2_left",
-      "node_index": 32,
-      "parent": "index_1_left"
-    },
-    {
-      "name": "index_1_left",
-      "node_index": 33,
-      "parent": "hand_left"
-    },
-    {
-      "name": "middle_3_left",
-      "node_index": 34,
-      "parent": "middle_2_left"
-    },
-    {
-      "name": "middle_2_left",
-      "node_index": 35,
-      "parent": "middle_1_left"
-    },
-    {
-      "name": "middle_1_left",
-      "node_index": 36,
-      "parent": "hand_left"
-    },
-    {
-      "name": "ring_3_left",
-      "node_index": 37,
-      "parent": "ring_2_left"
-    },
-    {
-      "name": "ring_2_left",
-      "node_index": 38,
-      "parent": "ring_1_left"
-    },
-    {
-      "name": "ring_1_left",
-      "node_index": 39,
-      "parent": "hand_left"
-    },
-    {
       "name": "little_3_left",
-      "node_index": 40,
+      "node_index": 31,
       "parent": "little_2_left"
     },
     {
       "name": "little_2_left",
-      "node_index": 41,
+      "node_index": 32,
       "parent": "little_1_left"
     },
     {
       "name": "little_1_left",
+      "node_index": 33,
+      "parent": "hand_left"
+    },
+    {
+      "name": "ring_3_left",
+      "node_index": 34,
+      "parent": "ring_2_left"
+    },
+    {
+      "name": "ring_2_left",
+      "node_index": 35,
+      "parent": "ring_1_left"
+    },
+    {
+      "name": "ring_1_left",
+      "node_index": 36,
+      "parent": "hand_left"
+    },
+    {
+      "name": "middle_3_left",
+      "node_index": 37,
+      "parent": "middle_2_left"
+    },
+    {
+      "name": "middle_2_left",
+      "node_index": 38,
+      "parent": "middle_1_left"
+    },
+    {
+      "name": "middle_1_left",
+      "node_index": 39,
+      "parent": "hand_left"
+    },
+    {
+      "name": "index_3_left",
+      "node_index": 40,
+      "parent": "index_2_left"
+    },
+    {
+      "name": "index_2_left",
+      "node_index": 41,
+      "parent": "index_1_left"
+    },
+    {
+      "name": "index_1_left",
       "node_index": 42,
       "parent": "hand_left"
     },
@@ -248,13 +248,23 @@
       "parent": "view_hands_rig"
     },
     {
-      "name": "view_hands_rig",
+      "name": "view_sleeve_left",
       "node_index": 49,
+      "parent": "view_hands_rig"
+    },
+    {
+      "name": "view_sleeve_right",
+      "node_index": 50,
+      "parent": "view_hands_rig"
+    },
+    {
+      "name": "view_hands_rig",
+      "node_index": 51,
       "parent": "presentation_root"
     },
     {
       "name": "presentation_root",
-      "node_index": 50
+      "node_index": 52
     }
   ],
   "roles": {

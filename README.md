@@ -80,6 +80,7 @@ The deployment-map fix is retained: the layout is baked into the JAR and map pre
 
 ## Documentation and previews
 
+- [Minecraft Steve/Alex first-person GLB hands: redesign, skin binding and verification](docs/armament/HANDS_REDESIGN_RU.md)
 - [Rebuild details, coordinates and validation](docs/WORLD_REWORK_2_2_0.md)
 - [World overview](docs/zone-overview.png)
 - [First-floor plans](docs/zone-interiors.png)

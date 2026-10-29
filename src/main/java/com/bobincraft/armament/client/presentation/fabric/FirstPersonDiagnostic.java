@@ -76,8 +76,8 @@ public final class FirstPersonDiagnostic {
     }
     private void updateUnchecked(){
         reason=FirstPersonEligibility.reason(observations());if(!reason.equals("ready")){drop();return;}
-        var bundle=resources.current().orElse(null);if(bundle==null){drop();reason="resources_unavailable";return;}
         var client=MinecraftClient.getInstance();long tick=client.world.getTime();
+        var bundle=resources.current(client.player.getModel()).orElse(null);if(bundle==null){drop();reason="resources_unavailable";return;}
         if(bundle!=generation||owner!=client.player||world!=client.world){generation=bundle;owner=client.player;world=client.world;presenter=new FirstPersonWeaponPresenter(bundle.cpu());presenter.show(tick/20.0);if(inertiaOverride!=null)presenter.inertia(inertiaOverride);}
         Vec3d velocity=client.player.getVelocity();double threshold=bundle.cpu().profile().movementThreshold();
         presenter.tick(tick,client.player.getYaw(),client.player.getPitch(),(velocity.x*velocity.x+velocity.z*velocity.z)*400>threshold*threshold);
@@ -102,7 +102,8 @@ public final class FirstPersonDiagnostic {
             presenter.copyProjection(transfer);viewProjection.set(transfer);presenter.copyNormals(normalTransfer);normalMatrix4.set(normalTransfer);normalMatrix.set(normalMatrix4);
             // Preserve the caller's pending immediate batch before using the GLB backend.
             consumers.draw();
-            renderer.render(generation.cpu().model(),presenter.pose(),new GlbRenderContext(viewProjection,light,new Vec3d(presenter.cameraInModel(0),presenter.cameraInModel(1),presenter.cameraInModel(2)),generation.gpu(),normalMatrix));
+            generation.skin().update(player);
+            renderer.render(generation.cpu().model(),presenter.pose(),new GlbRenderContext(viewProjection,light,new Vec3d(presenter.cameraInModel(0),presenter.cameraInModel(1),presenter.cameraInModel(2)),generation.gpu(),normalMatrix,generation.skin()));
             reason="rendered";return true;
         }catch(RuntimeException e){disable(e);return false;}
     }
@@ -111,6 +112,6 @@ public final class FirstPersonDiagnostic {
     public String status(){
         var client=MinecraftClient.getInstance();String policy=FirstPersonEligibility.reason(observations());
         return "fpRequested="+requested+", policy="+policy+", render="+reason+", fov="+fov+", viewport="+client.getWindow().getFramebufferWidth()+"x"+client.getWindow().getFramebufferHeight()+
-            (presenter==null?"":", clip="+presenter.action()+", inertia="+presenter.inertiaEnabled()+", contactMetres="+presenter.contactMetres()+", contactDegrees="+presenter.contactDegrees()+", minDepth="+presenter.minimumDepth())+", "+resources.status();
+            (presenter==null?"":", skinModel="+client.player.getModel()+", skin="+client.player.getSkinTexture()+", clip="+presenter.action()+", inertia="+presenter.inertiaEnabled()+", contactMetres="+presenter.contactMetres()+", contactDegrees="+presenter.contactDegrees()+", minDepth="+presenter.minimumDepth())+", "+resources.status();
     }
 }

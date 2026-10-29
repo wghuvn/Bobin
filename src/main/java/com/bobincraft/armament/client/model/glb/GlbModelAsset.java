@@ -3,10 +3,15 @@ package com.bobincraft.armament.client.model.glb;
 import com.bobincraft.armament.api.WeaponId;
 import com.bobincraft.armament.client.model.WeaponModelAsset;
 import java.util.List;
+import com.bobincraft.armament.client.animation.gltf.RigModel;
 
-/** Immutable, CPU-only static scene. Coordinates are glTF Y-up metres, one metre per block. */
+/** Immutable CPU asset, with optional imported rig. Coordinates are glTF Y-up metres. */
 public record GlbModelAsset(WeaponId id, List<Primitive> primitives, List<Material> materials,
-        List<Image> images, List<Texture> textures, Bounds bounds) implements WeaponModelAsset {
+        List<Image> images, List<Texture> textures, Bounds bounds, RigModel rig) implements WeaponModelAsset {
+    /** Source-compatible stage-3 static asset constructor. */
+    public GlbModelAsset(WeaponId id,List<Primitive> primitives,List<Material> materials,List<Image> images,List<Texture> textures,Bounds bounds){
+        this(id,primitives,materials,images,textures,bounds,null);
+    }
     public GlbModelAsset {
         primitives = List.copyOf(primitives); materials = List.copyOf(materials);
         images = List.copyOf(images); textures = List.copyOf(textures);

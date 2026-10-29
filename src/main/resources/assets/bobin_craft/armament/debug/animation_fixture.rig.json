@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "id": "bobin_craft:debug/animation_fixture_rig",
+  "nodes": [
+    {
+      "name": "joint_tip",
+      "node_index": 0,
+      "parent": "joint_mid"
+    },
+    {
+      "name": "joint_mid",
+      "node_index": 1,
+      "parent": "joint_root"
+    },
+    {
+      "name": "joint_root",
+      "node_index": 2,
+      "parent": "armature"
+    },
+    {
+      "name": "deforming_column",
+      "node_index": 3,
+      "parent": "armature"
+    },
+    {
+      "name": "armature",
+      "node_index": 4,
+      "parent": "fixture_root"
+    },
+    {
+      "name": "fixed_base",
+      "node_index": 5,
+      "parent": "fixture_root"
+    },
+    {
+      "name": "rotor_pointer",
+      "node_index": 6,
+      "parent": "rotor"
+    },
+    {
+      "name": "socket_debug",
+      "node_index": 7,
+      "parent": "rotor"
+    },
+    {
+      "name": "rotor",
+      "node_index": 8,
+      "parent": "fixture_root"
+    },
+    {
+      "name": "slider",
+      "node_index": 9,
+      "parent": "fixture_root"
+    },
+    {
+      "name": "fixture_root",
+      "node_index": 10
+    }
+  ],
+  "roles": {
+    "weapon_root": "fixture_root"
+  }
+}

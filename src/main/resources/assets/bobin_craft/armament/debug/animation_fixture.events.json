@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "id": "bobin_craft:debug/animation_fixture_events",
+  "clips": [
+    {
+      "name": "spin",
+      "duration_seconds": 2,
+      "markers": [
+        {
+          "name": "start",
+          "kind": "cosmetic",
+          "time_seconds": 0,
+          "event": "bobin_craft:debug/presentation"
+        },
+        {
+          "name": "midpoint",
+          "kind": "cosmetic",
+          "time_seconds": 1,
+          "event": "bobin_craft:debug/contact"
+        },
+        {
+          "name": "end",
+          "kind": "cosmetic",
+          "time_seconds": 2,
+          "event": "bobin_craft:debug/presentation"
+        }
+      ]
+    },
+    {
+      "name": "slide",
+      "duration_seconds": 2,
+      "markers": [
+        {
+          "name": "start",
+          "kind": "cosmetic",
+          "time_seconds": 0,
+          "event": "bobin_craft:debug/presentation"
+        },
+        {
+          "name": "midpoint",
+          "kind": "cosmetic",
+          "time_seconds": 1,
+          "event": "bobin_craft:debug/contact"
+        },
+        {
+          "name": "end",
+          "kind": "cosmetic",
+          "time_seconds": 2,
+          "event": "bobin_craft:debug/presentation"
+        }
+      ]
+    },
+    {
+      "name": "curve",
+      "duration_seconds": 2,
+      "markers": [
+        {
+          "name": "start",
+          "kind": "cosmetic",
+          "time_seconds": 0,
+          "event": "bobin_craft:debug/presentation"
+        },
+        {
+          "name": "midpoint",
+          "kind": "cosmetic",
+          "time_seconds": 1,
+          "event": "bobin_craft:debug/contact"
+        },
+        {
+          "name": "end",
+          "kind": "cosmetic",
+          "time_seconds": 2,
+          "event": "bobin_craft:debug/presentation"
+        }
+      ]
+    },
+    {
+      "name": "bend",
+      "duration_seconds": 2,
+      "markers": [
+        {
+          "name": "start",
+          "kind": "cosmetic",
+          "time_seconds": 0,
+          "event": "bobin_craft:debug/presentation"
+        },
+        {
+          "name": "midpoint",
+          "kind": "cosmetic",
+          "time_seconds": 1,
+          "event": "bobin_craft:debug/contact"
+        },
+        {
+          "name": "end",
+          "kind": "cosmetic",
+          "time_seconds": 2,
+          "event": "bobin_craft:debug/presentation"
+        }
+      ]
+    },
+    {
+      "name": "combo",
+      "duration_seconds": 2,
+      "markers": [
+        {
+          "name": "start",
+          "kind": "cosmetic",
+          "time_seconds": 0,
+          "event": "bobin_craft:debug/presentation"
+        },
+        {
+          "name": "midpoint",
+          "kind": "cosmetic",
+          "time_seconds": 1,
+          "event": "bobin_craft:debug/contact"
+        },
+        {
+          "name": "end",
+          "kind": "cosmetic",
+          "time_seconds": 2,
+          "event": "bobin_craft:debug/presentation"
+        }
+      ]
+    }
+  ]
+}

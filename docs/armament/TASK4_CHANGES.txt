@@ -1,0 +1,61 @@
+BASELINE 484616ae077dd8edc9ec304118b9c298e6a25923
+
+MODIFIED (8)
+scripts/test_armament_api.sh
+src/main/java/com/bobincraft/armament/client/animation/AnimationController.java
+src/main/java/com/bobincraft/armament/client/debug/GlbDebugPreview.java
+src/main/java/com/bobincraft/armament/client/model/glb/GlbModelAsset.java
+src/main/java/com/bobincraft/armament/client/model/glb/GlbPreflight.java
+src/main/java/com/bobincraft/armament/client/model/glb/JgltfModelLoader.java
+src/main/java/com/bobincraft/armament/client/render/fabric/FabricGlbRenderer.java
+src/main/java/com/bobincraft/armament/client/resource/fabric/GlbDebugResources.java
+
+ADDED (44)
+art/armament/animation_fixture.blend
+art/armament/animation_fixture.reference.json
+docs/armament/TASK4_CHANGES.txt
+docs/armament/TASK4_REPORT_RU.md
+docs/armament/task4/validation/TEST-com.bobincraft.armament.ApiBoundaryTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.ApiContractTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.DefinitionValidationTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GlbLoaderTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GlbResourceCacheTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GltfBlenderTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GltfImportTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GltfMathTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.GltfRuntimeTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.StrictJsonTest.xml
+docs/armament/task4/validation/TEST-com.bobincraft.armament.VisualContractTest.xml
+docs/armament/task4/validation/api-tests.log
+docs/armament/task4/validation/blender-export.log
+docs/armament/task4/validation/client-launch.log
+docs/armament/task4/validation/cpu-tests.log
+docs/armament/task4/validation/full-build.log
+docs/armament/task4/validation/full-gradle-results.json
+docs/armament/task4/validation/gltf-validator-report.json
+docs/armament/task4/validation/java-structure.json
+docs/armament/task4/validation/resolved-dependencies.json
+docs/armament/task4/validation/results.json
+docs/armament/task4/validation/schema-validation.log
+scripts/armament/export_animation_fixture.py
+src/main/java/com/bobincraft/armament/client/animation/gltf/AnimationClip.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/GltfAnimationController.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/NodeMask.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/RigFrame.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/RigMath.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/RigModel.java
+src/main/java/com/bobincraft/armament/client/animation/gltf/RigSockets.java
+src/main/java/com/bobincraft/armament/client/debug/GlbAnimationPreview.java
+src/main/java/com/bobincraft/armament/client/model/glb/GlbRigLoader.java
+src/main/resources/assets/bobin_craft/armament/debug/animation_fixture.events.json
+src/main/resources/assets/bobin_craft/armament/debug/animation_fixture.glb
+src/main/resources/assets/bobin_craft/armament/debug/animation_fixture.rig.json
+src/main/resources/assets/bobin_craft/armament/debug/animation_fixture.sockets.json
+src/test/java/com/bobincraft/armament/GltfBlenderTest.java
+src/test/java/com/bobincraft/armament/GltfImportTest.java
+src/test/java/com/bobincraft/armament/GltfMathTest.java
+src/test/java/com/bobincraft/armament/GltfRuntimeTest.java
+
+DELETED: none
+
+All 2477 other baseline files unchanged, including build.gradle and all non-armament systems.

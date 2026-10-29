@@ -34,8 +34,9 @@ final class GlbPreflight {
             check(b.getInt() == 0x004e4942 && binLength >= 0 && binLength % 4 == 0 && binLength == b.remaining(), "$", "expected a single complete BIN chunk");
         }
         noUris(root, "$");
-        for (String feature : List.of("extensionsRequired","extensionsUsed","skins","animations"))
-            check(array(root,feature,0,0).isEmpty(), "$."+feature, "not supported by the static GLB profile");
+        for (String feature : List.of("extensionsRequired","extensionsUsed"))
+            check(array(root,feature,0,0).isEmpty(), "$."+feature, "extensions are outside the supported GLB profile");
+        JsonArray skins=array(root,"skins",0,32),animations=array(root,"animations",0,128);
         JsonArray buffers = array(root,"buffers",1,1);
         int declared = integer(buffers.get(0).getAsJsonObject(),"byteLength",0,Integer.MAX_VALUE,0);
         check(declared > 0 && declared <= binLength && binLength-declared <= 3, "$.buffers[0]", "BIN length mismatch");
@@ -56,7 +57,7 @@ final class GlbPreflight {
             int component=integer(a,"componentType",5120,5126,-1);
             int size=switch(component){case 5120,5121->1;case 5122,5123->2;case 5125,5126->4;default->throw new IOException(path+": unsupported component type");};
             String type=a.get("type").getAsString();
-            int components=switch(type){case "SCALAR"->1;case "VEC2"->2;case "VEC3"->3;case "VEC4"->4;default->throw new IOException(path+": unsupported accessor type");};
+            int components=switch(type){case "SCALAR"->1;case "VEC2"->2;case "VEC3"->3;case "VEC4"->4;case "MAT4"->16;default->throw new IOException(path+": unsupported accessor type");};
             JsonObject v=views.get(view).getAsJsonObject();
             int offset=integer(a,"byteOffset",0,declared,0), element=size*components;
             int stride=integer(v,"byteStride",element,252,element);
@@ -68,7 +69,8 @@ final class GlbPreflight {
         JsonArray nodes=array(root,"nodes",1,256);int[] parents=new int[nodes.size()];
         for(int i=0;i<nodes.size();i++){
             JsonObject node=nodes.get(i).getAsJsonObject();
-            check(!node.has("skin") && !node.has("weights"),"$.nodes["+i+"]","skinning/morph weights are not supported");
+            check(!node.has("weights"),"$.nodes["+i+"]","morph weights are not supported");
+            if(node.has("skin"))integer(node,"skin",0,skins.size()-1,-1);
             check(!node.has("matrix") || (!node.has("translation")&&!node.has("rotation")&&!node.has("scale")),"$.nodes["+i+"]","matrix and TRS are mutually exclusive");
             for(String key:List.of("matrix","translation","rotation","scale"))if(node.has(key)){
                 int size=key.equals("matrix")?16:key.equals("rotation")?4:3;
@@ -94,6 +96,25 @@ final class GlbPreflight {
             }
         }
         integer(root,"scene",0,scenes.size()-1,0);
+        for(int i=0;i<skins.size();i++){
+            JsonObject skin=skins.get(i).getAsJsonObject();Set<Integer> unique=new HashSet<>();
+            for(JsonElement j:array(skin,"joints",1,128))check(unique.add(exactInt(j,0,nodes.size()-1,"$.skins["+i+"].joints")),"$.skins["+i+"]","duplicate joint");
+            if(skin.has("inverseBindMatrices"))integer(skin,"inverseBindMatrices",0,accessors.size()-1,-1);
+            if(skin.has("skeleton"))integer(skin,"skeleton",0,nodes.size()-1,-1);
+        }
+        for(int i=0;i<animations.size();i++){
+            JsonObject animation=animations.get(i).getAsJsonObject();JsonArray samplers=array(animation,"samplers",1,768);
+            for(JsonElement entry:samplers){JsonObject s=entry.getAsJsonObject();integer(s,"input",0,accessors.size()-1,-1);integer(s,"output",0,accessors.size()-1,-1);
+                if(s.has("interpolation"))check(Set.of("STEP","LINEAR","CUBICSPLINE").contains(s.get("interpolation").getAsString()),"$.animations.samplers.interpolation","unsupported interpolation");}
+            Set<String> targets=new HashSet<>();
+            for(JsonElement entry:array(animation,"channels",1,768)){
+                JsonObject channel=entry.getAsJsonObject();integer(channel,"sampler",0,samplers.size()-1,-1);
+                JsonObject target=channel.getAsJsonObject("target");int n=integer(target,"node",0,nodes.size()-1,-1);
+                String path=target.get("path").getAsString();check(Set.of("translation","rotation","scale").contains(path),"$.animations.channels.target.path","only TRS channels supported");
+                check(!nodes.get(n).getAsJsonObject().has("matrix"),"$.animations.channels.target","matrix nodes cannot be animated");
+                check(targets.add(n+":"+path),"$.animations.channels.target","duplicate node/path target");
+            }
+        }
         JsonArray meshes=array(root,"meshes",1,128);
         for(JsonElement e:meshes) for(JsonElement primitive:array(e.getAsJsonObject(),"primitives",1,256)){
             JsonObject pr=primitive.getAsJsonObject();check(array(pr,"targets",0,0).isEmpty(),"$.meshes.primitives.targets","morph targets are not supported");

@@ -3,6 +3,7 @@ package com.bobincraft.armament.client.model.glb;
 import com.bobincraft.armament.api.WeaponId;
 import com.bobincraft.armament.client.model.WeaponModelLoader;
 import com.google.gson.JsonObject;
+import com.bobincraft.armament.client.animation.gltf.RigModel;
 import de.javagl.jgltf.model.*;
 import de.javagl.jgltf.model.io.GltfModelReader;
 import javax.imageio.ImageIO;
@@ -13,7 +14,7 @@ import java.util.*;
 import static com.bobincraft.armament.client.model.glb.GlbPreflight.check;
 import static com.bobincraft.armament.client.model.glb.GlbModelAsset.*;
 
-/** Static embedded GLB 2 loader. JglTF does parsing; this adapter validates the supported profile. */
+/** Embedded GLB 2 loader. Static path is preserved; animated assets retain local rig geometry. */
 public final class JgltfModelLoader implements WeaponModelLoader {
     @Override public GlbModelAsset load(WeaponId resource, ResourceSource source) throws IOException {
         if (!resource.path().endsWith(".glb")) throw new IOException(resource+": expected .glb resource");
@@ -26,22 +27,27 @@ public final class JgltfModelLoader implements WeaponModelLoader {
             // Never use read(URI): no network, filesystem or data URI resolution.
             GltfModel model = reader.readWithoutReferences(new ByteArrayInputStream(bytes));
             check(errors.isEmpty(), "$", "JglTF validation: "+String.join("; ",errors));
-            check(model.getSkinModels().isEmpty() && model.getAnimationModels().isEmpty(), "$", "static scene only");
             List<Image> images = images(model);
             List<Texture> textures = textures(model, images);
             List<Material> materials = materials(model);
             List<Primitive> primitives = new ArrayList<>();
             int scene = GlbPreflight.integer(document,"scene",0,model.getSceneModels().size()-1,0);
-            int[] totals = {0,0};
-            for (NodeModel node : model.getSceneModels().get(scene).getNodeModels())
-                collect(node, StaticTransforms.identity(), primitives, materials, model, totals);
+            RigModel rig=null;
+            if(!model.getSkinModels().isEmpty()||!model.getAnimationModels().isEmpty()){
+                rig=GlbRigLoader.load(model,document,scene,materials);
+                primitives.addAll(GlbRigLoader.bindPrimitives(rig));
+            }else{
+                int[] totals = {0,0};
+                for (NodeModel node : model.getSceneModels().get(scene).getNodeModels())
+                    collect(node, StaticTransforms.identity(), primitives, materials, model, totals);
+            }
             check(!primitives.isEmpty(),"$.scenes","selected scene contains no triangle meshes");
             float minX=Float.POSITIVE_INFINITY,minY=minX,minZ=minX,maxX=Float.NEGATIVE_INFINITY,maxY=maxX,maxZ=maxX;
             for(Primitive p:primitives)for(Vertex v:p.vertices()){
                 minX=Math.min(minX,v.x());minY=Math.min(minY,v.y());minZ=Math.min(minZ,v.z());
                 maxX=Math.max(maxX,v.x());maxY=Math.max(maxY,v.y());maxZ=Math.max(maxZ,v.z());
             }
-            return new GlbModelAsset(resource,primitives,materials,images,textures,new Bounds(minX,minY,minZ,maxX,maxY,maxZ));
+            return new GlbModelAsset(resource,primitives,materials,images,textures,new Bounds(minX,minY,minZ,maxX,maxY,maxZ),rig);
         } catch (IOException e) { throw new IOException(resource+": "+e.getMessage(),e); }
         catch (RuntimeException e) { throw new IOException(resource+": malformed GLB: "+e.getMessage(),e); }
     }
@@ -83,13 +89,13 @@ public final class JgltfModelLoader implements WeaponModelLoader {
         for(NodeModel child:node.getChildren())collect(child,world,output,materials,model,totals);
     }
 
-    private static AccessorModel attribute(Map<String,AccessorModel> attributes,String name,ElementType type)throws IOException{
+    static AccessorModel attribute(Map<String,AccessorModel> attributes,String name,ElementType type)throws IOException{
         AccessorModel result=attributes.get(name);
         check(result!=null,"$."+name,"required attribute is missing; export normals/UVs from Blender");
         check(result.getElementType()==type && result.getComponentType()==5126 && !result.isNormalized(),"$."+name,"expected non-normalized FLOAT "+type);
         return result;
     }
-    private static List<Integer> indices(AccessorModel accessor,int vertexCount)throws IOException{
+    static List<Integer> indices(AccessorModel accessor,int vertexCount)throws IOException{
         int count=accessor==null?vertexCount:accessor.getCount();
         check(count>0 && count%3==0,"$.indices","triangle index count must be positive and divisible by 3");
         List<Integer> result=new ArrayList<>(count);

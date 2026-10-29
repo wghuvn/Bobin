@@ -21,17 +21,21 @@ public final class GlbDebugPreview {
     private RegistryKey<World> dimension;
     private final GlbDebugResources resources;
     private final FabricGlbRenderer renderer;
-    public GlbDebugPreview(GlbDebugResources resources,FabricGlbRenderer renderer){this.resources=resources;this.renderer=renderer;}
+    private final GlbAnimationPreview animations;
+    public GlbDebugPreview(GlbDebugResources resources,FabricGlbRenderer renderer){
+        this.resources=resources;this.renderer=renderer;animations=new GlbAnimationPreview(resources,renderer,()->anchor=null);
+    }
     public void register(){
+        animations.register();
         ClientCommandRegistrationCallback.EVENT.register((dispatcher,registry)->dispatcher.register(literal("bobin_glb")
             .then(literal("show").executes(ctx->{
                 var client=MinecraftClient.getInstance();if(client.player==null||client.world==null)return 0;
                 double yaw=Math.toRadians(client.player.getYaw());Vec3d horizontal=new Vec3d(-Math.sin(yaw),0,Math.cos(yaw));
-                anchor=client.player.getPos().add(horizontal.multiply(3));dimension=client.world.getRegistryKey();
+                animations.hide();anchor=client.player.getPos().add(horizontal.multiply(3));dimension=client.world.getRegistryKey();
                 if(resources.current().isEmpty())resources.reload(client.getResourceManager());
                 ctx.getSource().sendFeedback(Text.literal("GLB preview: 1 metre = 1 block; forward indicator points north (-Z). "+resources.status()+", shader="+renderer.hasShader()));return 1;
             }))
-            .then(literal("hide").executes(ctx->{anchor=null;return 1;}))
+            .then(literal("hide").executes(ctx->{anchor=null;animations.hide();return 1;}))
             .then(literal("status").executes(ctx->{ctx.getSource().sendFeedback(Text.literal(resources.status()+", shader="+renderer.hasShader()));return 1;}))
             .then(literal("reload").executes(ctx->{MinecraftClient.getInstance().reloadResources();return 1;}))));
         WorldRenderEvents.LAST.register(this::draw);

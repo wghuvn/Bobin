@@ -1,0 +1,151 @@
+{
+  "baseline_commit": "484616ae077dd8edc9ec304118b9c298e6a25923",
+  "java": "Temurin 17.0.21+9",
+  "blender": "4.3.2",
+  "cpu_tests": {
+    "tests": 311,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "test_suites": [
+    {
+      "name": "com.bobincraft.armament.ApiBoundaryTest",
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.ApiContractTest",
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.DefinitionValidationTest",
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GlbLoaderTest",
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GlbResourceCacheTest",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfBlenderTest",
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfImportTest",
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfMathTest",
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.GltfRuntimeTest",
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.StrictJsonTest",
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "name": "com.bobincraft.armament.VisualContractTest",
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "blender_golden_poses": 50,
+  "api_isolated_tests": 164,
+  "schema_cases": 83,
+  "exported_sidecars_validated": 3,
+  "benchmark": "animation_runtime_benchmark samples=2000 bytes=0 ns_per_sample=10030",
+  "gltf_validator": {
+    "numErrors": 0,
+    "numWarnings": 1,
+    "numInfos": 3,
+    "numHints": 0
+  },
+  "full_mod_build": "BLOCKED before compileJava: HTTP 403 Fabric Maven / fabric-loom 1.7.4",
+  "minecraft_launched": false,
+  "gpu_skinning_rendering_leak_checks_in_game": "NOT VERIFIED",
+  "build_gradle_unchanged": true,
+  "unchanged_original_files": 2477,
+  "modified_original_files": [
+    "scripts/test_armament_api.sh",
+    "src/main/java/com/bobincraft/armament/client/animation/AnimationController.java",
+    "src/main/java/com/bobincraft/armament/client/debug/GlbDebugPreview.java",
+    "src/main/java/com/bobincraft/armament/client/model/glb/GlbModelAsset.java",
+    "src/main/java/com/bobincraft/armament/client/model/glb/GlbPreflight.java",
+    "src/main/java/com/bobincraft/armament/client/model/glb/JgltfModelLoader.java",
+    "src/main/java/com/bobincraft/armament/client/render/fabric/FabricGlbRenderer.java",
+    "src/main/java/com/bobincraft/armament/client/resource/fabric/GlbDebugResources.java"
+  ],
+  "deleted_files": [],
+  "assets": {
+    "art/armament/animation_fixture.blend": {
+      "bytes": 621668,
+      "sha256": "ebaf0c13fcbb6d876020c6e946f5780d9f05cb74859de8b9b3806eb936741779"
+    },
+    "art/armament/animation_fixture.reference.json": {
+      "bytes": 678254,
+      "sha256": "1b001046a11e104625ec544a59bbb6f60c894684655d7ca06ae8196aff30faf1"
+    },
+    "src/main/resources/assets/bobin_craft/armament/debug/animation_fixture.glb": {
+      "bytes": 23256,
+      "sha256": "767c83bf914f96261d988c6d76471c4fdfac28eee7bf06331c6017dcf59f8db3"
+    }
+  },
+  "java_structure": {
+    "java_version": "17.0.21",
+    "syntax_release": 17,
+    "parsed_sources": 374,
+    "declared_types": 662,
+    "local_imports": 443,
+    "distinct_qualified_local_references": 426,
+    "errors": 0,
+    "minecraft_type_checking": false
+  },
+  "cpu_verification_command": [
+    "./gradlew",
+    "-p",
+    "tools/armament-glb-check",
+    "test",
+    "--offline",
+    "--no-daemon",
+    "--console=plain"
+  ],
+  "prior_clean_cpu_run": "clean test dependencyReport on the same Java/dependency configuration; subsequent test reran compileJava/compileTestJava after socket alias changes"
+}

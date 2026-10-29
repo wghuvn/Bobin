@@ -24,8 +24,9 @@ find src/main/java/com/bobincraft/armament -name '*.java' ! -path '*/client/*' |
 find src/main/java/com/bobincraft/armament -name '*.java' \
     ! -path '*/client/model/glb/*' ! -path '*/client/render/fabric/*' \
     ! -path '*/client/resource/fabric/*' ! -path '*/client/debug/*' \
+    ! -path '*/client/animation/gltf/*' \
     ! -name 'ArmamentGlbClient.java' | sort > "$armament_out/main-sources.txt"
-find src/test/java/com/bobincraft/armament -name '*.java' ! -name 'Glb*Test.java' | sort > "$armament_out/test-sources.txt"
+find src/test/java/com/bobincraft/armament -name '*.java' ! -name 'Glb*Test.java' ! -name 'Gltf*Test.java' | sort > "$armament_out/test-sources.txt"
 # Common is compiled separately with no Minecraft/Fabric/client classes available.
 "$armament_jdk/bin/javac" --release 17 -encoding UTF-8 -cp "$armament_gson" -d "$armament_out/common" @"$armament_out/common-sources.txt"
 "$armament_jdk/bin/javac" --release 17 -encoding UTF-8 -cp "$armament_gson" -d "$armament_out/main" @"$armament_out/main-sources.txt"

@@ -1,0 +1,28 @@
+[
+  {
+    "command": [
+      "./gradlew",
+      "build",
+      "--no-daemon",
+      "--console=plain",
+      "--info"
+    ],
+    "exit_code": 1,
+    "log": "full-build.log",
+    "compilation_started": false,
+    "fabric_maven_http_403": true
+  },
+  {
+    "command": [
+      "./gradlew",
+      "runGlbDebugClient",
+      "--no-daemon",
+      "--console=plain",
+      "--info"
+    ],
+    "exit_code": 1,
+    "log": "client-launch.log",
+    "compilation_started": false,
+    "fabric_maven_http_403": true
+  }
+]

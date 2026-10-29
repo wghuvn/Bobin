@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GltfBlenderTest" tests="53" skipped="0" failures="0" errors="0" timestamp="2026-10-29T17:34:52" hostname="e8d722c6862b" time="0.713">
+  <properties/>
+  <testcase name="steadyStateSamplingHasNoPerFrameHeapAllocation()" classname="com.bobincraft.armament.GltfBlenderTest" time="0.226"/>
+  <testcase name="spin@0" classname="com.bobincraft.armament.GltfBlenderTest" time="0.034"/>
+  <testcase name="spin@0.1375" classname="com.bobincraft.armament.GltfBlenderTest" time="0.015"/>
+  <testcase name="spin@0.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.028"/>
+  <testcase name="spin@0.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.024"/>
+  <testcase name="spin@0.75" classname="com.bobincraft.armament.GltfBlenderTest" time="0.011"/>
+  <testcase name="spin@1" classname="com.bobincraft.armament.GltfBlenderTest" time="0.018"/>
+  <testcase name="spin@1.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="spin@1.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="spin@1.875" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="spin@2" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="slide@0" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="slide@0.1375" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@0.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.006"/>
+  <testcase name="slide@0.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@0.75" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="slide@1" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@1.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@1.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@1.875" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="slide@2" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="curve@0" classname="com.bobincraft.armament.GltfBlenderTest" time="0.004"/>
+  <testcase name="curve@0.1375" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="curve@0.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.003"/>
+  <testcase name="curve@0.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.007"/>
+  <testcase name="curve@0.75" classname="com.bobincraft.armament.GltfBlenderTest" time="0.007"/>
+  <testcase name="curve@1" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="curve@1.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="curve@1.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="curve@1.875" classname="com.bobincraft.armament.GltfBlenderTest" time="0.008"/>
+  <testcase name="curve@2" classname="com.bobincraft.armament.GltfBlenderTest" time="0.014"/>
+  <testcase name="bend@0" classname="com.bobincraft.armament.GltfBlenderTest" time="0.014"/>
+  <testcase name="bend@0.1375" classname="com.bobincraft.armament.GltfBlenderTest" time="0.017"/>
+  <testcase name="bend@0.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.009"/>
+  <testcase name="bend@0.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.009"/>
+  <testcase name="bend@0.75" classname="com.bobincraft.armament.GltfBlenderTest" time="0.012"/>
+  <testcase name="bend@1" classname="com.bobincraft.armament.GltfBlenderTest" time="0.015"/>
+  <testcase name="bend@1.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.008"/>
+  <testcase name="bend@1.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.009"/>
+  <testcase name="bend@1.875" classname="com.bobincraft.armament.GltfBlenderTest" time="0.019"/>
+  <testcase name="bend@2" classname="com.bobincraft.armament.GltfBlenderTest" time="0.018"/>
+  <testcase name="combo@0" classname="com.bobincraft.armament.GltfBlenderTest" time="0.021"/>
+  <testcase name="combo@0.1375" classname="com.bobincraft.armament.GltfBlenderTest" time="0.009"/>
+  <testcase name="combo@0.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.016"/>
+  <testcase name="combo@0.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.007"/>
+  <testcase name="combo@0.75" classname="com.bobincraft.armament.GltfBlenderTest" time="0.011"/>
+  <testcase name="combo@1" classname="com.bobincraft.armament.GltfBlenderTest" time="0.006"/>
+  <testcase name="combo@1.25" classname="com.bobincraft.armament.GltfBlenderTest" time="0.006"/>
+  <testcase name="combo@1.5" classname="com.bobincraft.armament.GltfBlenderTest" time="0.008"/>
+  <testcase name="combo@1.875" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="combo@2" classname="com.bobincraft.armament.GltfBlenderTest" time="0.005"/>
+  <testcase name="sidecarsValidateAgainstActualRigAndClipDurations()" classname="com.bobincraft.armament.GltfBlenderTest" time="0.002"/>
+  <testcase name="realRigAndAllInterpolationModesAreImported()" classname="com.bobincraft.armament.GltfBlenderTest" time="0.001"/>
+  <system-out><![CDATA[animation_runtime_benchmark samples=2000 bytes=0 ns_per_sample=10030
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

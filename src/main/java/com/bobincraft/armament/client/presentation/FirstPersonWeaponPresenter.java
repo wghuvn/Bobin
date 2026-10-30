@@ -62,6 +62,14 @@ public final class FirstPersonWeaponPresenter {
     public double contactMetres(){return grips.positionError();}public double contactDegrees(){return grips.angleError();}
     public RigFrame pose(){return pose;}public FirstPersonAsset asset(){return asset;}
     public double cameraInModel(int axis){if(axis<0||axis>2)throw new IllegalArgumentException("camera axis");return viewInverse[12+axis];}
+    /** Last accepted sample; diagnostic copies are requested explicitly, never in the render loop. */
+    public void copyModelToView(double[] destination){copyDiagnosticMatrix(modelToView,destination);}
+    public void copyViewProjection(double[] destination){copyDiagnosticMatrix(viewProjection,destination);}
+    private void copyDiagnosticMatrix(double[] source,double[] destination){
+        if(!rejection.equals("ready"))throw new IllegalStateException("first-person diagnostics require an accepted camera sample");
+        if(destination.length!=16)throw new IllegalArgumentException("matrix output length");
+        System.arraycopy(source,0,destination,0,16);
+    }
     public void copyProjection(float[] destination){copy(viewProjection,destination);}public void copyNormals(float[] destination){copy(normal,destination);}
     private static void copy(double[] source,float[] out){if(out.length!=16)throw new IllegalArgumentException("matrix output length");for(int i=0;i<16;i++)out[i]=(float)source[i];}
 }

@@ -48,9 +48,14 @@ def create(root, variant):
         local_offset=Vector((0,PALM_FIRST,-CONTACT_DEPTH))
         wrist_matrix=contact @ Matrix.Translation(-local_offset)
         wrist=wrist_matrix.translation.copy();primary=wrist_matrix.col[1].xyz;dorsal=wrist_matrix.col[2].xyz;lateral=wrist_matrix.col[0].xyz
-        approach=Vector((.35,-.80,-.35)) if side=='right' else Vector((-.8,-.4,-.15))
+        # Keep the full 25 cm forearm, but route its elbow below the grip rather
+        # than toward the lens. The primary tangent still limits wrist flexion
+        # to <45 degrees; these are bind-pose joint locations, not runtime offsets.
+        approach=Vector((.20,-.84,-.50)) if side=='right' else Vector((-.75,-.35,-.56))
         elbow=wrist+approach.normalized()*.25
-        upper_direction=Vector((.45,-.15,-.85)) if side=='right' else Vector((-.75,-.30,-.55))
+        # Left upper arm now drops from the bent elbow, rather than continuing
+        # almost collinearly with the forearm. Both rigs use the same anatomy.
+        upper_direction=Vector((.50,-.12,-.858)) if side=='right' else Vector((-.15,-.40,-.904))
         shoulder=elbow+upper_direction.normalized()*.375
         width=(3 if variant=='slim' else 4)/16*.625
         digits=[];order=('index','middle','ring','little') if side=='right' else ('little','ring','middle','index')

@@ -105,7 +105,7 @@ def make_arm(data, arm, variant, material, overlay_material):
         x, z = axes(tangent)
         front = [vertex(center + x * ((f - .5) * w) + z * h / 2, influence) for f in fractions]
         back = [vertex(center + x * ((f - .5) * w) - z * h / 2, influence) for f in fractions]
-        value = {'front': front, 'back': back, 'row': row, 'center': center, 'x': x, 'z': z}
+        value = {'front': front, 'back': back, 'row': row, 'center': center, 'x': x, 'z': z, 'tangent': tangent}
         if rings:
             previous = rings[-1]
             for direction in ('front', 'back'):
@@ -128,15 +128,33 @@ def make_arm(data, arm, variant, material, overlay_material):
 
     s, e, w = data['shoulder'], data['elbow'], data['wrist']
     a, b, c = (e - s).normalized(), (w - e).normalized(), data['forward']
+    # FPS-only proximal shoulder seam. The anatomical shoulder, 37.5 cm upper
+    # arm and 25 cm forearm remain unchanged. A cut cap at the shoulder floats
+    # in the viewport at wide FOV: continue the shirt toward the unseen body,
+    # with a bend in depth, rather than stretch the forearm or scale the hand.
+    # These sections are welded into the same skinned mesh and share upper-arm
+    # weights. They are not a third-person body or another animation system.
+    proximal = ([s + Vector((-.025, -.53, -.49)), s + Vector((-.015, -.28, -.28)), s - a * .11]
+                if side == 'left' else [s - a * .40])
+    path = proximal + [s]
+    for i, center in enumerate(proximal):
+        tangent = (path[i + 1] - (path[i - 1] if i else center)).normalized()
+        # Repeat proximal atlas rows instead of stretching hand UVs along the
+        # seam. The last seam section joins row 0 of the original shoulder.
+        ring(center, tangent, width, 4 * PIXEL, {upper: 1}, 6 if i == 0 else 0)
     # A bevel in the longitudinal topology, rather than an anatomical tapered tube.
     for t in (0, .25, .5, 1):
         blend = .5 if t == 1 else 0
         tangent = (a * (1 - blend) + b * blend).normalized()
         ring(s.lerp(e, t), tangent, width * (.8 if t == 1 else 1), 4 * PIXEL * (.8 if t == 1 else 1), {upper: 1 - blend, lower: blend}, t * 6)
-    for t in (.5, .75, 1):
+    for t in (.5, .75, .875, 1):
         joint = .5 if t == 1 else 0
         influence = {lower: 1} if t < 1 else {hand: 1}
-        tangent = b if t < 1 else c
+        # A half-step bevel transports the rectangular cross-section into
+        # the palm instead of joining the full forearm directly to a rotated
+        # wrist ring. Keep widths/depths and the Minecraft skin rows unchanged.
+        blend = max(0, (t - .75) / .25)
+        tangent = (b * (1 - blend) + c * blend).normalized()
         ring(e.lerp(w, t), tangent, width * (1 - .375 * max(0, (t - .5) / .5)),
              PIXEL * (4 - 3 * max(0, (t - .5) / .5)), influence, 6 + t * 4)
     # Palm occupies the next skin row. Its width remains unmistakably Minecraft.
@@ -228,6 +246,7 @@ def make_arm(data, arm, variant, material, overlay_material):
         return obj
 
     body = build('view_arm_' + side, vertices, faces, weights, uv_faces, material)
+    body['proximal_cap_vertices'] = first['front'] + first['back']
     # Vanilla sleeve dilation is 0.25 skin pixel. Open cuff: the separate shell
     # follows the same welded elbow weights and does not inflate the bare hand.
     sleeve_vertices, sleeve_weights, sleeve_faces, sleeve_uvs = [], [], [], []
@@ -247,11 +266,12 @@ def make_arm(data, arm, variant, material, overlay_material):
                 dx = delta.dot(r['x']);dz = delta.dot(r['z'])
                 position = vertices[i] + r['x'] * (PIXEL / 4 if dx > 0 else -PIXEL / 4) + r['z'] * (PIXEL / 4 if dz > 0 else -PIXEL / 4)
                 if r is rings[0]:
-                    position -= (e - s).normalized() * PIXEL / 4
+                    position -= r['tangent'] * PIXEL / 4
                 lookup[i] = len(sleeve_vertices);sleeve_vertices.append(position);sleeve_weights.append(weights[i])
             out.append(lookup[i])
         sleeve_faces.append(out)
         du, dv = sleeve_uv[0] - arm_uv[0], sleeve_uv[1] - arm_uv[1]
         sleeve_uvs.append([(u + du / 64, v - dv / 64) for u, v in coords])
     sleeve = build('view_sleeve_' + side, sleeve_vertices, sleeve_faces, sleeve_weights, sleeve_uvs, overlay_material)
+    sleeve['proximal_cap_vertices'] = [lookup[i] for i in first['front'] + first['back']]
     return body, sleeve

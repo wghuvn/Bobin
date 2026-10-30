@@ -20,10 +20,11 @@ ASSETS = ROOT / 'src/main/resources/assets/bobin_craft/armament/debug'
 sys.path.insert(0, str(Path(__file__).parent))
 from minecraft_hand_geometry import make_arm, skin_image, skin_material
 from ergonomic_calibration import create as create_gauge
+from triangle_contacts import nonadjacent_contacts
 VARIANT = sys.argv[sys.argv.index('--variant') + 1] if '--variant' in sys.argv else 'default'
 assert VARIANT in ('default', 'slim')
 STEM = 'first_person_fixture' + ('_slim' if VARIANT == 'slim' else '')
-CAMERA_OFFSET = [0.24, -0.23, -0.78]  # Explicit camera-space placement, all geometry stays in metres.
+CAMERA_OFFSET = [0.24, -0.23, -0.90]  # 12 cm view clearance; preserve all authored metric dimensions.
 CAMERA_ROTATION = Quaternion((0, 0, 1), 0)
 bpy.ops.object.select_all(action='SELECT')
 bpy.ops.object.delete(use_global=False)
@@ -184,7 +185,8 @@ reference = {'blender': bpy.app.version_string, 'source_model': 'ergonomic_calib
              'metres_per_unit': 1, 'gauge_body_metres': [.10,.69,.09], 'variant': VARIANT, 'camera_offset': CAMERA_OFFSET, 'clips': {}, 'intersections': []}
 reference['camera_rotation'] = [CAMERA_ROTATION.x, CAMERA_ROTATION.y, CAMERA_ROTATION.z, CAMERA_ROTATION.w]
 reference['topology'] = {obj.name: {'vertices': len(obj.data.vertices), 'polygons': len(obj.data.polygons),
-                                 'nonmanifold_edges': obj['nonmanifold_edges'], 'arm_pixels': obj['minecraft_arm_pixels'], 'weighted_bones': list(obj['weighted_bones'])}
+                                 'nonmanifold_edges': obj['nonmanifold_edges'], 'arm_pixels': obj['minecraft_arm_pixels'], 'weighted_bones': list(obj['weighted_bones']),
+                                 'proximal_cap_vertices': list(obj['proximal_cap_vertices'])}
                          for obj in hand_meshes}
 for obj in (root, arm):
     for track in obj.animation_data.nla_tracks:
@@ -197,7 +199,7 @@ for clip, keys in specs.items():
         seconds = fraction * duration;frame = seconds * scene.render.fps
         scene.frame_set(int(frame), subframe=frame - int(frame))
         depsgraph = bpy.context.evaluated_depsgraph_get()
-        sample = {'seconds': seconds, 'vertices': {}, 'sockets': {}}
+        sample = {'seconds': seconds, 'vertices': {}, 'sockets': {}, 'joints': {}, 'surface_contacts': {}}
         bvhs = {};holding_self = {}
         for obj in object_meshes + hand_meshes:
             evaluated = obj.evaluated_get(depsgraph);mesh = evaluated.to_mesh()
@@ -209,10 +211,21 @@ for clip, keys in specs.items():
             if obj.name.startswith('view_arm_'):
                 mesh.calc_loop_triangles();triangles = [list(t.vertices) for t in mesh.loop_triangles]
                 bvh = BVHTree.FromPolygons(points, triangles, all_triangles=True)
-                holding_self[obj.name] = sum(a < b and not set(triangles[a]).intersection(triangles[b]) for a, b in bvh.overlap(bvh))
+                holding_self[obj.name] = len(nonadjacent_contacts(points, triangles, bvh.overlap(bvh)))
             evaluated.to_mesh_clear()
         for obj in socket_objects:
             sample['sockets'][obj.name] = column_major(C @ obj.evaluated_get(depsgraph).matrix_world)
+        evaluated_arm = arm.evaluated_get(depsgraph)
+        for side in arms:
+            for joint in ('upper_', 'forearm_', 'hand_'):
+                name = joint + side
+                sample['joints'][name] = list((C @ evaluated_arm.matrix_world @ evaluated_arm.pose.bones[name].head.to_4d()).xyz)
+            slot = 'primary' if side == 'right' else 'secondary'
+            target = next(obj for obj in socket_objects if obj.name == 'grip_' + slot).evaluated_get(depsgraph).matrix_world.translation
+            # Independent evaluated triangle surfaces, not empty-to-empty socket error.
+            palm = bvhs['view_arm_' + side].find_nearest(target)
+            panel = bvhs['gauge_primary_handle' if side == 'right' else 'gauge_forward_support'].find_nearest(palm[0])
+            sample['surface_contacts'][side] = {'target_to_skin_metres': palm[3], 'skin_to_panel_metres': panel[3]}
         intersections = {hand.name + '/' + obj.name: len(bvhs[hand.name].overlap(bvhs[obj.name])) for hand in hand_meshes for obj in object_meshes}
         intersections['left_arm/right_arm'] = len(bvhs['view_arm_left'].overlap(bvhs['view_arm_right']))
         for side in arms:
@@ -243,13 +256,12 @@ for elbow_degrees, wrist_degrees in [(0, 0), (45, 0), (-30, 0), (0, 25), (0, -25
         ratios = [(points[e.vertices[1]] - points[e.vertices[0]]).length / (obj.data.vertices[e.vertices[1]].co - obj.data.vertices[e.vertices[0]].co).length for e in mesh.edges]
         mesh.calc_loop_triangles();triangles = [list(t.vertices) for t in mesh.loop_triangles]
         bvh = BVHTree.FromPolygons(points, triangles, all_triangles=True)
-        intersections = [(a, b) for a, b in bvh.overlap(bvh) if a < b and not set(triangles[a]).intersection(triangles[b])]
+        intersections = nonadjacent_contacts(points, triangles, bvh.overlap(bvh))
         result['meshes'][obj.name] = {'min_edge_ratio': min(ratios), 'max_edge_ratio': max(ratios), 'nonadjacent_triangle_contacts': len(intersections)}
         evaluated.to_mesh_clear()
     reference['joint_stress'].append(result)
 arm_pose(0)
 bpy.context.view_layer.update()
-(ART / (STEM + '.reference.json')).write_text(json.dumps(reference, indent=2) + '\n')
 
 raw = export.read_bytes();doc = json.loads(raw[20:20 + struct.unpack_from('<I', raw, 12)[0]])
 parents = {child: i for i, node in enumerate(doc['nodes']) for child in node.get('children', [])}
@@ -336,6 +348,30 @@ for label, objects in [('technical_object', object_meshes), ('left_hand_and_slee
     framing['bounds_top_left_normalized'][label] = [min(p.x for p in points), 1 - max(p.y for p in points), max(p.x for p in points), 1 - min(p.y for p in points)]
     framing['visible_bounds_top_left_normalized'][label] = [min(p.x for p in visible), 1 - max(p.y for p in visible), max(p.x for p in visible), 1 - min(p.y for p in visible)]
 (ART / (STEM + '.framing.json')).write_text(json.dumps(framing, indent=2) + '\n')
+# Blender's real perspective camera supplies independent golden screen bounds.
+# Keep unclipped NDC bounds separate from the visible/clipped framing above.
+reference['camera_diagnostics'] = {'joints': {}, 'projections': []}
+for name, point in reference['clips']['idle'][0]['joints'].items():
+    reference['camera_diagnostics']['joints'][name] = list((model_to_view @ Vector((*point, 1))).xyz)
+for fov in (70, 90, 110):
+    camera.data.lens = 12 / math.tan(math.radians(fov) / 2)
+    for width, height in ((960, 720), (960, 540), (1260, 540)):
+        scene.render.resolution_x, scene.render.resolution_y = width, height
+        bpy.context.view_layer.update()
+        bounds = {}
+        for obj in hand_meshes:
+            if not obj.name.startswith('view_arm_'):
+                continue
+            evaluated = obj.evaluated_get(bpy.context.evaluated_depsgraph_get());mesh = evaluated.to_mesh()
+            points = [world_to_camera_view(scene, camera, evaluated.matrix_world @ v.co) for v in mesh.vertices]
+            bounds[obj.name] = [min(p.x * 2 - 1 for p in points), min(p.y * 2 - 1 for p in points),
+                                max(p.x * 2 - 1 for p in points), max(p.y * 2 - 1 for p in points),
+                                min(p.z for p in points), max(p.z for p in points)]
+            evaluated.to_mesh_clear()
+        reference['camera_diagnostics']['projections'].append({'fov': fov, 'aspect': width / height, 'bounds': bounds})
+scene.render.resolution_x, scene.render.resolution_y = 960, 540
+camera.data.lens = 12 / math.tan(math.radians(70) / 2)
+(ART / (STEM + '.reference.json')).write_text(json.dumps(reference, indent=2) + '\n')
 bpy.ops.wm.save_as_mainfile(filepath=str(ART / (STEM + '.blend')))
 bpy.ops.render.render(write_still=True)
 print('FIRST_PERSON_EXPORTED', export)

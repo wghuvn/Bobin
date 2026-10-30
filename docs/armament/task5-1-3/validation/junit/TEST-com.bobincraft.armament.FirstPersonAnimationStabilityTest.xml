@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonAnimationStabilityTest" tests="66" skipped="0" failures="0" errors="0" timestamp="2026-10-30T00:23:02" hostname="9fefaaa38e6a" time="1.964">
+  <properties/>
+  <testcase name="default shading/UV idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.08"/>
+  <testcase name="default shading/UV inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.062"/>
+  <testcase name="default shading/UV raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.044"/>
+  <testcase name="default shading/UV lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.063"/>
+  <testcase name="default shading/UV move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.033"/>
+  <testcase name="slim shading/UV idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.04"/>
+  <testcase name="slim shading/UV inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="slim shading/UV raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.01"/>
+  <testcase name="slim shading/UV lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="slim shading/UV move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.004"/>
+  <testcase name="default idle -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.042"/>
+  <testcase name="default idle -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.016"/>
+  <testcase name="default idle -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.015"/>
+  <testcase name="default idle -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.018"/>
+  <testcase name="default idle -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.019"/>
+  <testcase name="default inspect -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="default inspect -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="default inspect -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="default inspect -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.034"/>
+  <testcase name="default inspect -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="default raise -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.018"/>
+  <testcase name="default raise -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.021"/>
+  <testcase name="default raise -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.028"/>
+  <testcase name="default raise -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.006"/>
+  <testcase name="default raise -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.011"/>
+  <testcase name="default lower -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.017"/>
+  <testcase name="default lower -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="default lower -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="default lower -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.025"/>
+  <testcase name="default lower -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="default move -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="default move -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="default move -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="default move -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="default move -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="slim idle -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="slim idle -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="slim idle -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.025"/>
+  <testcase name="slim idle -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.01"/>
+  <testcase name="slim idle -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim inspect -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim inspect -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.01"/>
+  <testcase name="slim inspect -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim inspect -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim inspect -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim raise -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.031"/>
+  <testcase name="slim raise -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.01"/>
+  <testcase name="slim raise -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.008"/>
+  <testcase name="slim raise -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.011"/>
+  <testcase name="slim raise -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.018"/>
+  <testcase name="slim lower -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.015"/>
+  <testcase name="slim lower -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.031"/>
+  <testcase name="slim lower -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="slim lower -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.012"/>
+  <testcase name="slim lower -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.013"/>
+  <testcase name="slim move -&gt; idle" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.022"/>
+  <testcase name="slim move -&gt; inspect" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.016"/>
+  <testcase name="slim move -&gt; raise" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.033"/>
+  <testcase name="slim move -&gt; lower" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.018"/>
+  <testcase name="slim move -&gt; move" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.009"/>
+  <testcase name="default at 30 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.093"/>
+  <testcase name="default at 60 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.116"/>
+  <testcase name="default at 144 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.264"/>
+  <testcase name="slim at 30 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.038"/>
+  <testcase name="slim at 60 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.069"/>
+  <testcase name="slim at 144 FPS" classname="com.bobincraft.armament.FirstPersonAnimationStabilityTest" time="0.109"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

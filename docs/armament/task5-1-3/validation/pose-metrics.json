@@ -1,0 +1,424 @@
+{
+  "first_person_fixture": {
+    "camera_joints": {
+      "upper_right": [
+        0.5410575270652771,
+        -0.7919352650642395,
+        -0.5545490980148315
+      ],
+      "forearm_right": [
+        0.3536103665828705,
+        -0.47027587890625,
+        -0.5995364189147949
+      ],
+      "hand_right": [
+        0.3034999966621399,
+        -0.3449999988079071,
+        -0.8100000023841858
+      ],
+      "upper_left": [
+        -0.053889378905296326,
+        -0.7563962936401367,
+        -1.0024173259735107
+      ],
+      "forearm_left": [
+        0.002368614077568054,
+        -0.41734808683395386,
+        -1.1524386405944824
+      ],
+      "hand_left": [
+        0.18999998271465302,
+        -0.2772499918937683,
+        -1.2400000095367432
+      ]
+    },
+    "holding_poses": 45,
+    "holding_pair_contacts": 0,
+    "holding_self_contacts": 0,
+    "stress_poses": 7,
+    "stress_self_contacts": 0,
+    "surface_contacts_idle": {
+      "right": {
+        "target_to_skin_metres": 3.725290298461914e-09,
+        "skin_to_panel_metres": 0.0009999945759773254
+      },
+      "left": {
+        "target_to_skin_metres": 1.862645149230957e-09,
+        "skin_to_panel_metres": 0.0010000020265579224
+      }
+    },
+    "topology": {
+      "view_arm_right": {
+        "vertices": 280,
+        "polygons": 278,
+        "nonmanifold_edges": 0,
+        "arm_pixels": 4,
+        "weighted_bones": [
+          "forearm_right",
+          "hand_right",
+          "index_1_right",
+          "index_2_right",
+          "index_3_right",
+          "little_1_right",
+          "little_2_right",
+          "little_3_right",
+          "middle_1_right",
+          "middle_2_right",
+          "middle_3_right",
+          "ring_1_right",
+          "ring_2_right",
+          "ring_3_right",
+          "thumb_1_right",
+          "thumb_2_right",
+          "thumb_3_right",
+          "upper_right"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      "view_sleeve_right": {
+        "vertices": 140,
+        "polygons": 129,
+        "nonmanifold_edges": 20,
+        "arm_pixels": 4,
+        "weighted_bones": [
+          "forearm_right",
+          "upper_right"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          23,
+          22,
+          25,
+          27,
+          29,
+          31,
+          33,
+          35,
+          37,
+          39
+        ]
+      },
+      "view_arm_left": {
+        "vertices": 320,
+        "polygons": 318,
+        "nonmanifold_edges": 0,
+        "arm_pixels": 4,
+        "weighted_bones": [
+          "forearm_left",
+          "hand_left",
+          "index_1_left",
+          "index_2_left",
+          "index_3_left",
+          "little_1_left",
+          "little_2_left",
+          "little_3_left",
+          "middle_1_left",
+          "middle_2_left",
+          "middle_3_left",
+          "ring_1_left",
+          "ring_2_left",
+          "ring_3_left",
+          "thumb_1_left",
+          "thumb_2_left",
+          "thumb_3_left",
+          "upper_left"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      "view_sleeve_left": {
+        "vertices": 180,
+        "polygons": 169,
+        "nonmanifold_edges": 20,
+        "arm_pixels": 4,
+        "weighted_bones": [
+          "forearm_left",
+          "upper_left"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          23,
+          22,
+          25,
+          27,
+          29,
+          31,
+          33,
+          35,
+          37,
+          39
+        ]
+      }
+    }
+  },
+  "first_person_fixture_slim": {
+    "camera_joints": {
+      "upper_right": [
+        0.5410575270652771,
+        -0.7919352650642395,
+        -0.5545490980148315
+      ],
+      "forearm_right": [
+        0.3536103665828705,
+        -0.47027587890625,
+        -0.5995364189147949
+      ],
+      "hand_right": [
+        0.3034999966621399,
+        -0.3449999988079071,
+        -0.8100000023841858
+      ],
+      "upper_left": [
+        -0.053889378905296326,
+        -0.7563962936401367,
+        -1.0024173259735107
+      ],
+      "forearm_left": [
+        0.002368614077568054,
+        -0.41734808683395386,
+        -1.1524386405944824
+      ],
+      "hand_left": [
+        0.18999998271465302,
+        -0.2772499918937683,
+        -1.2400000095367432
+      ]
+    },
+    "holding_poses": 45,
+    "holding_pair_contacts": 0,
+    "holding_self_contacts": 0,
+    "stress_poses": 7,
+    "stress_self_contacts": 0,
+    "surface_contacts_idle": {
+      "right": {
+        "target_to_skin_metres": 3.725290298461914e-09,
+        "skin_to_panel_metres": 0.0009999945759773254
+      },
+      "left": {
+        "target_to_skin_metres": 1.862645149230957e-09,
+        "skin_to_panel_metres": 0.0010000020265579224
+      }
+    },
+    "topology": {
+      "view_arm_right": {
+        "vertices": 280,
+        "polygons": 278,
+        "nonmanifold_edges": 0,
+        "arm_pixels": 3,
+        "weighted_bones": [
+          "forearm_right",
+          "hand_right",
+          "index_1_right",
+          "index_2_right",
+          "index_3_right",
+          "little_1_right",
+          "little_2_right",
+          "little_3_right",
+          "middle_1_right",
+          "middle_2_right",
+          "middle_3_right",
+          "ring_1_right",
+          "ring_2_right",
+          "ring_3_right",
+          "thumb_1_right",
+          "thumb_2_right",
+          "thumb_3_right",
+          "upper_right"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      "view_sleeve_right": {
+        "vertices": 140,
+        "polygons": 129,
+        "nonmanifold_edges": 20,
+        "arm_pixels": 3,
+        "weighted_bones": [
+          "forearm_right",
+          "upper_right"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          23,
+          22,
+          25,
+          27,
+          29,
+          31,
+          33,
+          35,
+          37,
+          39
+        ]
+      },
+      "view_arm_left": {
+        "vertices": 320,
+        "polygons": 318,
+        "nonmanifold_edges": 0,
+        "arm_pixels": 3,
+        "weighted_bones": [
+          "forearm_left",
+          "hand_left",
+          "index_1_left",
+          "index_2_left",
+          "index_3_left",
+          "little_1_left",
+          "little_2_left",
+          "little_3_left",
+          "middle_1_left",
+          "middle_2_left",
+          "middle_3_left",
+          "ring_1_left",
+          "ring_2_left",
+          "ring_3_left",
+          "thumb_1_left",
+          "thumb_2_left",
+          "thumb_3_left",
+          "upper_left"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19
+        ]
+      },
+      "view_sleeve_left": {
+        "vertices": 180,
+        "polygons": 169,
+        "nonmanifold_edges": 20,
+        "arm_pixels": 3,
+        "weighted_bones": [
+          "forearm_left",
+          "upper_left"
+        ],
+        "proximal_cap_vertices": [
+          0,
+          1,
+          4,
+          6,
+          8,
+          10,
+          12,
+          14,
+          16,
+          18,
+          23,
+          22,
+          25,
+          27,
+          29,
+          31,
+          33,
+          35,
+          37,
+          39
+        ]
+      }
+    }
+  }
+}

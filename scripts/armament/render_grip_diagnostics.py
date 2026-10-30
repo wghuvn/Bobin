@@ -4,7 +4,10 @@ Run after exporting both authored fixtures:
   blender -b --python scripts/armament/render_grip_diagnostics.py
   blender -b --python scripts/armament/render_grip_diagnostics.py -- --variant default --draft
 
-Writes only first_person_fixture{,_slim}.fov90.png and .grip-detail.png.
+Without options, preserves the existing .fov90.png and .grip-detail.png outputs.
+Use --output-dir for the task-5.1.3 comparison set: matching 70/90/110 degree
+FPS views, 4:3/21:9 views, and three close-ups of each actual grip surface.
+Use --source-dir to render archived before .blend files without replacing them.
 It never saves a .blend, exports GLB, or updates reference/metadata JSON.
 The FPS preview retains the authored camera pose and metres, changing only
 vertical FOV to 90 degrees. The external close-up shows both grip locations
@@ -15,6 +18,7 @@ the opaque handle; a grey line connects the displayed gizmo to the real origin.
 """
 import argparse
 import hashlib
+import json
 import math
 import sys
 from pathlib import Path
@@ -31,11 +35,19 @@ def arguments():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--variant', choices=('all', 'default', 'slim'), default='all')
     parser.add_argument('--draft', action='store_true', help='16 samples instead of 64; geometry and camera are unchanged')
+    parser.add_argument('--source-dir', type=Path, default=ART, help='Directory containing the authored .blend files')
+    parser.add_argument('--output-dir', type=Path, help='Comparison output directory; also enables the extended view set')
+    parser.add_argument('--label', default='authored', help='Provenance label recorded in the diagnostic manifest')
+    parser.add_argument('--only-closeups', action='store_true', help='Refresh only six close-ups in an existing --output-dir set')
+    parser.add_argument('--threads', type=int, default=4, help='CPU render threads')
     return parser.parse_args(sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else [])
 
 
-def protected_hashes():
-    files = [p for folder in (ART, ASSETS) for p in folder.glob('first_person_*') if p.suffix in ('.blend', '.glb', '.json')]
+def protected_hashes(source_dir=ART):
+    # Archived sources can be rendered while a separate Blender process exports
+    # the current fixtures; only protect this process's input artifacts then.
+    folders = {ART, ASSETS} if source_dir.resolve() == ART.resolve() else {source_dir}
+    files = [p for folder in folders for p in folder.glob('first_person_*') if p.suffix in ('.blend', '.glb', '.json')]
     return {p: hashlib.sha256(p.read_bytes()).hexdigest() for p in files}
 
 
@@ -101,30 +113,47 @@ def label(text, position, camera, material):
     curve.materials.append(material)
 
 
-def render(scene, path):
+def render(scene, path, records=None, view=None):
+    path.parent.mkdir(parents=True, exist_ok=True)
     scene.render.filepath = str(path)
     bpy.ops.render.render(write_still=True)
     print('BLENDER_DIAGNOSTIC_ONLY', path)
+    if records is not None:
+        records.append({'file': path.name, 'view': view,
+                        'resolution': [scene.render.resolution_x, scene.render.resolution_y],
+                        'vertical_fov_degrees': math.degrees(2 * math.atan(scene.camera.data.sensor_height / (2 * scene.camera.data.lens))),
+                        'camera_world_column_major': [scene.camera.matrix_world[r][c] for c in range(4) for r in range(4)]})
 
 
-def render_variant(variant, draft):
+def render_variant(variant, args):
     stem = 'first_person_fixture' + ('_slim' if variant == 'slim' else '')
-    source = ART / (stem + '.blend')
+    source = args.source_dir / (stem + '.blend')
+    output = args.output_dir or ART
+    records = []
     if not source.is_file():
         raise FileNotFoundError('Export the authored fixture first: ' + str(source))
     bpy.ops.wm.open_mainfile(filepath=str(source))
     scene = bpy.context.scene
     freeze_idle(scene)
     scene.render.engine = 'CYCLES';scene.cycles.device = 'CPU';scene.cycles.use_denoising = False
-    scene.cycles.samples = 16 if draft else 64
+    scene.cycles.samples = 16 if args.draft else 64
+    scene.render.threads_mode = 'FIXED';scene.render.threads = max(1, args.threads)
     scene.render.resolution_x = 960;scene.render.resolution_y = 540;scene.render.resolution_percentage = 100
     scene.render.image_settings.file_format = 'PNG';scene.render.film_transparent = False
     if scene.camera is None:
         raise ValueError('Authored FPS camera is missing from ' + str(source))
 
     # Render the unmodified geometry from the exact authored FPS camera pose.
-    vertical_fov(scene.camera, 90)
-    render(scene, ART / (stem + '.fov90.png'))
+    fps_camera = scene.camera
+    for degrees in () if args.only_closeups else ((70, 90, 110) if args.output_dir else (90,)):
+        vertical_fov(fps_camera, degrees)
+        render(scene, output / (stem + '.fov' + str(degrees) + '.png'), records, 'FPS 16:9')
+    if args.output_dir and not args.only_closeups:
+        vertical_fov(fps_camera, 90)
+        for name, width in [('4x3', 720), ('21x9', 1260)]:
+            scene.render.resolution_x = width
+            render(scene, output / (stem + '.aspect-' + name + '.png'), records, 'FPS ' + name)
+        scene.render.resolution_x = 960
 
     grips = [bpy.data.objects.get('grip_primary'), bpy.data.objects.get('grip_secondary')]
     if any(obj is None for obj in grips):
@@ -161,15 +190,61 @@ def render_variant(variant, draft):
         # Keep the label outside the wrist silhouette and slightly toward the
         # external camera. The grey connector still identifies the real origin.
         label(name, origin + camera_axes.col[1].normalized() * .085 + camera_axes.col[2].normalized() * .05, camera, text)
-    render(scene, ART / (stem + '.grip-detail.png'))
+    if not args.only_closeups:
+        render(scene, output / (stem + '.grip-detail.png'), records, 'both grips with semantic axes')
+
+    if args.output_dir:
+        # Show real surfaces without axis gizmos obscuring fingertip contacts.
+        # These changes exist only in memory; meshes, bind pose and clips stay intact.
+        for obj in scene.objects:
+            if obj.name.startswith('diagnostic_') and obj != camera:
+                obj.hide_render = True
+        scene.render.resolution_x = scene.render.resolution_y = 800
+        # The authored FPS lights illuminate arm exteriors. A soft inspection
+        # light follows the close-up camera so underside contacts remain readable.
+        light_data = bpy.data.lights.new('diagnostic_contact_light', 'AREA')
+        light_data.energy = 12;light_data.shape = 'DISK';light_data.size = .5
+        contact_light = bpy.data.objects.new(light_data.name, light_data)
+        scene.collection.objects.link(contact_light)
+        for index, matrix in enumerate(matrices):
+            side = 'right' if index == 0 else 'left'
+            axes = matrix.to_3x3()
+            # Contact origin and orientation come from the independently authored
+            # surface socket, rather than the hand socket under test.
+            target = matrix.translation + axes.col[1] * .015 + axes.col[2] * .025
+            for angle, local in [('dorsal', (.35, .15, 1)),
+                                 ('fingers', (.35, .7, -.8)),
+                                 ('side', (-1 if index == 0 else 1, -.25, .85))]:
+                direction = sum((axes.col[i] * value for i, value in enumerate(local)), Vector()).normalized()
+                camera.location = target + direction * .36
+                camera.rotation_euler = (target - camera.location).to_track_quat('-Z', 'Y').to_euler()
+                contact_light.location = camera.location
+                contact_light.rotation_euler = camera.rotation_euler
+                vertical_fov(camera, 50)
+                bpy.context.view_layer.update()
+                render(scene, output / (stem + '.grip-' + side + '-' + angle + '.png'), records, side + ' grip ' + angle)
+        manifest = {'label': args.label, 'variant': variant, 'source': str(source),
+                    'source_sha256': hashlib.sha256(source.read_bytes()).hexdigest(),
+                    'blender': bpy.app.version_string, 'kind': 'Blender authoring diagnostics, not Minecraft screenshots',
+                    'frame': 0, 'animation': 'idle', 'samples': scene.cycles.samples, 'renders': records}
+        manifest_path = output / (stem + '.diagnostics.json')
+        if args.only_closeups and manifest_path.exists():
+            previous = json.loads(manifest_path.read_text())
+            if previous['source_sha256'] != manifest['source_sha256'] or previous['label'] != args.label:
+                raise ValueError('Cannot merge close-ups from a different source or phase')
+            refreshed = {record['file'] for record in records}
+            manifest['renders'] = [record for record in previous['renders'] if record['file'] not in refreshed] + records
+        manifest_path.write_text(json.dumps(manifest, indent=2) + '\n')
 
 
 if __name__ == '__main__':
     args = arguments()
-    before = protected_hashes()
+    if args.only_closeups and not args.output_dir:
+        raise ValueError('--only-closeups requires --output-dir')
+    before = protected_hashes(args.source_dir)
     for variant in ('default', 'slim') if args.variant == 'all' else (args.variant,):
-        render_variant(variant, args.draft)
-    after = protected_hashes()
+        render_variant(variant, args)
+    after = protected_hashes(args.source_dir)
     if before != after:
         raise RuntimeError('Protected .blend/GLB/JSON files changed while rendering; no source save/export is allowed')
     print('PASS_READ_ONLY', len(before), 'protected files unchanged; PNG authoring previews only')

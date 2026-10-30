@@ -1,0 +1,52 @@
+{
+  "default": {
+    "source_sha256": {
+      "art/armament/first_person_fixture.blend": "0e5d024c79a2c57b866fbf601e8c585a50ec52a4a0e1e279d1b3f45158ae37d8",
+      "art/armament/first_person_fixture.reference.json": "d2a1db00cdc7d9711a402fd8cb9cd1920502dd9a30af5badb351bd510b93dfea",
+      "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture.glb": "932921b4f10a3f33ccd9577c0fa5e9943c7b34ba129c0a531a559e806c43da2b"
+    },
+    "checks": 540,
+    "sampled_clips": [
+      "idle",
+      "inspect",
+      "raise",
+      "lower",
+      "move"
+    ],
+    "samples_per_clip": 9,
+    "projection": "top-left normalized screen y; >1 is below viewport",
+    "cap_indices": "Blender authoring topology indices independently checked against planar cap geometry",
+    "all_caps_below_frame": true,
+    "minimum_y_by_fov": {
+      "70": 1.558224041517563,
+      "90": 1.2409764509853427,
+      "110": 1.0188372966158143
+    },
+    "failing_samples": []
+  },
+  "_slim": {
+    "source_sha256": {
+      "art/armament/first_person_fixture_slim.blend": "8031e578f424cac2f71c4b230a826f9299232286e09cd95256788e1678afb6d4",
+      "art/armament/first_person_fixture_slim.reference.json": "8680f47184f9eeefec17b1f0c61bf6525bafaea12f4ce41744ae58c88c437c67",
+      "src/main/resources/assets/bobin_craft/armament/debug/first_person_fixture_slim.glb": "2699449d8c882e448566611784de3f273af7950229cb5a480cc4c65f35a48505"
+    },
+    "checks": 540,
+    "sampled_clips": [
+      "idle",
+      "inspect",
+      "raise",
+      "lower",
+      "move"
+    ],
+    "samples_per_clip": 9,
+    "projection": "top-left normalized screen y; >1 is below viewport",
+    "cap_indices": "Blender authoring topology indices independently checked against planar cap geometry",
+    "all_caps_below_frame": true,
+    "minimum_y_by_fov": {
+      "70": 1.5693075486783064,
+      "90": 1.2487372062490962,
+      "110": 1.0242714359536955
+    },
+    "failing_samples": []
+  }
+}

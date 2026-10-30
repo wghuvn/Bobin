@@ -46,6 +46,15 @@ public final class FirstPersonDiagnostic {
                 .then(literal("show").executes(ctx->{requested=true;if(resources.current().isEmpty())resources.reload(MinecraftClient.getInstance().getResourceManager());update();if(presenter!=null)presenter.calibration();ctx.getSource().sendFeedback(Text.literal(status()));return presenter==null?0:1;}))
                 .then(literal("hide").executes(ctx->{requested=false;drop();reason="hidden";return 1;}))
                 .then(literal("static").executes(ctx->{update();if(presenter==null)return 0;presenter.calibration();return 1;}))
+                .then(literal("diagnose").executes(ctx->{
+                    if(presenter==null||!presenter.rejection().equals("ready")){ctx.getSource().sendError(Text.literal("Show the FPS diagnostic and wait for a rendered frame first. "+status()));return 0;}
+                    var snapshot=FirstPersonPoseDiagnostics.capture(presenter);
+                    ctx.getSource().sendFeedback(Text.literal("Last accepted FPS pose: view metres (depth = -z); bounds are unclipped NDC, not visible silhouette coverage."));
+                    snapshot.joints().forEach((name,p)->ctx.getSource().sendFeedback(Text.literal(String.format(java.util.Locale.ROOT,"%s xyz=(%.4f, %.4f, %.4f), depth=%.4fm",name,p.x(),p.y(),p.z(),p.depth()))));
+                    snapshot.elbowDegrees().forEach((side,degrees)->ctx.getSource().sendFeedback(Text.literal(String.format(java.util.Locale.ROOT,"%s elbow bend=%.2fdeg (straight=0)",side,degrees))));
+                    snapshot.meshes().forEach((name,b)->ctx.getSource().sendFeedback(Text.literal(String.format(java.util.Locale.ROOT,"%s NDC=[%.3f,%.3f]-[%.3f,%.3f], depth=[%.4f,%.4f]m",name,b.minX(),b.minY(),b.maxX(),b.maxY(),b.minDepth(),b.maxDepth()))));
+                    snapshot.contacts().forEach(c->ctx.getSource().sendFeedback(Text.literal(String.format(java.util.Locale.ROOT,"%s socket error=%.6fm / %.4fdeg, view palm normal=(%.3f,%.3f,%.3f)",c.name(),c.metres(),c.degrees(),c.palmNormal().x(),c.palmNormal().y(),c.palmNormal().z()))));return 1;
+                }))
                 .then(literal("status").executes(ctx->{ctx.getSource().sendFeedback(Text.literal(status()));return 1;}));
             var animation=literal("anim");
             for(String label:new String[]{"idle","inspect","raise","lower","move"})animation.then(literal(label).executes(ctx->{

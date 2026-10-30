@@ -18,7 +18,9 @@ public final class ThirdPersonAnimationController {
         double[] mask=new double[controller.model().nodes().size()];var body=NodeMask.subtree(controller.model(),"tp_body");
         for(int n=0;n<mask.length;n++)mask[n]=body.weight(n);
         mask[controller.model().node("tp_head_assist")]=1;actionMask=new NodeMask(mask);
-        motionMask=single("tp_motion");stanceMask=single("tp_stance");
+        double[] motion=new double[controller.model().nodes().size()];
+        motion[controller.model().node("tp_motion")]=motion[controller.model().node("tp_weapon_motion")]=1;
+        motionMask=new NodeMask(motion);stanceMask=single("tp_stance");
     }
     private NodeMask single(String name){double[] w=new double[controller.model().nodes().size()];w[controller.model().node(name)]=1;return new NodeMask(w);}
     public void update(PresentationAction next,double now,boolean moving,boolean running,boolean crouching){
@@ -75,7 +77,7 @@ public final class ThirdPersonAnimationController {
         }
         return controller.sampleSeconds(now);
     }
-    private static double look(PresentationAction.Action action){return action==PresentationAction.Action.AIM?1:action==PresentationAction.Action.INSPECT||action==PresentationAction.Action.LOWER?0:.30;}
+    private static double look(PresentationAction.Action action){return action==PresentationAction.Action.AIM?1:0;}
     public double lookWeight(double now){
         double u=lookFade==0?1:Math.max(0,Math.min(1,(now-lookChanged)/lookFade));u=u*u*u*(10+u*(-15+6*u));
         return lookFrom+(lookTo-lookFrom)*u;

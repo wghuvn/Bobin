@@ -1,0 +1,28 @@
+{
+  "minecraft": "1.20.1",
+  "fabric_loader": "0.15.11",
+  "java": 17,
+  "display": "Xorg dummy 1280x720; Mesa software OpenGL",
+  "world": "Bobin_5_2_1_Smoke (isolated creative superflat)",
+  "runtime_skin_model": "default",
+  "runtime_skin": "minecraft:textures/entity/player/wide/alex.png",
+  "checks": [
+    "3P rest front/rear",
+    "actual mouse camera turns",
+    "3P aim and crouch",
+    "walk/sprint/crouch",
+    "inspect/lower/raise",
+    "F5 round trips",
+    "1P static rest",
+    "automatic 1P rest -> existing walk -> rest",
+    "1P aim/sprint",
+    "F3+T with generation 2 and liveTextures stable at 10"
+  ],
+  "own_recording": "../minecraft/own-smoke.mp4 (16 seconds; created here, not a user reference)",
+  "reference_videos_analysed": false,
+  "limitations": [
+    "uploaded Desktop videos exceed download tool 32 MiB cap",
+    "slim model covered by CPU/Blender; current Minecraft run used default 4px",
+    "multiplayer and third-party rendering mods not retested"
+  ]
+}

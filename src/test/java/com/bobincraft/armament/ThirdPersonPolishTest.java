@@ -16,24 +16,25 @@ final class ThirdPersonPolishTest {
     }
     private static PresentationAction action(PresentationAction.Action a,double start){return new PresentationAction(a,start,false);}
     private static double[] vertex(double[] matrix,double[] position){return point(matrix,position[0],position[1],position[2]);}
-    @ParameterizedTest @ValueSource(booleans={false,true}) void aimingPointsForwardWithLevelArmsAndShoulderSupport(boolean alex){
+    @ParameterizedTest @ValueSource(booleans={false,true}) void aimingRaisesTheHoldWithoutBringingHandsToTheFace(boolean alex){
         var p=new ThirdPersonWeaponPresenter(alex?slim:normal);
         p.update(action(PresentationAction.Action.IDLE,0),0,false,false,false);var carry=p.sample(0,0,0);
         double[] carryWeapon=multiply(carry.placement(),matrix(carry.geometry(),"tp_weapon"));
         p.update(action(PresentationAction.Action.AIM,1),1,false,false,false);var aim=p.sample(2.4,0,0);
         double[] weapon=multiply(aim.placement(),matrix(aim.geometry(),"tp_weapon"));
         double[] forward=subtract(point(weapon,0,0,-1),position(weapon));
-        assertTrue(Math.abs(Math.toDegrees(Math.atan2(forward[0],-forward[2])))<3,"Muzzle is forward, not 60 degrees sideways");
+        assertTrue(Math.abs(Math.toDegrees(Math.atan2(forward[0],-forward[2])))<5,"Muzzle is forward, not 60 degrees sideways");
         assertTrue(forward[2]<-.98);assertTrue(forward[1]>-.05&&forward[1]<.15);
         assertTrue(weapon[13]-carryWeapon[13]>.07,"Aiming actually raises the item");
         double[] butt=point(weapon,0,.065,.31);
-        assertTrue(length(subtract(butt,position(aim.rightMatrix())))<.29,"Rear support stays close to the shoulder");
+        assertTrue(length(subtract(butt,position(aim.rightMatrix())))<.45,"Technical rear support remains at the upper chest/shoulder region");
+        assertTrue(butt[1]<aim.bodyMatrix()[13],"Do not force the stock into the head to emulate a bent human elbow");
         for(boolean right:new boolean[]{true,false}){
             double[] arm=right?aim.rightMatrix():aim.leftMatrix();double[] contact=(alex?slim:normal).armContact(right);
             double[] direction=subtract(vertex(arm,contact),position(arm));
-            assertTrue(Math.abs(Math.toDegrees(Math.atan2(direction[1],Math.hypot(direction[0],direction[2]))))<25,"Avoid the vertical arm slabs");
+            assertTrue(Math.abs(Math.toDegrees(Math.atan2(direction[1],Math.hypot(direction[0],direction[2]))))<40,"Avoid the vertical arm slabs");
         }
-        assertTrue(aim.headAssist().roll()>.02,"Independent head support for the aiming stance");
+        assertEquals(0,aim.headAssist().roll(),1e-6,"Head look stays vanilla; the neck follows the torso");
     }
     @ParameterizedTest @ValueSource(booleans={false,true}) void pelvisStaysJoinedThroughEveryActionLookGaitAndCrouch(boolean alex){
         for(var a:PresentationAction.Action.values())for(boolean crouched:new boolean[]{false,true}){

@@ -1,0 +1,367 @@
+Picked up JAVA_TOOL_OPTIONS: -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.8/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build
+
+> Configure project :
+Fabric Loom: 1.7.4
+
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :generateLog4jConfig UP-TO-DATE
+> Task :generateRemapClasspath UP-TO-DATE
+> Task :generateDLIConfig UP-TO-DATE
+> Task :configureLaunch UP-TO-DATE
+> Task :downloadAssets UP-TO-DATE
+> Task :configureClientLaunch UP-TO-DATE
+
+> Task :runGlbDebugClient
+Picked up JAVA_TOOL_OPTIONS: -Dhttps.proxyHost=proxy -Dhttps.proxyPort=8080 -Dhttp.proxyHost=proxy -Dhttp.proxyPort=8080 -Djavax.net.ssl.trustStore=/etc/ssl/certs/java/cacerts
+[19:21:24] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 1.20.1 with Fabric Loader 0.15.11
+[19:21:24] [main/INFO] (FabricLoader) Loading 59 mods:
+	- bobin_craft 2.7.7-clean
+	- fabric-api 0.92.2+1.20.1
+	- fabric-api-base 0.4.31+1802ada577
+	- fabric-api-lookup-api-v1 1.6.36+1802ada577
+	- fabric-biome-api-v1 13.0.13+1802ada577
+	- fabric-block-api-v1 1.0.11+1802ada577
+	- fabric-block-view-api-v2 1.0.1+1802ada577
+	- fabric-blockrenderlayer-v1 1.1.41+1802ada577
+	- fabric-client-tags-api-v1 1.1.2+1802ada577
+	- fabric-command-api-v1 1.2.34+f71b366f77
+	- fabric-command-api-v2 2.2.13+1802ada577
+	- fabric-commands-v0 0.2.51+df3654b377
+	- fabric-containers-v0 0.1.64+df3654b377
+	- fabric-content-registries-v0 4.0.11+1802ada577
+	- fabric-convention-tags-v1 1.5.5+1802ada577
+	- fabric-crash-report-info-v1 0.2.19+1802ada577
+	- fabric-data-attachment-api-v1 1.0.0+de0fd6d177
+	- fabric-data-generation-api-v1 12.3.4+1802ada577
+	- fabric-dimensions-v1 2.1.54+1802ada577
+	- fabric-entity-events-v1 1.6.0+1c78457f77
+	- fabric-events-interaction-v0 0.6.2+1802ada577
+	- fabric-events-lifecycle-v0 0.2.63+df3654b377
+	- fabric-game-rule-api-v1 1.0.40+1802ada577
+	- fabric-gametest-api-v1 1.2.13+1802ada577
+	- fabric-item-api-v1 2.1.28+1802ada577
+	- fabric-item-group-api-v1 4.0.12+1802ada577
+	- fabric-key-binding-api-v1 1.0.37+1802ada577
+	- fabric-keybindings-v0 0.2.35+df3654b377
+	- fabric-lifecycle-events-v1 2.2.22+1802ada577
+	- fabric-loot-api-v2 1.2.1+1802ada577
+	- fabric-loot-tables-v1 1.1.45+9e7660c677
+	- fabric-message-api-v1 5.1.9+1802ada577
+	- fabric-mining-level-api-v1 2.1.50+1802ada577
+	- fabric-model-loading-api-v1 1.0.3+1802ada577
+	- fabric-models-v0 0.4.2+9386d8a777
+	- fabric-networking-api-v1 1.3.11+1802ada577
+	- fabric-networking-v0 0.3.51+df3654b377
+	- fabric-object-builder-api-v1 11.1.3+1802ada577
+	- fabric-particles-v1 1.1.2+1802ada577
+	- fabric-recipe-api-v1 1.0.21+1802ada577
+	- fabric-registry-sync-v0 2.3.3+1802ada577
+	- fabric-renderer-api-v1 3.2.1+1802ada577
+	- fabric-renderer-indigo 1.5.2+85287f9f77
+	- fabric-renderer-registries-v1 3.2.46+df3654b377
+	- fabric-rendering-data-attachment-v1 0.3.37+92a0d36777
+	- fabric-rendering-fluids-v1 3.0.28+1802ada577
+	- fabric-rendering-v0 1.1.49+df3654b377
+	- fabric-rendering-v1 3.0.8+1802ada577
+	- fabric-resource-conditions-api-v1 2.3.8+1802ada577
+	- fabric-resource-loader-v0 0.11.10+1802ada577
+	- fabric-screen-api-v1 2.0.8+1802ada577
+	- fabric-screen-handler-api-v1 1.3.30+1802ada577
+	- fabric-sound-api-v1 1.0.13+1802ada577
+	- fabric-transfer-api-v1 3.3.5+8dd72ea377
+	- fabric-transitive-access-wideners-v1 4.3.1+1802ada577
+	- fabricloader 0.15.11
+	- java 17
+	- minecraft 1.20.1
+	- mixinextras 0.3.5
+[19:21:24] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.5 Source=file:/workspace/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.13.3+mixin.0.8.5/9527e6b0d2449408958fd1302594dc65ec5ade9c/sponge-mixin-0.13.3+mixin.0.8.5.jar Service=Knot/Fabric Env=CLIENT
+[19:21:24] [main/INFO] (FabricLoader/Mixin) Loaded Fabric development mappings for mixin remapper!
+[19:21:24] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_16
+[19:21:24] [main/INFO] (FabricLoader/Mixin) Compatibility level set to JAVA_17
+[19:21:25] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.3.5).
+[19:21:29] [Datafixer Bootstrap/INFO] (Minecraft) 188 Datafixer optimizations took 192 milliseconds
+[19:21:30] [Render thread/INFO] (Minecraft) Environment: authHost='https://authserver.mojang.com', accountsHost='https://api.mojang.com', sessionHost='https://sessionserver.mojang.com', servicesHost='https://api.minecraftservices.com', name='PROD'
+[19:21:35] [Yggdrasil Key Fetcher/ERROR] (Minecraft) Failed to request yggdrasil public key
+com.mojang.authlib.exceptions.AuthenticationUnavailableException: Cannot contact authentication server
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:119) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:91) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilServicesKeyInfo.fetch(YggdrasilServicesKeyInfo.java:94) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilServicesKeyInfo.lambda$get$1(YggdrasilServicesKeyInfo.java:81) ~[authlib-4.0.43.jar:?]
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:539) ~[?:?]
+	at java.util.concurrent.FutureTask.runAndReset(FutureTask.java:305) ~[?:?]
+	at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:305) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136) ~[?:?]
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635) ~[?:?]
+	at java.lang.Thread.run(Thread.java:840) ~[?:?]
+Caused by: java.net.ConnectException: Connection refused
+	at sun.nio.ch.Net.pollConnect(Native Method) ~[?:?]
+	at sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[?:?]
+	at java.net.Socket.connect(Socket.java:633) ~[?:?]
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304) ~[?:?]
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[?:?]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:533) ~[?:?]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:638) ~[?:?]
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266) ~[?:?]
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:380) ~[?:?]
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1303) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1144) ~[?:?]
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1703) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627) ~[?:?]
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224) ~[?:?]
+	at com.mojang.authlib.HttpAuthenticationService.performGetRequest(HttpAuthenticationService.java:140) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:96) ~[authlib-4.0.43.jar:?]
+	... 9 more
+[19:21:35] [Render thread/INFO] (Minecraft) Setting user: Player999
+[19:21:36] [Render thread/INFO] (bobin_craft/warzone) [Warzone] Black Alder Exclusion Zone v10: fixed seed 19860426, 2048 x 2048; retired structure generators removed
+[19:21:36] [Render thread/INFO] (Indigo) [Indigo] Registering Indigo renderer!
+[19:21:36] [Render thread/INFO] (Minecraft) Backend library: LWJGL version 3.3.1 SNAPSHOT
+[ALSOFT] (EE) Failed to set real-time priority for thread: Operation not permitted (1)
+[19:21:37] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-command-api-v1, fabric-message-api-v1, fabric-renderer-api-v1, fabric-item-api-v1, fabric-entity-events-v1, fabric-data-attachment-api-v1, fabric-block-view-api-v2, fabric-renderer-indigo, fabric-block-api-v1, fabric-content-registries-v0, fabric-sound-api-v1, fabric-rendering-v0, fabric-keybindings-v0, fabric-crash-report-info-v1, fabric-key-binding-api-v1, fabric-transitive-access-wideners-v1, fabric-resource-loader-v0, fabric-gametest-api-v1, fabric-dimensions-v1, fabric-loot-tables-v1, fabric-networking-api-v1, fabric-networking-v0, fabric-api-lookup-api-v1, fabric-resource-conditions-api-v1, fabric-particles-v1, fabric-containers-v0, fabric-models-v0, fabricloader, fabric-events-lifecycle-v0, fabric-events-interaction-v0, fabric-data-generation-api-v1, fabric-rendering-fluids-v1, fabric-screen-api-v1, fabric-mining-level-api-v1, fabric-api-base, fabric-transfer-api-v1, bobin_craft, fabric-rendering-v1, fabric-renderer-registries-v1, fabric-item-group-api-v1, fabric-convention-tags-v1, fabric-registry-sync-v0, fabric-client-tags-api-v1, fabric-biome-api-v1, fabric-game-rule-api-v1, fabric-recipe-api-v1, fabric-command-api-v2, fabric-screen-handler-api-v1, fabric-commands-v0, fabric-lifecycle-events-v1, fabric-api, fabric-object-builder-api-v1, fabric-loot-api-v2, fabric-model-loading-api-v1, fabric-rendering-data-attachment-v1, fabric-blockrenderlayer-v1)
+[19:21:37] [Worker-Main-4/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[19:21:39] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
+[19:21:39] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5728:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5728:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
+[19:21:39] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at net.minecraft.client.sound.SoundEngine.openDeviceOrFallback(SoundEngine.java:283) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundEngine.init(SoundEngine.java:153) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundSystem.start(SoundSystem.java:116) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundSystem.reloadSounds(SoundSystem.java:106) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundManager.apply(SoundManager.java:125) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundManager.apply(SoundManager.java:40) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.resource.SinglePreparationResourceReloader.method_18790(SinglePreparationResourceReloader.java:13) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.resource.SimpleResourceReload.method_18365(SimpleResourceReload.java:69) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.executeTask(ThreadExecutor.java:156) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ReentrantThreadExecutor.executeTask(ReentrantThreadExecutor.java:23) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTask(ThreadExecutor.java:130) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTasks(ThreadExecutor.java:115) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1175) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:802) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:250) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:470) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 2048x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[19:21:39] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[19:21:39] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[19:21:40] [Render thread/INFO] (bobin_craft/armament_glb) GLB resource bobin_craft:armament/debug/technical_fixture.glb generation 1 loaded; live textures 2
+[19:21:40] [Render thread/INFO] (bobin_craft/armament_glb) GLB resource bobin_craft:armament/debug/animation_fixture.glb generation 2 loaded; live textures 4
+[19:23:34] [Render thread/INFO] (Minecraft) Loaded 7 recipes
+[19:23:34] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
+[19:23:45] [Render thread/INFO] (Minecraft) Loaded 7 recipes
+[19:23:45] [Render thread/INFO] (Minecraft) Loaded 1271 advancements
+[19:23:46] [Render thread/INFO] (BiomeModificationImpl) Applied 0 biome modifications to 0 of 72 new biomes in 1.154 ms
+[19:23:46] [Server thread/INFO] (Minecraft) Starting integrated minecraft server version 1.20.1
+[19:23:46] [Server thread/INFO] (Minecraft) Generating keypair
+[19:23:48] [Server thread/INFO] (Minecraft) Preparing start region for dimension minecraft:overworld
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:50] [Render thread/INFO] (Minecraft) Preparing spawn area: 0%
+[19:23:51] [Render thread/INFO] (Minecraft) Preparing spawn area: 38%
+[19:23:51] [Render thread/INFO] (Minecraft) Time elapsed: 3430 ms
+[19:23:55] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 3589ms or 71 ticks behind
+[19:23:55] [Server thread/INFO] (Minecraft) Changing view distance to 12, from 10
+[19:23:55] [Server thread/INFO] (Minecraft) Changing simulation distance to 12, from 0
+[19:23:55] [Server thread/INFO] (Minecraft) Player999[local:E:11a2d757] logged in with entity id 14 at (0.5, -60.0, 73.19342052898365)
+[19:23:55] [Server thread/INFO] (Minecraft) Player999 joined the game
+[19:23:56] [Render thread/WARN] (Minecraft) Ignoring chat session from Player999 due to missing Services public key
+[19:23:56] [Render thread/INFO] (Minecraft) Loaded 2 advancements
+[19:24:01] [Worker-Main-1/WARN] (Minecraft) Couldn't look up profile properties for com.mojang.authlib.GameProfile@420967e4[id=3c28cca8-db38-324d-ac91-779beed87c8d,name=Player999,properties={},legacy=false]
+com.mojang.authlib.exceptions.AuthenticationUnavailableException: Cannot contact authentication server
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:119) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:91) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService.fillGameProfile(YggdrasilMinecraftSessionService.java:175) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService$1.load(YggdrasilMinecraftSessionService.java:51) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService$1.load(YggdrasilMinecraftSessionService.java:48) ~[authlib-4.0.43.jar:?]
+	at com.google.common.cache.LocalCache$LoadingValueReference.loadFuture(LocalCache.java:3533) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache$Segment.loadSync(LocalCache.java:2282) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache$Segment.lockedGetOrLoad(LocalCache.java:2159) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache$Segment.get(LocalCache.java:2049) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache.get(LocalCache.java:3966) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache.getOrLoad(LocalCache.java:3989) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache$LocalLoadingCache.get(LocalCache.java:4950) ~[guava-31.1-jre.jar:?]
+	at com.google.common.cache.LocalCache$LocalLoadingCache.getUnchecked(LocalCache.java:4956) ~[guava-31.1-jre.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilMinecraftSessionService.fillProfileProperties(YggdrasilMinecraftSessionService.java:149) ~[authlib-4.0.43.jar:?]
+	at net.minecraft.client.MinecraftClient.getSessionProperties(MinecraftClient.java:2507) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.texture.PlayerSkinProvider.method_4653(PlayerSkinProvider.java:107) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at java.util.concurrent.ForkJoinTask$RunnableExecuteAction.exec(ForkJoinTask.java:1395) ~[?:?]
+	at java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:373) ~[?:?]
+	at java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1182) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1655) ~[?:?]
+	at java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1622) ~[?:?]
+	at java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:165) ~[?:?]
+Caused by: java.net.ConnectException: Connection refused
+	at sun.nio.ch.Net.pollConnect(Native Method) ~[?:?]
+	at sun.nio.ch.Net.pollConnectNow(Net.java:672) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.timedFinishConnect(NioSocketImpl.java:554) ~[?:?]
+	at sun.nio.ch.NioSocketImpl.connect(NioSocketImpl.java:602) ~[?:?]
+	at java.net.SocksSocketImpl.connect(SocksSocketImpl.java:327) ~[?:?]
+	at java.net.Socket.connect(Socket.java:633) ~[?:?]
+	at sun.security.ssl.SSLSocketImpl.connect(SSLSocketImpl.java:304) ~[?:?]
+	at sun.net.NetworkClient.doConnect(NetworkClient.java:178) ~[?:?]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:533) ~[?:?]
+	at sun.net.www.http.HttpClient.openServer(HttpClient.java:638) ~[?:?]
+	at sun.net.www.protocol.https.HttpsClient.<init>(HttpsClient.java:266) ~[?:?]
+	at sun.net.www.protocol.https.HttpsClient.New(HttpsClient.java:380) ~[?:?]
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.getNewHttpClient(AbstractDelegateHttpsURLConnection.java:193) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect0(HttpURLConnection.java:1303) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.plainConnect(HttpURLConnection.java:1144) ~[?:?]
+	at sun.net.www.protocol.https.AbstractDelegateHttpsURLConnection.connect(AbstractDelegateHttpsURLConnection.java:179) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1703) ~[?:?]
+	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1627) ~[?:?]
+	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:224) ~[?:?]
+	at com.mojang.authlib.HttpAuthenticationService.performGetRequest(HttpAuthenticationService.java:140) ~[authlib-4.0.43.jar:?]
+	at com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService.makeRequest(YggdrasilAuthenticationService.java:96) ~[authlib-4.0.43.jar:?]
+	... 21 more
+[19:25:02] [Server thread/INFO] (Minecraft) [Player999: Set the time to 6000]
+[19:25:03] [Server thread/INFO] (Minecraft) [Player999: Set the weather to clear]
+[19:25:04] [Server thread/INFO] (Minecraft) [Player999: Teleported Player999 to 0.500000, -60.000000, 0.500000]
+[19:25:05] [Render thread/INFO] (Minecraft) [System] [CHAT] tpRequested=true, policy=ready, render=ready, action=idle, started=0.0, visualTick=1381, instances=1, tpClip=idle, tpPhase=calibration, network=local_only, arms=vanilla_rigid, tpGeneration=1
+[19:25:06] [Render thread/INFO] (Minecraft) [System] [CHAT] fpRequested=true, policy=ready, render=ready, visualTick=1406, fov=70.0, viewport=1280x720, staticIdle=true, skinModel=default, skin=minecraft:textures/entity/player/wide/alex.png, clip=idle, phase=STATIC, movementLayer=false, inertiaRequested=false, inertia=false, contactMetres=3.725290300948949E-9, contactDegrees=0.0, minDepth=0.47724479988382684, fpHands=vanillaModelParts, fpGeneration=1, fpVariants=2, liveTextures=10
+[19:25:09] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=REST, selection=auto
+[19:25:10] [Render thread/INFO] (Minecraft) [System] [CHAT] fpRequested=true, policy=ready, render=rendered, visualTick=1488, fov=70.0, viewport=1280x720, staticIdle=true, skinModel=default, skin=minecraft:textures/entity/player/wide/alex.png, clip=idle, phase=STATIC, movementLayer=false, inertiaRequested=false, inertia=false, contactMetres=3.725290300948949E-9, contactDegrees=0.0, minDepth=0.47724479988382684, fpHands=vanillaModelParts, fpGeneration=1, fpVariants=2, liveTextures=10
+[19:25:14] [Render thread/INFO] (Minecraft) [System] [CHAT] tpRequested=true, policy=ready, render=rendered, action=idle, started=0.0, visualTick=1564, instances=1, tpClip=idle, tpPhase=calibration, network=local_only, arms=vanilla_rigid, tpGeneration=1, contactMetres=1.1796119636642288E-16, blendCorrectionMetres=0.0039302204889733044
+[19:27:21] [Render thread/INFO] (Minecraft) [System] [CHAT] tpRequested=true, policy=ready, render=rendered, action=aim, started=201.5, visualTick=4111, instances=1, tpClip=aim, tpPhase=aim_hold, network=local_only, arms=vanilla_rigid, tpGeneration=1, contactMetres=1.3597399555105182E-16, blendCorrectionMetres=0.025034677038452992
+[19:27:24] [Render thread/INFO] (Minecraft) [System] [CHAT] fpRequested=true, policy=ready, render=rendered, visualTick=4162, fov=70.0, viewport=1280x720, staticIdle=false, skinModel=default, skin=minecraft:textures/entity/player/wide/alex.png, clip=idle, phase=PLAYING, movementLayer=false, inertiaRequested=false, inertia=false, contactMetres=3.725290301518184E-9, contactDegrees=0.0, minDepth=0.4599856576992062, fpHands=vanillaModelParts, fpGeneration=1, fpVariants=2, liveTextures=10
+[19:30:19] [Server thread/INFO] (Minecraft) [Player999: Teleported Player999 to 0.500000, -60.000000, 0.500000]
+[19:30:20] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=BASE, selection=auto
+[19:32:27] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=REST, selection=auto
+[19:32:28] [Render thread/INFO] (Minecraft) [System] [CHAT] fpRequested=true, policy=ready, render=rendered, visualTick=10246, fov=70.0, viewport=1280x720, staticIdle=false, skinModel=default, skin=minecraft:textures/entity/player/wide/alex.png, clip=idle, phase=PLAYING, movementLayer=false, inertiaRequested=false, inertia=false, contactMetres=3.7252902953043427E-9, contactDegrees=0.0, minDepth=0.47724479988382684, fpHands=vanillaModelParts, fpGeneration=1, fpVariants=2, liveTextures=10
+[19:32:28] [Render thread/INFO] (Minecraft) [System] [CHAT] [Debug]: Reloaded resource packs
+[19:32:28] [Render thread/INFO] (Minecraft) Reloading ResourceManager: vanilla, fabric (fabric-command-api-v1, fabric-message-api-v1, fabric-renderer-api-v1, fabric-item-api-v1, fabric-entity-events-v1, fabric-data-attachment-api-v1, fabric-block-view-api-v2, fabric-renderer-indigo, fabric-block-api-v1, fabric-content-registries-v0, fabric-sound-api-v1, fabric-rendering-v0, fabric-keybindings-v0, fabric-crash-report-info-v1, fabric-key-binding-api-v1, fabric-transitive-access-wideners-v1, fabric-resource-loader-v0, fabric-gametest-api-v1, fabric-dimensions-v1, fabric-loot-tables-v1, fabric-networking-api-v1, fabric-networking-v0, fabric-api-lookup-api-v1, fabric-resource-conditions-api-v1, fabric-particles-v1, fabric-containers-v0, fabric-models-v0, fabricloader, fabric-events-lifecycle-v0, fabric-events-interaction-v0, fabric-data-generation-api-v1, fabric-rendering-fluids-v1, fabric-screen-api-v1, fabric-mining-level-api-v1, fabric-api-base, fabric-transfer-api-v1, bobin_craft, fabric-rendering-v1, fabric-renderer-registries-v1, fabric-item-group-api-v1, fabric-convention-tags-v1, fabric-registry-sync-v0, fabric-client-tags-api-v1, fabric-biome-api-v1, fabric-game-rule-api-v1, fabric-recipe-api-v1, fabric-command-api-v2, fabric-screen-handler-api-v1, fabric-commands-v0, fabric-lifecycle-events-v1, fabric-api, fabric-object-builder-api-v1, fabric-loot-api-v2, fabric-model-loading-api-v1, fabric-rendering-data-attachment-v1, fabric-blockrenderlayer-v1)
+[19:32:28] [Worker-Main-20/INFO] (Minecraft) Found unifont_all_no_pua-15.0.06.hex, loading
+[19:32:28] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[19:32:28] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:overworld
+[19:32:28] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_end
+[19:32:29] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_nether
+[19:32:29] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/bobin_craft:warzone
+[19:32:30] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:item.goat_horn.play
+[19:32:30] [Render thread/WARN] (Minecraft) Missing sound for event: minecraft:entity.goat.screaming.horn_break
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5728:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
+ALSA lib confmisc.c:855:(parse_card) cannot find card '0'
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_card_inum returned error: No such file or directory
+ALSA lib confmisc.c:422:(snd_func_concat) error evaluating strings
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_concat returned error: No such file or directory
+ALSA lib confmisc.c:1342:(snd_func_refer) error evaluating name
+ALSA lib conf.c:5205:(_snd_config_evaluate) function snd_func_refer returned error: No such file or directory
+ALSA lib conf.c:5728:(snd_config_expand) Evaluate error: No such file or directory
+ALSA lib pcm.c:2722:(snd_pcm_open_noupdate) Unknown PCM default
+[19:32:30] [Render thread/ERROR] (Minecraft) Error starting SoundSystem. Turning off sounds & music
+java.lang.IllegalStateException: Failed to open OpenAL device
+	at net.minecraft.client.sound.SoundEngine.openDeviceOrFallback(SoundEngine.java:283) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundEngine.init(SoundEngine.java:153) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundSystem.start(SoundSystem.java:116) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundSystem.reloadSounds(SoundSystem.java:106) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundManager.apply(SoundManager.java:125) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.sound.SoundManager.apply(SoundManager.java:40) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.resource.SinglePreparationResourceReloader.method_18790(SinglePreparationResourceReloader.java:13) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at java.util.concurrent.CompletableFuture$UniAccept.tryFire(CompletableFuture.java:718) ~[?:?]
+	at java.util.concurrent.CompletableFuture$Completion.run(CompletableFuture.java:482) ~[?:?]
+	at net.minecraft.resource.SimpleResourceReload.method_18365(SimpleResourceReload.java:69) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.executeTask(ThreadExecutor.java:156) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ReentrantThreadExecutor.executeTask(ReentrantThreadExecutor.java:23) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTask(ThreadExecutor.java:130) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.util.thread.ThreadExecutor.runTasks(ThreadExecutor.java:115) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.render(MinecraftClient.java:1175) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.MinecraftClient.run(MinecraftClient.java:802) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.minecraft.client.main.Main.main(Main.java:250) ~[minecraft-merged-7787b014d4-1.20.1-net.fabricmc.yarn.1_20_1.1.20.1+build.10-v2.jar:?]
+	at net.fabricmc.loader.impl.game.minecraft.MinecraftGameProvider.launch(MinecraftGameProvider.java:470) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.Knot.launch(Knot.java:74) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.loader.impl.launch.knot.KnotClient.main(KnotClient.java:23) ~[fabric-loader-0.15.11.jar:?]
+	at net.fabricmc.devlaunchinjector.Main.main(Main.java:86) ~[dev-launch-injector-0.2.1+build.8.jar:?]
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 2048x2048x4 minecraft:textures/atlas/blocks.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/signs.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/banner_patterns.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 512x512x4 minecraft:textures/atlas/shield_patterns.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 1024x1024x4 minecraft:textures/atlas/armor_trims.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 256x256x4 minecraft:textures/atlas/chest.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 128x64x4 minecraft:textures/atlas/decorated_pot.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/shulker_boxes.png-atlas
+[19:32:30] [Render thread/INFO] (Minecraft) Created: 512x256x4 minecraft:textures/atlas/beds.png-atlas
+[19:32:30] [Render thread/WARN] (Minecraft) Shader rendertype_entity_translucent_emissive could not find sampler named Sampler2 in the specified shader program.
+[19:32:31] [Render thread/INFO] (Minecraft) Created: 512x256x0 minecraft:textures/atlas/particles.png-atlas
+[19:32:31] [Render thread/INFO] (Minecraft) Created: 256x256x0 minecraft:textures/atlas/paintings.png-atlas
+[19:32:31] [Render thread/INFO] (Minecraft) Created: 128x128x0 minecraft:textures/atlas/mob_effects.png-atlas
+[19:32:31] [Render thread/INFO] (bobin_craft/armament_glb) GLB resource bobin_craft:armament/debug/technical_fixture.glb generation 3 loaded; live textures 10
+[19:32:31] [Render thread/INFO] (bobin_craft/armament_glb) GLB resource bobin_craft:armament/debug/animation_fixture.glb generation 4 loaded; live textures 10
+[19:33:46] [Render thread/INFO] (Minecraft) [System] [CHAT] fpRequested=true, policy=ready, render=rendered, visualTick=11688, fov=70.0, viewport=1280x720, staticIdle=true, skinModel=default, skin=minecraft:textures/entity/player/wide/alex.png, clip=idle, phase=STATIC, movementLayer=false, inertiaRequested=false, inertia=false, contactMetres=3.725290300948949E-9, contactDegrees=0.0, minDepth=0.47724479988382684, fpHands=vanillaModelParts, fpGeneration=2, fpVariants=2, liveTextures=10
+[19:33:55] [Render thread/INFO] (Minecraft) [System] [CHAT] tpRequested=true, policy=ready, render=rendered, action=idle, started=592.7, visualTick=11877, instances=1, tpClip=idle, tpPhase=playing, network=local_only, arms=vanilla_rigid, tpGeneration=2, contactMetres=2.3055512673781017E-16, blendCorrectionMetres=0.00392911117404117
+[19:33:56] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[19:33:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:overworld
+[19:33:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_end
+[19:33:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_nether
+[19:33:56] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/bobin_craft:warzone
+[19:35:55] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=SPRINT, selection=SPRINT
+[19:35:58] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=SPRINT, selection=SPRINT
+[19:36:00] [Render thread/INFO] (Minecraft) [System] [CHAT] fpMotionEnabled=true, fpMotion=BASE, selection=auto
+[19:36:00] [Server thread/INFO] (Minecraft) Saving and pausing game...
+[19:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:overworld
+[19:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_end
+[19:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_nether
+[19:36:00] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/bobin_craft:warzone
+[19:36:00] [Server thread/INFO] (Minecraft) Player999 lost connection: Disconnected
+[19:36:00] [Server thread/INFO] (Minecraft) Player999 left the game
+[19:36:00] [Server thread/INFO] (Minecraft) Stopping singleplayer server as player logged out
+[19:36:00] [Server thread/INFO] (Minecraft) Stopping server
+[19:36:00] [Server thread/INFO] (Minecraft) Saving players
+[19:36:00] [Server thread/INFO] (Minecraft) Saving worlds
+[19:36:01] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:overworld
+[19:36:01] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_end
+[19:36:01] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/minecraft:the_nether
+[19:36:01] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[Bobin_5_2_1_Smoke]'/bobin_craft:warzone
+[19:36:01] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (Bobin_5_2_1_Smoke): All chunks are saved
+[19:36:01] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM1): All chunks are saved
+[19:36:01] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (DIM-1): All chunks are saved
+[19:36:01] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage (warzone): All chunks are saved
+[19:36:01] [Server thread/INFO] (Minecraft) ThreadedAnvilChunkStorage: All dimensions are saved
+[19:38:49] [Render thread/INFO] (Minecraft) Stopping!
+
+BUILD SUCCESSFUL in 17m 32s
+7 actionable tasks: 1 executed, 6 up-to-date

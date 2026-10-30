@@ -27,10 +27,10 @@ public final class FirstPersonMotionClient {
         ClientLifecycleEvents.CLIENT_STOPPING.register(client->{host=null;resources.close();});
         ClientCommandRegistrationCallback.EVENT.register((dispatcher,registry)->{
             var anim=literal("anim");
-            for(Mode mode:new Mode[]{Mode.AIM,Mode.SPRINT})anim.then(literal(mode.name().toLowerCase(java.util.Locale.ROOT)).executes(ctx->{
+            for(Mode mode:new Mode[]{Mode.REST,Mode.AIM,Mode.SPRINT})anim.then(literal(mode.name().toLowerCase(java.util.Locale.ROOT)).executes(ctx->{
                 var semantic=(ThirdPersonSemanticPort)(Object)host;
                 // Common actions/time, independent FPS clips. SPRINT uses the existing MOVE action.
-                if(!semantic.bobin$requestPresentation(mode==Mode.AIM?"aim":"move"))return 0;
+                if(!semantic.bobin$requestPresentation(mode==Mode.AIM?"aim":mode==Mode.SPRINT?"move":"idle"))return 0;
                 var access=(FirstPersonMotionHostAccess)(Object)host;var p=access.bobin$motionPresenter();
                 if(!FirstPersonMotionController.supported(p.asset().model().rig())){
                     ctx.getSource().sendError(Text.literal("New FPS motion assets unavailable; approved FPS remains active."));return 0;
@@ -58,6 +58,7 @@ public final class FirstPersonMotionClient {
         return new Input(enabled,(action!=null&&action.action()==Action.AIM)||(controls&&client.options.useKey.isPressed()),
             controls&&moving&&client.player.isSprinting());
     }
+    public static boolean enabled(){return enabled;}
     private static String status(){
         var p=host==null?null:((FirstPersonMotionHostAccess)(Object)host).bobin$motionPresenter();
         return "fpMotionEnabled="+enabled+", "+(p==null?"show the FPS diagnostic first":((FirstPersonMotionPort)(Object)p).bobin$motionStatus());

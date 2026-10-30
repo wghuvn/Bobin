@@ -1,10 +1,12 @@
-"""Author two new FPS clips and append ONLY their accessors/channels to the
+"""Author separate FPS presentation clips and append ONLY their accessors/channels to the
 approved binary GLB. Never re-export its geometry or existing animation data.
 """
 import bpy,json,math,struct,sys,copy,hashlib,tempfile
 from pathlib import Path
+from mathutils import Matrix,Vector
 sys.path.insert(0,str(Path(__file__).parent))
 from first_person_motion_poses import CLIPS
+from glb_rigid_scales import normalize_rigid_scales
 ROOT=Path(__file__).resolve().parents[2];ART=ROOT/'art/armament';ASSETS=ROOT/'src/main/resources/assets/bobin_craft/armament/debug'
 variant=sys.argv[sys.argv.index('--variant')+1] if '--variant' in sys.argv else 'default'
 assert variant in ('default','slim')
@@ -24,6 +26,26 @@ bpy.context.preferences.filepaths.save_version=0;root=bpy.data.objects['presenta
 root.animation_data.action=None
 for tr in list(root.animation_data.nla_tracks):root.animation_data.nla_tracks.remove(tr)
 root.rotation_mode='XYZ';scene.render.fps=192;scene.frame_start=0;scene.frame_end=768
+# New-state anchors route the full vanilla cuboids down out of view, rather
+# than pointing their proximal ends at the lens. Original binds/clips stay in
+# the combined GLB; only the three new animations contain these arm channels.
+C=Matrix(((1,0,0,0),(0,0,1,0),(0,-1,0,0),(0,0,0,1)));CI=C.inverted()
+arm_nodes=[]
+for side,direction in [('right',(-.25,.91,-.33)),('left',(.30,.86,-.41))]:
+ arm=bpy.data.objects['vanilla_arm_'+side];arm.animation_data_create()
+ arm.animation_data.action=None
+ for track in list(arm.animation_data.nla_tracks):arm.animation_data.nla_tracks.remove(track)
+ y=Vector(direction).normalized();normal=Vector((1,0,0) if side=='right' else (0,-1,0))
+ x=y.cross(normal).normalized()
+ if x.x<0:x.negate()
+ z=x.cross(y).normalized();toward=-normal
+ width=(3 if variant=='slim' else 4)/16
+ offset=x*(math.copysign(width/2,toward.dot(x)) if abs(toward.dot(x))>1e-6 else 0)
+ offset+=z*(math.copysign(.125,toward.dot(z)) if abs(toward.dot(z))>1e-6 else 0)
+ grip=bpy.data.objects['grip_'+('primary' if side=='right' else 'secondary')]
+ end=(C@grip.matrix_local).translation-offset
+ anchor=Matrix(((x.x,y.x,z.x,end.x),(x.y,y.y,z.y,end.y),(x.z,y.z,z.z,end.z),(0,0,0,1)))
+ arm.matrix_local=CI@anchor@C;arm.rotation_mode='QUATERNION';arm_nodes.append(arm)
 for clip,keys in CLIPS.items():
  action=bpy.data.actions.new('fp_motion_'+clip);root.animation_data.action=action
  for seconds,loc,rot in keys:
@@ -32,6 +54,11 @@ for clip,keys in CLIPS.items():
  for curve in action.fcurves:
   for key in curve.keyframe_points:key.interpolation='BEZIER';key.handle_left_type=key.handle_right_type='AUTO_CLAMPED'
  root.animation_data.action=None;track=root.animation_data.nla_tracks.new();track.name=clip;track.strips.new(clip,0,action)
+ for arm in arm_nodes:
+  action=bpy.data.actions.new('fp_motion_'+clip+'_'+arm.name);arm.animation_data.action=action
+  for seconds in (0,keys[-1][0]):
+   arm.keyframe_insert('location',frame=seconds*192);arm.keyframe_insert('rotation_quaternion',frame=seconds*192)
+  arm.animation_data.action=None;track=arm.animation_data.nla_tracks.new();track.name=clip;track.strips.new(clip,0,action)
 root.location=(0,0,0);root.rotation_euler=(0,0,0)
 bpy.ops.object.select_all(action='DESELECT')
 for n in original_doc['nodes']:bpy.data.objects[n['name']].select_set(True)
@@ -39,8 +66,9 @@ bpy.context.view_layer.objects.active=root
 with tempfile.TemporaryDirectory() as tmp:
  temp=Path(tmp)/'new-actions.glb'
  bpy.ops.export_scene.gltf(filepath=str(temp),export_format='GLB',use_selection=True,export_yup=True,export_animations=True,export_skins=False,
-  export_animation_mode='NLA_TRACKS',export_force_sampling=True,export_optimize_animation_size=False,export_morph=False,export_extras=False)
+  export_animation_mode='NLA_TRACKS',export_force_sampling=True,export_optimize_animation_size=False,export_optimize_animation_keep_anim_object=True,export_morph=False,export_extras=False)
  extra,extra_bin=unpack(temp)
+ normalize_rigid_scales(extra,extra_bin)
  doc=copy.deepcopy(original_doc);data=original_bin.copy();accessor_map={};view_map={};names={n['name']:i for i,n in enumerate(doc['nodes'])}
  def accessor(index):
   if index in accessor_map:return accessor_map[index]
@@ -64,12 +92,14 @@ with tempfile.TemporaryDirectory() as tmp:
 profile=json.loads((ASSETS/(base+'.profile.json')).read_text());profile['id']='bobin_craft:debug/'+stem;profile['model']='bobin_craft:armament/debug/'+stem+'.glb'
 (ASSETS/(stem+'.profile.json')).write_text(json.dumps(profile,indent=2)+'\n')
 # New editable Blender file; the approved source is never saved over.
-for tr in root.animation_data.nla_tracks:tr.mute=tr.name!='aim'
+for obj in [root,*arm_nodes]:
+ for tr in obj.animation_data.nla_tracks:tr.mute=tr.name!='rest'
 scene.frame_set(0);bpy.ops.wm.save_as_mainfile(filepath=str(ART/(stem+'.blend')))
 meta={'base_sha256':baseline_sha,'variant':variant,'camera_offset':profile['camera_offset'],'camera_rotation':profile['camera_rotation'],'added_clips':list(CLIPS),'approved_binary_prefix_bytes':len(original_bin),'legacy_animations_unchanged':True,'geometry_metadata_unchanged':True}
 (ASSETS/(stem+'.provenance.json')).write_text(json.dumps(meta,indent=2)+'\n')
 if '--render' in sys.argv:
- for clip,time in [('aim',0),('sprint',.17)]:
-  for tr in root.animation_data.nla_tracks:tr.mute=tr.name!=clip
+ for clip,time in [('rest',0),('aim',0),('sprint',.17)]:
+  for obj in [root,*arm_nodes]:
+   for tr in obj.animation_data.nla_tracks:tr.mute=tr.name!=clip
   scene.frame_set(round(time*192));scene.render.filepath=str(ART/(stem+'.'+clip+'.png'));bpy.ops.render.render(write_still=True)
 print('APPENDED_FPS_MOTIONS',variant,meta)

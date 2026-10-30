@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/** Add two explicit visuals without editing the approved presenter, camera or legacy clips. */
+/** Independent FPS rest/aim/sprint; the legacy walking clip and camera remain unchanged. */
 @Mixin(value=FirstPersonWeaponPresenter.class,remap=false)
 public abstract class FirstPersonMotionPresenterMixin implements FirstPersonMotionPort {
     @Shadow @Final private GltfAnimationController controller;
@@ -19,22 +19,29 @@ public abstract class FirstPersonMotionPresenterMixin implements FirstPersonMoti
         if(bobin$motion==null&&FirstPersonMotionController.supported(controller.model()))bobin$motion=new FirstPersonMotionController(controller);
         return bobin$motion;
     }
-    @Inject(method="calibration",at=@At("HEAD"))
-    private void bobin$calibrate(CallbackInfo ci){bobin$manual=null;if(bobin$motion!=null)bobin$motion.calibrated();}
+    @Inject(method="calibration",at=@At("RETURN"))
+    private void bobin$calibrate(CallbackInfo ci){
+        bobin$manual=null;var driver=bobin$driver();if(driver!=null)driver.calibrated(FirstPersonMotionClient.enabled());
+    }
     @Inject(method="animation",at=@At("HEAD"))
     private void bobin$legacyAction(String action,double now,CallbackInfo ci){
         bobin$manual=null;if(bobin$motion!=null)bobin$motion.select(Mode.BASE,now);
     }
-    @Inject(method="tick",at=@At("TAIL"))
+    @Inject(method="tick",at=@At("RETURN"))
     private void bobin$visualInput(long tick,double yaw,double pitch,boolean moving,CallbackInfo ci){
         var p=(FirstPersonWeaponPresenter)(Object)this;
         var driver=bobin$driver();if(driver==null)return;
         var input=FirstPersonMotionClient.input(p,moving);
-        driver.select(FirstPersonMotionController.desired(input.enabled(),p.staticIdle(),p.action(),bobin$manual,input.aim(),input.sprint()),tick/20.0);
+        if(input.enabled()&&p.staticIdle()&&(moving||input.aim()||input.sprint()))p.animation("idle",tick/20.0);
+        if(p.staticIdle())return; // static rest was evaluated at time zero by calibration
+        driver.select(FirstPersonMotionController.desired(input.enabled(),false,p.action(),bobin$manual,input.aim(),input.sprint(),moving),tick/20.0);
     }
     @Override public void bobin$motion(Mode manual,double now){
         bobin$manual=manual;var driver=bobin$driver();
-        if(driver!=null)driver.select(manual==null?Mode.BASE:manual,now);
+        if(driver!=null){
+            if(((FirstPersonWeaponPresenter)(Object)this).staticIdle())driver.calibrated(FirstPersonMotionClient.enabled());
+            else driver.select(manual==null?Mode.BASE:manual,now);
+        }
     }
     @Override public String bobin$motionStatus(){return "fpMotion="+(bobin$motion==null?"BASE":bobin$motion.mode())+", selection="+(bobin$manual==null?"auto":bobin$manual);}
 }

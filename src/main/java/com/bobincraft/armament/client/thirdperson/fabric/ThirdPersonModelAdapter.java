@@ -13,10 +13,11 @@ public final class ThirdPersonModelAdapter implements AutoCloseable {
         parts=new ModelPart[]{model.body,model.rightArm,model.leftArm,model.jacket,model.rightSleeve,model.leftSleeve,model.head,model.hat};
         saved=new ModelTransform[parts.length];
         for(int i=0;i<parts.length;i++)saved[i]=parts[i].getTransform();
-        var originalBody=model.body.getTransform();
-        model.head.pivotX+=pose.body().x()-originalBody.pivotX;
-        model.head.pivotY+=pose.body().y()-originalBody.pivotY;
-        model.head.pivotZ+=pose.body().z()-originalBody.pivotZ;
+        // The body origin is its neck. Use an absolute joint, not a delta from
+        // vanilla's independently adjusted crouch/head pivots.
+        model.head.pivotX=pose.body().x();
+        model.head.pivotY=pose.body().y();
+        model.head.pivotZ=pose.body().z();
         model.head.pitch+=pose.headAssist().pitch();model.head.yaw+=pose.headAssist().yaw();model.head.roll+=pose.headAssist().roll();
         model.hat.copyTransform(model.head);
         apply(model.body,pose.body());apply(model.rightArm,pose.right());apply(model.leftArm,pose.left());

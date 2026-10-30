@@ -32,7 +32,7 @@ public final class ThirdPersonAsset {
         var rig=model.rig();String side=right?"right":"left";int n=rig.node("tp_contact_"+side);
         if(rig.nodes().get(n).parent()!=rig.node("tp_arm_"+side))throw new IllegalArgumentException("contact must be arm-local");
         double[] v={bind[n*10],bind[n*10+1],bind[n*10+2]};
-        // Contact stays within the distal four pixels of the original rigid arm.
+        // The palm contact stays inside the distal four pixels of a full-length vanilla arm.
         double x=(right?1:-1)*(slim?.5:1)/16;
         if(Math.abs(v[0]-x)>1e-6||v[1]<-.625001||v[1]>-.374999||Math.abs(v[2])>1e-6)
             throw new IllegalArgumentException("contact outside the vanilla hand cuboid");
@@ -41,5 +41,6 @@ public final class ThirdPersonAsset {
     }
     public GlbModelAsset model(){return model;}
     public boolean slim(){return slim;}
+    public double[] shoulder(boolean right){return new double[]{(right?5:-5)/16.0,-(slim?2.5:2)/16,0};}
     public double[] armContact(boolean right){return (right?rightContact:leftContact).clone();}
 }

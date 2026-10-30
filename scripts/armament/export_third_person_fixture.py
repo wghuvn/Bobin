@@ -7,6 +7,7 @@ from mathutils import Matrix, Vector, Euler, Quaternion
 sys.path.insert(0,str(Path(__file__).parent))
 from ergonomic_calibration import create_gauge  # geometry only, no FPS animations
 from third_person_poses import POSES, DURATIONS, REST, interpolate
+from glb_rigid_scales import normalize_rigid_scales
 ROOT=Path(__file__).resolve().parents[2]
 ASSETS=ROOT/'src/main/resources/assets/bobin_craft/armament/debug'
 ART=ROOT/'art/armament'
@@ -28,7 +29,7 @@ def empty(name,parent=None):
     o=bpy.data.objects.new(name,None);scene.collection.objects.link(o);o.parent=parent
     o.rotation_mode='QUATERNION';return o
 motion=empty('tp_motion');stance=empty('tp_stance',motion);body=empty('tp_body',stance)
-weapon=empty('tp_weapon',body)
+weapon_motion=empty('tp_weapon_motion',body);weapon=empty('tp_weapon',weapon_motion)
 head_assist=empty('tp_head_assist')
 HIP=Vector((0,0,-.75))
 
@@ -41,11 +42,14 @@ arms={s:empty('tp_arm_'+s,body) for s in ('right','left')}
 # Exact vanilla pivot and distal rectangle centre. No elbow or hand bones.
 shoulders={'right':Vector((5/16,0,-(2.5 if VARIANT=='slim' else 2)/16)),
            'left':Vector((-5/16,0,-(2.5 if VARIANT=='slim' else 2)/16))}
-end_model={'right':Vector((-end_x,7.5/16,0)), 'left':Vector((end_x,10/16,0))}
+end_model={'right':Vector((-end_x,10/16,0)), 'left':Vector((end_x,10/16,0))}
 end_blender={s:(B.to_3x3()@v) for s,v in end_model.items()}
 # End-centre sockets lie outside the grip surfaces, along the approach of the
 # rigid cuboids. These are independent third-person attachments.
-local_grips={'right':Vector((.075,-.055,-.115)), 'left':Vector((-.015,.19,-.045))}
+# The forward support spans Y=.095..285. Grasp its rear section: a rigid
+# vanilla support arm cannot reach a human rifle's forward grip from a square
+# torso. Keep the actual gauge geometry and full arm lengths unchanged.
+local_grips={'right':contacts['right'].translation.copy(), 'left':Vector((-.04,.10,-.040))}
 sockets={}
 for s in arms:
     o=empty('tp_grip_'+s,weapon);o.location=local_grips[s];sockets[s]=o
@@ -63,7 +67,7 @@ def solve_translation(rotation,preferred):
     return mid+direction.normalized()*circle
 
 def pose(t,clip):
-    for o in (motion,stance,body,weapon,head_assist,*arms.values()):
+    for o in (motion,stance,body,weapon_motion,weapon,head_assist,*arms.values()):
         o.location=(0,0,0);o.rotation_quaternion=(1,0,0,0);o.scale=(1,1,1)
     loc,angles,torso,head=interpolate(POSES[clip],t)
     body_rotation=Euler(tuple(math.radians(a) for a in torso),'XYZ').to_matrix()
@@ -86,9 +90,9 @@ def pose(t,clip):
         twist=math.atan2(axis.dot(current.cross(desired)),current.dot(desired))
         o.location=shoulders[side];o.rotation_quaternion=Quaternion(axis,twist)@q
 
-tracked=[motion,stance,body,weapon,head_assist,*arms.values()]
+tracked=[motion,stance,body,weapon,head_assist,*arms.values(),weapon_motion]
 for clip,duration in DURATIONS.items():
-    names=tracked[2:] if clip!='move' else [motion]
+    names=[body,weapon,head_assist,*arms.values()] if clip!='move' else [motion,weapon_motion]
     for o in names:
         o.animation_data_create();o.animation_data.action=bpy.data.actions.new(clip+'_'+o.name)
     for f in range(round(duration*FPS)+1):
@@ -96,7 +100,9 @@ for clip,duration in DURATIONS.items():
         pose(t,clip if clip!='move' else 'idle')
         if clip=='move':
             # Rotation around the pelvis, with no independent vertical bob.
-            motion.matrix_local=at_hip(Euler((0,math.radians(.45)*math.sin(2*math.pi*t),math.radians(.65)*math.sin(2*math.pi*t)),'XYZ').to_matrix())
+            phase=2*math.pi*t
+            motion.matrix_local=at_hip(Euler((math.radians(.25)*math.sin(phase),math.radians(.30)*math.sin(phase),math.radians(.4)*math.sin(phase)),'XYZ').to_matrix())
+            weapon_motion.location=(.002*math.sin(phase),0,.003*math.sin(2*phase))
         for o in names:
             o.keyframe_insert('location',frame=f);o.keyframe_insert('rotation_quaternion',frame=f)
     for o in names:
@@ -107,21 +113,24 @@ for clip,duration in DURATIONS.items():
         track=o.animation_data.nla_tracks.new();track.name=clip;strip=track.strips.new(clip,0,action);strip.action_frame_start=0;strip.action_frame_end=duration*FPS
 # Separate posture and run layers; never drive the legs or the head.
 for clip in ('crouch','run'):
-    o=stance if clip=='crouch' else motion
-    o.animation_data_create();o.animation_data.action=bpy.data.actions.new(clip+'_'+o.name)
+    nodes=[stance] if clip=='crouch' else [motion,weapon_motion]
+    for o in nodes:o.animation_data_create();o.animation_data.action=bpy.data.actions.new(clip+'_'+o.name)
     for f in range(FPS+1):
         for p in tracked:p.location=(0,0,0);p.rotation_quaternion=(1,0,0,0)
         t=f/FPS
         if clip=='crouch':
             u=min(1,t/.2);u=u*u*(3-2*u)
-            o.matrix_local=at_hip(Euler((math.radians(-22)*u,0,0),'XYZ').to_matrix())
+            stance.matrix_local=at_hip(Euler((math.radians(-22)*u,0,0),'XYZ').to_matrix())
         else:
-            o.matrix_local=at_hip(Euler((math.radians(-2),math.radians(.8)*math.sin(2*math.pi*t),math.radians(1.2)*math.sin(2*math.pi*t)),'XYZ').to_matrix())
-        o.keyframe_insert('location',frame=f);o.keyframe_insert('rotation_quaternion',frame=f)
-    action=o.animation_data.action
-    for fc in action.fcurves:
-        for k in fc.keyframe_points:k.interpolation='LINEAR'
-    o.animation_data.action=None;track=o.animation_data.nla_tracks.new();track.name=clip;track.strips.new(clip,0,action)
+            motion.matrix_local=at_hip(Euler((math.radians(-3),math.radians(.6)*math.sin(2*math.pi*t),math.radians(.8)*math.sin(2*math.pi*t)),'XYZ').to_matrix())
+            weapon_motion.location=(.005*math.sin(2*math.pi*t),0,-.015+.006*math.sin(4*math.pi*t))
+            weapon_motion.rotation_quaternion=Euler((math.radians(-6),0,0),'XYZ').to_quaternion()
+        for o in nodes:o.keyframe_insert('location',frame=f);o.keyframe_insert('rotation_quaternion',frame=f)
+    for o in nodes:
+        action=o.animation_data.action
+        for fc in action.fcurves:
+            for k in fc.keyframe_points:k.interpolation='LINEAR'
+        o.animation_data.action=None;track=o.animation_data.nla_tracks.new();track.name=clip;track.strips.new(clip,0,action)
 # Export matching NLA track names as independent clips across nodes.
 for o in tracked:
     if o.animation_data:
@@ -135,15 +144,17 @@ for o in tracked:
         for tr in o.animation_data.nla_tracks:tr.mute=False
 bpy.ops.export_scene.gltf(filepath=str(ASSETS/(STEM+'.glb')),export_format='GLB',use_selection=True,export_yup=True,
     export_animations=True,export_skins=False,export_animation_mode='NLA_TRACKS',export_force_sampling=True,
-    export_optimize_animation_size=False,export_morph=False,export_extras=False)
+    export_optimize_animation_size=False,export_optimize_animation_keep_anim_object=True,export_morph=False,export_extras=False)
 # NLA exporter may retain the first run key as an unanimated node default.
 # Additive layers require a neutral bind for motion/stance, regardless of track
 # enumeration order. Normalize only their defaults; preserve every exported key.
 path=ASSETS/(STEM+'.glb');raw=path.read_bytes()
 size=struct.unpack_from('<I',raw,12)[0]
-document=json.loads(raw[20:20+size]);binary=raw[20+size:]
+document=json.loads(raw[20:20+size]);payload=bytearray(raw[28+size:])
+normalize_rigid_scales(document,payload)
+binary=struct.pack('<II',len(payload),0x004e4942)+payload
 for n in document['nodes']:
-    if n['name'] in ('tp_motion','tp_stance','tp_head_assist'):
+    if n['name'] in ('tp_motion','tp_stance','tp_head_assist','tp_weapon_motion'):
         for k in ('translation','rotation','scale','matrix'):n.pop(k,None)
 encoded=json.dumps(document,separators=(',',':')).encode();encoded+=b' '*((-len(encoded))%4)
 path.write_bytes(struct.pack('<4sII',b'glTF',2,20+len(encoded)+len(binary))+struct.pack('<II',len(encoded),0x4e4f534a)+encoded+binary)

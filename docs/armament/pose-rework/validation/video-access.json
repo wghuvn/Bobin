@@ -1,0 +1,16 @@
+[
+  {
+    "file": "Desktop 2026.10.30 - 20.13.12.81.mp4",
+    "pointer": "sediment://file_0000000087708246b62d6381bdfc4c15",
+    "status": "not accessible to executor",
+    "reason": "download_file rejected: file exceeds the executor transfer limit of 32 MiB",
+    "analysed": false
+  },
+  {
+    "file": "Desktop 2026.10.30 - 20.11.31.80.mp4",
+    "pointer": "sediment://file_00000000a21082468e5e3f31432ef33f",
+    "status": "not accessible to executor",
+    "reason": "download_file rejected: file exceeds the executor transfer limit of 32 MiB",
+    "analysed": false
+  }
+]

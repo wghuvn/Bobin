@@ -13,6 +13,12 @@ import java.util.function.Consumer;
 public final class GltfAnimationController implements AnimationController<RigFrame> {
     public enum State { IDLE, PLAYING, TRANSITION }
     public enum Mode { LOOP, ONCE, HOLD }
+    /** Eases the blend weight; authored GLB keyframe interpolation stays unchanged. */
+    public enum BlendCurve {
+        LINEAR { @Override double weight(double t){return t;} },
+        SMOOTHSTEP { @Override double weight(double t){return t*t*(3-2*t);} };
+        abstract double weight(double t);
+    }
     public record ClipRequest(String clip,Mode mode,double weight){
         public ClipRequest{Objects.requireNonNull(clip);Objects.requireNonNull(mode);unit(weight,"clip weight");}
     }
@@ -46,9 +52,16 @@ public final class GltfAnimationController implements AnimationController<RigFra
     public void play(String clip,Mode mode,double simulationSeconds,double fadeSeconds){
         layer(0,List.of(new ClipRequest(clip,mode,1)),NodeMask.all(model),false,1,simulationSeconds,fadeSeconds);
     }
+    public void play(String clip,Mode mode,double simulationSeconds,double fadeSeconds,BlendCurve curve){
+        layer(0,List.of(new ClipRequest(clip,mode,1)),NodeMask.all(model),false,1,simulationSeconds,fadeSeconds,curve);
+    }
     /** Ordered layers: override uses coverage, additive uses bind-relative local TRS deltas. */
     public void layer(int index,List<ClipRequest> requests,NodeMask mask,boolean additive,double weight,double now,double fadeSeconds){
+        layer(index,requests,mask,additive,weight,now,fadeSeconds,BlendCurve.LINEAR);
+    }
+    public void layer(int index,List<ClipRequest> requests,NodeMask mask,boolean additive,double weight,double now,double fadeSeconds,BlendCurve curve){
         checkIndex(index);time(now);duration(fadeSeconds);unit(weight,"layer weight");Objects.requireNonNull(mask);
+        Objects.requireNonNull(curve);
         if(mask.size()!=model.nodes().size()||requests.size()>8)throw new IllegalArgumentException("layer: mask/count mismatch");
         Layer current=layers[index];
         if(current!=null&&current.additive!=additive)throw new IllegalArgumentException("layer: additive mode is fixed until reset");
@@ -60,7 +73,7 @@ public final class GltfAnimationController implements AnimationController<RigFra
         }
         if(current==null){current=new Layer(additive);layers[index]=current;}
         current.prepareOutgoing(now);current.players=players;current.mask=mask;current.weight=weight;
-        current.changed=now;current.fade=fadeSeconds;current.release=Math.max(0.05,fadeSeconds);mutation++;
+        current.changed=now;current.fade=fadeSeconds;current.curve=curve;current.release=Math.max(0.05,fadeSeconds);mutation++;
     }
     public void stop(double now,double fadeSeconds){
         time(now);duration(fadeSeconds);
@@ -171,6 +184,7 @@ public final class GltfAnimationController implements AnimationController<RigFra
         NodeMask outgoingMask;
         double outgoingWeight,outgoingRelease;
         double weight,changed,fade,release=0.15;
+        BlendCurve curve=BlendCurve.LINEAR;
         Layer(boolean additive){this.additive=additive;model.copyBind(target);model.copyBind(from);}
         void capture(){System.arraycopy(target,0,from,0,target.length);System.arraycopy(coverage,0,fromCoverage,0,coverage.length);}
         void prepareOutgoing(double now){
@@ -194,6 +208,7 @@ public final class GltfAnimationController implements AnimationController<RigFra
         void evaluate(double now){
             group(players,mask,weight,release,now,target,coverage);
             double progress=fade==0?1:Math.max(0,Math.min(1,(now-changed)/fade));
+            progress=curve.weight(progress);
             if(progress<1&&outgoing!=null)group(outgoing,outgoingMask,outgoingWeight,outgoingRelease,now,from,fromCoverage);
             for(int n=0;n<coverage.length;n++){
                 double a=fromCoverage[n]*(1-progress),b=coverage[n]*progress;

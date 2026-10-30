@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class FirstPersonHeldItemMixin {
     @Shadow private ItemStack mainHand;
     @Shadow private ItemStack offHand;
-    @Inject(method="renderItem(FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/network/ClientPlayerEntity;I)V",at=@At("HEAD"),cancellable=true)
+    @Inject(method="renderItem(FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;Lnet/minecraft/client/network/ClientPlayerEntity;I)V",at=@At("HEAD"),cancellable=true,require=1)
     private void bobin$firstPersonGlb(float delta,MatrixStack matrices,VertexConsumerProvider.Immediate consumers,ClientPlayerEntity player,int light,CallbackInfo ci){
         if(FirstPersonDiagnostic.render(delta,matrices,consumers,player,light,mainHand.isEmpty()&&offHand.isEmpty()))ci.cancel();
     }

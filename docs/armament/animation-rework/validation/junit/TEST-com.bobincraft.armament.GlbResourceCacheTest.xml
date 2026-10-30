@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GlbResourceCacheTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-30T07:55:08" hostname="9fefaaa38e6a" time="0.002">
+  <properties/>
+  <testcase name="failedReloadPreservesLastGoodResourceAndGeneration()" classname="com.bobincraft.armament.GlbResourceCacheTest" time="0.001"/>
+  <testcase name="repeatedReloadsDoNotAccumulateOwnedResources()" classname="com.bobincraft.armament.GlbResourceCacheTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

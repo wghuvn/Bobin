@@ -5,7 +5,7 @@ import net.minecraft.client.render.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-/** Read the actual interpolated world FOV; no camera/projection setters or redirects. */
+/** Read vanilla's interpolated FOV. The first-person adapter passes changingFov=false for hands. */
 @Mixin(GameRenderer.class)
 public interface GameRendererFovAccess {
     @Invoker("getFov") double bobin$armamentFov(Camera camera,float tickDelta,boolean changingFov);

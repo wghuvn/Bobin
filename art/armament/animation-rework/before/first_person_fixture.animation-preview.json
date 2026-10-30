@@ -1,0 +1,46 @@
+{
+  "source": "first_person_fixture.blend",
+  "source_sha256": "0e5d024c79a2c57b866fbf601e8c585a50ec52a4a0e1e279d1b3f45158ae37d8",
+  "variant": "default",
+  "label": "before",
+  "kind": "Blender authoring preview, not Minecraft",
+  "vertical_fov": 70,
+  "resolution": [
+    640,
+    360
+  ],
+  "fps": 12,
+  "samples": 16,
+  "clips": {
+    "raise": {
+      "duration_seconds": 1.25,
+      "frames": 16,
+      "video": "first_person_fixture.raise.mp4",
+      "sha256": "b95c9af2d5e2158bc4061a58ab1ed9e1813e2e77551745b1bef20d23369d4e7e"
+    },
+    "idle": {
+      "duration_seconds": 2.0,
+      "frames": 25,
+      "video": "first_person_fixture.idle.mp4",
+      "sha256": "55b0d5c42c03b8863c706a1f9320346091bc165bf4f32e44d5bcb9077f7fa104"
+    },
+    "inspect": {
+      "duration_seconds": 3.0,
+      "frames": 37,
+      "video": "first_person_fixture.inspect.mp4",
+      "sha256": "89f7b1f9e5c2094fdaa2a46c2fdc9137b5a27d1788150f232a5e84fac662fc61"
+    },
+    "move": {
+      "duration_seconds": 1.0,
+      "frames": 13,
+      "video": "first_person_fixture.move.mp4",
+      "sha256": "3eebf80f88207338139c638206ec7c6a45e9c048fbbead13d9228c053a2dec40"
+    },
+    "lower": {
+      "duration_seconds": 1.25,
+      "frames": 16,
+      "video": "first_person_fixture.lower.mp4",
+      "sha256": "33e34315805ec129837a3d48887fdcd1974a0a4cfb39f9f72219173f5db25388"
+    }
+  }
+}

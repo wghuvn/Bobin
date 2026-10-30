@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GltfMathTest" tests="17" skipped="0" failures="0" errors="0" timestamp="2026-10-30T07:55:09" hostname="9fefaaa38e6a" time="0.006">
+  <properties/>
+  <testcase name="slerpUsesShortestPathAndKeepsInputs()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="[0.0, 0.0]" classname="com.bobincraft.armament.GltfMathTest" time="0.001"/>
+  <testcase name="[1.0, 0.0]" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="[-1.0, 2.0]" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="[0.0, NaN]" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="[0.0, Infinity]" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="antipodalQuaternionHasNoSpin()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="oneKeyAndZeroDurationAreValidForHold()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="skinPaletteUsesMeshSpaceAndInverseTransposeNormals()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="linearAndClampedTime()" classname="com.bobincraft.armament.GltfMathTest" time="0.001"/>
+  <testcase name="channelsDefensivelyCopy()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="rejectsWrongOutputAndNonUnitKeys()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="invalidHierarchyAndSkinFailBeforeSampling()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="stepChangesExactlyAtKey()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="cubicQuaternionNormalizesWithoutChangingExportedSigns()" classname="com.bobincraft.armament.GltfMathTest" time="0.001"/>
+  <testcase name="cubicHermiteMultipliesTangentsByInterval()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <testcase name="affineCompositionAndInverseRespectHierarchy()" classname="com.bobincraft.armament.GltfMathTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

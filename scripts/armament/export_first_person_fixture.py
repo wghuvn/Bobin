@@ -1,6 +1,6 @@
 """Author the neutral ergonomic gauge and two held Minecraft hands in Blender.
 All dimensions are metres; no object import/rescale and no Java-authored mesh.
-Default output has a truly constant idle, with other clips available explicitly.
+Calibration samples the exact bind pose at idle time zero; animated idle breathes.
 Run: blender -b --python scripts/armament/export_first_person_fixture.py
 """
 import bpy
@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from minecraft_hand_geometry import make_arm, skin_image, skin_material
 from ergonomic_calibration import create as create_gauge
 from triangle_contacts import nonadjacent_contacts
+from first_person_animation_poses import CLIP_POSES, authoring_metadata
 VARIANT = sys.argv[sys.argv.index('--variant') + 1] if '--variant' in sys.argv else 'default'
 assert VARIANT in ('default', 'slim')
 STEM = 'first_person_fixture' + ('_slim' if VARIANT == 'slim' else '')
@@ -32,8 +33,8 @@ bpy.context.preferences.filepaths.save_version = 0
 scene = bpy.context.scene
 scene.unit_settings.system = 'METRIC'
 scene.unit_settings.scale_length = 1
-scene.render.fps = 96  # Dense export baking keeps fractional-frame error below 0.08 mm.
-scene.frame_start, scene.frame_end = 0, 288
+scene.render.fps = 192  # Fast draw/stow curves need denser baking to keep subframe error below 0.08 mm.
+scene.frame_start, scene.frame_end = 0, round(max(keys[-1][0] for keys in CLIP_POSES.values()) * scene.render.fps)
 root = bpy.data.objects.new('presentation_root', None)
 scene.collection.objects.link(root)
 root.rotation_mode = 'XYZ'
@@ -105,14 +106,8 @@ for side, data in arms.items():
 
 
 hand_meshes = [obj for data in arms.values() for obj in make_arm(data, arm, VARIANT, *materials[data['side']])]
-# Hand-authored key poses, seconds: translation metres, Euler degrees, elbow swivel degrees.
-# These keyframes live in Blender and are exported/baked by its glTF exporter.
-specs = {
-    'idle': [(0, (0, 0, 0), (0, 0, 0), 0), (2, (0, 0, 0), (0, 0, 0), 0)],
-    'inspect': [(0, (0, 0, 0), (0, 0, 0), 0), (0.75, (0.025, 0.025, 0.035), (3, -2, -9), 4), (1.5, (-0.025, 0.025, 0.035), (-2, 2, 9), -4), (2.25, (0.01, 0.01, 0.015), (1, 0, -4), 2), (3, (0, 0, 0), (0, 0, 0), 0)],
-    'raise': [(0, (0, 0.04, -0.30), (-5, 0, 0), 0), (0.5, (0, 0.025, -0.13), (-2, 0, 0), 1), (1, (0, 0.002, 0.006), (0.2, 0, 0), 0.4), (1.25, (0, 0, 0), (0, 0, 0), 0)],
-    'lower': [(0, (0, 0, 0), (0, 0, 0), 0), (0.5, (0, 0.012, -0.08), (-1, 0, 0), 1), (1, (0, 0.035, -0.25), (-4, 0, 0), 0.2), (1.25, (0, 0.04, -0.30), (-5, 0, 0), 0)],
-    'move': [(0, (0, 0, 0), (0, 0, 0), 0), (0.25, (0.012, 0.003, 0.008), (0.4, 0, 0.7), 1.2), (0.5, (0, 0, 0), (0, 0, 0), 0), (0.75, (-0.012, 0.003, 0.008), (-0.4, 0, -0.7), -1.2), (1, (0, 0, 0), (0, 0, 0), 0)]}
+# Independently authored action phases; Blender creates and bakes all keyframes.
+specs = CLIP_POSES
 actions = {}
 
 
@@ -182,8 +177,9 @@ def column_major(matrix):
 
 
 reference = {'blender': bpy.app.version_string, 'source_model': 'ergonomic_calibration.py',
-             'metres_per_unit': 1, 'gauge_body_metres': [.10,.69,.09], 'variant': VARIANT, 'camera_offset': CAMERA_OFFSET, 'clips': {}, 'intersections': []}
+             'metres_per_unit': 1, 'gauge_body_metres': [.10,.69,.09], 'variant': VARIANT, 'camera_offset': CAMERA_OFFSET, 'clips': {}, 'subframe_checks': {}, 'intersections': []}
 reference['camera_rotation'] = [CAMERA_ROTATION.x, CAMERA_ROTATION.y, CAMERA_ROTATION.z, CAMERA_ROTATION.w]
+reference['animation_authoring'] = authoring_metadata()
 reference['topology'] = {obj.name: {'vertices': len(obj.data.vertices), 'polygons': len(obj.data.polygons),
                                  'nonmanifold_edges': obj['nonmanifold_edges'], 'arm_pixels': obj['minecraft_arm_pixels'], 'weighted_bones': list(obj['weighted_bones']),
                                  'proximal_cap_vertices': list(obj['proximal_cap_vertices'])}
@@ -195,7 +191,9 @@ for clip, keys in specs.items():
     for obj in (root, arm):
         obj.animation_data.action = actions[clip][obj.name]
     duration = keys[-1][0];samples = []
-    for fraction in (0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1):
+    # Retain the nine established golden poses and add genuinely off-grid times
+    # to check GLB interpolation independently of Blender's baked key locations.
+    for fraction in (0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1, .137, .413, .739):
         seconds = fraction * duration;frame = seconds * scene.render.fps
         scene.frame_set(int(frame), subframe=frame - int(frame))
         depsgraph = bpy.context.evaluated_depsgraph_get()
@@ -232,7 +230,8 @@ for clip, keys in specs.items():
             intersections['skin/sleeve_' + side] = len(bvhs['view_arm_' + side].overlap(bvhs['view_sleeve_' + side]))
         reference['intersections'].append({'clip': clip, 'seconds': seconds, 'pairs': {k: v for k, v in intersections.items() if v}, 'self_contacts': holding_self})
         samples.append(sample)
-    reference['clips'][clip] = samples
+    reference['clips'][clip] = samples[:9]
+    reference['subframe_checks'][clip] = samples[9:]
 
 # QA poses deliberately release the held object: exercise actual relative elbow
 # flexion and wrist flexion, not just the contact-preserving holding swivel.

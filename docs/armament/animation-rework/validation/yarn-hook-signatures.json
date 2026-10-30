@@ -1,0 +1,20 @@
+{
+  "GameRenderer.mapping": {
+    "sha256": "c1d842d4021d2d8ef0826ad249674a4e62e346880489f903779372f61d0db2b5",
+    "source": "https://raw.githubusercontent.com/FabricMC/yarn/1.20.1/mappings/net/minecraft/client/render/GameRenderer.mapping",
+    "verified_lines": [
+      "\tMETHOD method_22973 getBasicProjectionMatrix (D)Lorg/joml/Matrix4f;",
+      "\tMETHOD method_3196 getFov (Lnet/minecraft/class_4184;FZ)D"
+    ]
+  },
+  "HeldItemRenderer.mapping": {
+    "sha256": "6b33f3fc1f38bcb06db2728e90d022df33d178b51b5720034aae05bacbcf84c0",
+    "source": "https://raw.githubusercontent.com/FabricMC/yarn/1.20.1/mappings/net/minecraft/client/render/item/HeldItemRenderer.mapping",
+    "verified_lines": [
+      "\tFIELD field_4047 mainHand Lnet/minecraft/class_1799;",
+      "\tFIELD field_4048 offHand Lnet/minecraft/class_1799;",
+      "\tMETHOD method_22976 renderItem (FLnet/minecraft/class_4587;Lnet/minecraft/class_4597$class_4598;Lnet/minecraft/class_746;I)V",
+      "\tMETHOD method_3233 renderItem (Lnet/minecraft/class_1309;Lnet/minecraft/class_1799;Lnet/minecraft/class_811;ZLnet/minecraft/class_4587;Lnet/minecraft/class_4597;I)V"
+    ]
+  }
+}

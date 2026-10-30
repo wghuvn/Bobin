@@ -1,0 +1,46 @@
+{
+  "source": "art/armament/first_person_fixture.blend",
+  "source_sha256": "ebd8bb7056de84f554d4412274901e3e3778144144e86e23fd82784d4cb40423",
+  "variant": "default",
+  "label": "after",
+  "kind": "Blender authoring preview, not Minecraft",
+  "vertical_fov": 70,
+  "resolution": [
+    640,
+    360
+  ],
+  "fps": 12,
+  "samples": 16,
+  "clips": {
+    "raise": {
+      "duration_seconds": 0.625,
+      "frames": 9,
+      "video": "first_person_fixture.raise.mp4",
+      "sha256": "5742084cdf418c5cbc8847a49e3d3ce0c6c7f281edc99960a162a32763cd6bcc"
+    },
+    "idle": {
+      "duration_seconds": 4.0,
+      "frames": 49,
+      "video": "first_person_fixture.idle.mp4",
+      "sha256": "b7e85e0d8e476e8c6655b4b53233573f6f2d49210a22a059d0c63611ef960216"
+    },
+    "inspect": {
+      "duration_seconds": 2.75,
+      "frames": 34,
+      "video": "first_person_fixture.inspect.mp4",
+      "sha256": "bf8b83196bfc8b6801c573c12973338a64314aec1337cecdeaf6d665fb6dca9d"
+    },
+    "move": {
+      "duration_seconds": 1.0,
+      "frames": 13,
+      "video": "first_person_fixture.move.mp4",
+      "sha256": "4ac0e2b7f48caee24470d9b8b5786e5799f9788d1db1b4b6b299a41b5874a321"
+    },
+    "lower": {
+      "duration_seconds": 0.5,
+      "frames": 7,
+      "video": "first_person_fixture.lower.mp4",
+      "sha256": "9bbe18443e1ed61769ff7abb98774717cea6f0b9c2637497bf28dc1ac3e3283d"
+    }
+  }
+}

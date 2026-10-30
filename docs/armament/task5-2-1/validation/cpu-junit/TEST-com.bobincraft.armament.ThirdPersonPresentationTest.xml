@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.ThirdPersonPresentationTest" tests="62" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:37" hostname="dfa4b5029fbd" time="1.203">
+  <properties/>
+  <testcase name="crouchLeansTorsoForwardAndKeepsVanillaLegsIndependent()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.001"/>
+  <testcase name="f5SemanticClockMatchesApprovedFpsWithoutReadingTransforms()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.012"/>
+  <testcase name="eligibilityYieldsToEveryExistingOwnerAndRemotePlayers()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.001"/>
+  <testcase name="physicalGeometryDimensionsAreSharedButAnimationSetsAreIndependent()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.007"/>
+  <testcase name="renderRateDoesNotAdvanceSemanticTimeOrChangePose()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.007"/>
+  <testcase name="[1] false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.045"/>
+  <testcase name="[2] true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.044"/>
+  <testcase name="playerInstancesAndReloadDoNotShareAnimationOrRestartTime()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[1] false, idle, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.013"/>
+  <testcase name="[2] false, idle, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[3] false, idle, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.007"/>
+  <testcase name="[4] false, idle, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[5] false, inspect, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[6] false, inspect, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[7] false, inspect, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[8] false, inspect, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[9] false, raise, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[10] false, raise, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[11] false, raise, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[12] false, raise, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[13] false, lower, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[14] false, lower, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[15] false, lower, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[16] false, lower, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[17] false, move, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[18] false, move, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[19] false, move, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[20] false, move, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.009"/>
+  <testcase name="[21] false, aim, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[22] false, aim, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[23] false, aim, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[24] false, aim, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[25] true, idle, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[26] true, idle, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[27] true, idle, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[28] true, idle, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[29] true, inspect, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[30] true, inspect, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[31] true, inspect, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[32] true, inspect, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[33] true, raise, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[34] true, raise, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[35] true, raise, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.006"/>
+  <testcase name="[36] true, raise, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[37] true, lower, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[38] true, lower, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[39] true, lower, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[40] true, lower, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[41] true, move, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[42] true, move, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[43] true, move, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[44] true, move, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[45] true, aim, false, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[46] true, aim, false, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[47] true, aim, true, false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.004"/>
+  <testcase name="[48] true, aim, true, true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.005"/>
+  <testcase name="[1] false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.014"/>
+  <testcase name="[2] true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.009"/>
+  <testcase name="[1] false" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.153"/>
+  <testcase name="[2] true" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.138"/>
+  <testcase name="measuredPlayerScaleDoesNotChangePhysicalItemSize()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.0"/>
+  <testcase name="frozenFirstPersonSourcesClipsGeometryAndCameraSettingsRemainByteIdentical()" classname="com.bobincraft.armament.ThirdPersonPresentationTest" time="0.476"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

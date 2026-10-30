@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.ThirdPersonPolishTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:18" hostname="dfa4b5029fbd" time="0.161">
+  <properties/>
+  <testcase name="sharedAimSurvivesF5WithoutAddingOrChangingAnyFpsClip()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.003"/>
+  <testcase name="locomotionUsesVanillaStridePhaseRatherThanAnIndependentBobClock()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.003"/>
+  <testcase name="inspectHasAnEndHoldAndSeparateRecoveryWithoutChangingSemanticClock()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.001"/>
+  <testcase name="idleAfterInspectHasBoundedFrameToFrameMotionAtDifferentRenderRates()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.046"/>
+  <testcase name="allActionInterruptionsIncludingAimKeepTheCurrentPoseAtTheBoundary()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.005"/>
+  <testcase name="[1] false" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.009"/>
+  <testcase name="[2] true" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.0"/>
+  <testcase name="explicitMoveShowsTheCycleEvenWhileThePlayerIsStationary()" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.0"/>
+  <testcase name="[1] false" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.032"/>
+  <testcase name="[2] true" classname="com.bobincraft.armament.ThirdPersonPolishTest" time="0.038"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

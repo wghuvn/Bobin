@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.destruction.DebrisTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.179">
+  <properties/>
+  <testcase name="sourcePhysicsAndSupport()" classname="com.bobincraft.destruction.DebrisTest" time="0.179"/>
+  <system-out><![CDATA[PASS Stage 5 production geometry/collision/support kernels: 21963 checks; 172 recognizable source patches, 813 conserved source cells
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

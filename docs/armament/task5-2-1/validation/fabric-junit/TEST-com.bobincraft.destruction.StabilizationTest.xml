@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.destruction.StabilizationTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.036">
+  <properties/>
+  <testcase name="productionKernelContract()" classname="com.bobincraft.destruction.StabilizationTest" time="0.036"/>
+  <system-out><![CDATA[PASS stabilization production kernels: 39087 checks; policy, smoke color/allocation, phase schedules, audio clusters, parked ledger, swept cosmetic collision
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

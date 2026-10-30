@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.combat.ExplosionVisualProfileTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.038">
+  <properties/>
+  <testcase name="layeredContract()" classname="com.bobincraft.combat.ExplosionVisualProfileTest" time="0.015"/>
+  <testcase name="visualContract()" classname="com.bobincraft.combat.ExplosionVisualProfileTest" time="0.022"/>
+  <system-out><![CDATA[PASS Stage 2.1: 60 profile/budget scenarios; all five layers, flash duration, lifetimes and determinism
+PASS: 4196 assertions; all 12 categories, protocol rejection, seeded geometry and budgets
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

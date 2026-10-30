@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.DefinitionValidationTest" tests="109" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:04" hostname="dfa4b5029fbd" time="0.467">
+  <properties/>
+  <testcase name="errorIdentifiesNestedField()" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.065"/>
+  <testcase name="weapon valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="rig valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.006"/>
+  <testcase name="sockets valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.011"/>
+  <testcase name="animation-events valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="weapon unknown field" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="weapon missing id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="weapon null id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="weapon version 2" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="weapon version string" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="weapon invalid namespace" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="weapon traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual unknown field" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual missing id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual null id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002"/>
+  <testcase name="visual version 2" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002"/>
+  <testcase name="visual version string" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual invalid namespace" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="visual traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="rig unknown field" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="rig missing id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="rig null id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="rig version 2" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.008"/>
+  <testcase name="rig version string" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="rig invalid namespace" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="rig traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="sockets unknown field" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="sockets missing id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="sockets null id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="sockets version 2" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="sockets version string" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.01"/>
+  <testcase name="sockets invalid namespace" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="sockets traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="animation-events unknown field" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="animation-events missing id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="animation-events null id" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.009"/>
+  <testcase name="animation-events version 2" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="animation-events version string" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="animation-events invalid namespace" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="animation-events traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.025"/>
+  <testcase name="duplicate actions" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="string as actions" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="actions excessive" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.007"/>
+  <testcase name="actions empty allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.004"/>
+  <testcase name="gltf visual allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002"/>
+  <testcase name="unsafe model URI" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.004"/>
+  <testcase name="wrong model format" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.002"/>
+  <testcase name="missing NPC view" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="unknown view" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="unknown transform member" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.006"/>
+  <testcase name="string vector component" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="short vector" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="negative scale" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="non-unit quaternion" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.01"/>
+  <testcase name="nested null transform" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="missing root role" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="unknown node role" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="unknown parent" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.005"/>
+  <testcase name="no root" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="second root" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="self cycle with root" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="role must select root" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="duplicate node name" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="duplicate node index" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="fractional node index" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="negative node index" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="null parent" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="empty sockets allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="duplicate socket name" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="missing socket transform" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="socket quaternion component too large" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="gameplay marker forbidden" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="executable marker payload forbidden" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="marker out of duration" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.025"/>
+  <testcase name="duplicate marker name" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="unsorted markers" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="negative marker time" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="zero duration" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="duplicate clip name" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="empty events allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.005"/>
+  <testcase name="namespace traversal" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="namespace empty segment" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="trailing newline ID" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="weapon valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.003"/>
+  <testcase name="visual valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.01"/>
+  <testcase name="rig valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.005"/>
+  <testcase name="sockets valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.007"/>
+  <testcase name="animation-events valid" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.004"/>
+  <testcase name="actions empty allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="gltf visual allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.006"/>
+  <testcase name="empty sockets allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="empty events allowed" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="deeplyNestedAndOversizedDocumentsAreRejected()" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.03"/>
+  <testcase name="reject " classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject null" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject []" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {} {}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;x&quot;:1,}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {unquoted:1}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {'x':1}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;x&quot;:NaN}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;x&quot;:Infinity}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject // comment&#10;{}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.006"/>
+  <testcase name="reject /*comment*/{}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;x&quot;:01}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;x&quot;:1,&quot;x&quot;:2}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <testcase name="reject {&quot;a&quot;:{&quot;x&quot;:1,&quot;x&quot;:2}}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.001"/>
+  <testcase name="reject {&quot;x&quot;:&quot;a&#10;text&quot;}" classname="com.bobincraft.armament.DefinitionValidationTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

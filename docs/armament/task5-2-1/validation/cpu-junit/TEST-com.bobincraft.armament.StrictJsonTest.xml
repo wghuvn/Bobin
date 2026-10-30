@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.StrictJsonTest" tests="23" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:37" hostname="dfa4b5029fbd" time="0.005">
+  <properties/>
+  <testcase name="strict syntax " classname="com.bobincraft.armament.StrictJsonTest" time="0.001"/>
+  <testcase name="strict syntax {} {}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:1,}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {unquoted:1}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {'x':1}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:NaN}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:Infinity}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax // comment&#10;{}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax /*comment*/{}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:01}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:1,&quot;x&quot;:2}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;a&quot;:{&quot;x&quot;:1,&quot;x&quot;:2}}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:&quot;a&#10;text&quot;}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:&quot;a&#9;text&quot;}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:&quot;a?text&quot;}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax {&quot;x&quot;:&quot;a\'text&quot;}" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax TRUE" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax FALSE" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax NULL" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax truE" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax falsE" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="strict syntax nulL" classname="com.bobincraft.armament.StrictJsonTest" time="0.0"/>
+  <testcase name="validJsonIsNotConfusedWithInvalidDefinitions()" classname="com.bobincraft.armament.StrictJsonTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

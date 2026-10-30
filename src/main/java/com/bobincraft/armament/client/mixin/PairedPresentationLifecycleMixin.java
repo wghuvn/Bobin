@@ -15,6 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(value=FirstPersonDiagnostic.class, remap=false)
 public abstract class PairedPresentationLifecycleMixin implements ThirdPersonSemanticPort {
+    @Unique private final com.bobincraft.armament.client.thirdperson.SharedPresentationActions bobin$sharedActions=new com.bobincraft.armament.client.thirdperson.SharedPresentationActions();
     @Shadow private boolean requested;
     @Shadow private FirstPersonWeaponPresenter presenter;
     @Shadow private long visualTick;
@@ -31,9 +32,17 @@ public abstract class PairedPresentationLifecycleMixin implements ThirdPersonSem
     @Override public boolean bobin$requestPresentation(String action) {
         bobin$enablePairedPresentation();
         if(presenter==null)return false;
-        presenter.animation(action,visualTick/20.0);return true;
+        bobin$sharedActions.clear();
+        if(action.equals("aim")) {
+            // Only the existing FPS idle input is used. No FPS ADS transform or
+            // state-machine/presenter change is introduced for this 3P task.
+            presenter.animation("idle",visualTick/20.0);
+            bobin$sharedActions.aim(bobin$legacyPresentation(),visualTick/20.0);
+        } else presenter.animation(action,visualTick/20.0);
+        return true;
     }
-    @Override public PresentationAction bobin$presentationAction() {
+    @Override public PresentationAction bobin$presentationAction() { return bobin$sharedActions.observe(bobin$legacyPresentation()); }
+    @Unique private PresentationAction bobin$legacyPresentation() {
         if(!requested||presenter==null)return null;
         var state=((FirstPersonSemanticStateAccess)(Object)presenter).bobin$semanticState();
         return new PresentationAction(PresentationAction.Action.parse(state.action().key()),state.started(),state.staticIdle());

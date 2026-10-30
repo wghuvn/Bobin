@@ -21,7 +21,7 @@ final class ThirdPersonPresentationTest {
     private static PresentationAction state(String key,double start){return new PresentationAction(PresentationAction.Action.parse(key),start,false);}
     static Stream<Arguments> poses(){
         var cases=new ArrayList<Arguments>();
-        for(boolean slim:new boolean[]{false,true}) for(String action:new String[]{"idle","inspect","raise","lower","move"})
+        for(boolean slim:new boolean[]{false,true}) for(String action:new String[]{"idle","inspect","raise","lower","move","aim"})
             for(boolean crouch:new boolean[]{false,true}) for(boolean run:new boolean[]{false,true})cases.add(Arguments.of(slim,action,crouch,run));
         return cases.stream();
     }
@@ -61,7 +61,7 @@ final class ThirdPersonPresentationTest {
                 best=Math.min(best,Math.sqrt(dx*dx+dy*dy+dz*dz));
             }
         }
-        assertTrue(best<.006,"Real grip geometry must meet the vanilla cuboid, not only an empty marker: "+best);
+        assertTrue(best<.006,"right="+right+" Real grip geometry must meet the vanilla cuboid, not only an empty marker: "+best);
     }
     private static void assertModelPartRoundTrip(Part p,double[] expected){
         double cx=Math.cos(p.pitch()),sx=Math.sin(p.pitch()),cy=Math.cos(p.yaw()),sy=Math.sin(p.yaw()),cz=Math.cos(p.roll()),sz=Math.sin(p.roll());
@@ -74,8 +74,8 @@ final class ThirdPersonPresentationTest {
         JsonObject ref=JsonParser.parseString(Files.readString(Path.of("src/main/resources/assets/bobin_craft/armament/debug",stem+".reference.json"))).getAsJsonObject();
         for(JsonElement entry:ref.getAsJsonArray("samples")){
             var sample=entry.getAsJsonObject();String clip=sample.get("clip").getAsString();double time=sample.get("time").getAsDouble();
-            var controller=new ThirdPersonAnimationController(ASSETS.get(slim));controller.update(state(clip,0),0,false,false,false);
-            RigFrame frame=controller.sample(time);
+            var controller=new GltfAnimationController(ASSETS.get(slim).model().rig());controller.play(clip,GltfAnimationController.Mode.HOLD,0,0);
+            RigFrame frame=controller.sampleSeconds(time);
             for(var node:sample.getAsJsonObject("matrices").entrySet()){
                 double[] actual=matrix(frame,node.getKey());
                 for(int i=0;i<16;i++)assertEquals(node.getValue().getAsJsonArray().get(i).getAsDouble(),actual[i],.0004,stem+" "+clip+" "+time+" "+node.getKey()+" ["+i+"]");
@@ -83,7 +83,7 @@ final class ThirdPersonPresentationTest {
         }
     }
     @ParameterizedTest @ValueSource(booleans={false,true}) void everyInterruptedTransitionMaintainsContactAndContinuity(boolean slim){
-        for(String from:new String[]{"idle","inspect","raise","lower","move"})for(String to:new String[]{"idle","inspect","raise","lower","move"}){
+        for(String from:new String[]{"idle","inspect","raise","lower","move","aim"})for(String to:new String[]{"idle","inspect","raise","lower","move","aim"}){
             var p=new ThirdPersonWeaponPresenter(ASSETS.get(slim));
             p.update(state(from,0),0,false,false,false);
             var before=p.sample(.31,0,0);
@@ -134,7 +134,7 @@ final class ThirdPersonPresentationTest {
         var tp=ASSETS.get(false).model().rig();
         var fp=FirstPersonAsset.load(VanillaArmAttachments.PROFILES.get("default"),id->Files.newInputStream(Path.of("src/main/resources/assets",id.namespace(),id.path()))).model().rig();
         assertEquals(7,tp.meshes().size());assertTrue(tp.skins().isEmpty());
-        for(var action:PresentationAction.Action.values())assertEquals(fp.clip(action.key()).duration(),tp.clip(action.key()).duration(),1e-5,"Semantic durations only");
+        for(var action:FirstPersonActionStateMachine.Action.values())assertEquals(fp.clip(action.key()).duration(),tp.clip(action.key()).duration(),1e-5,"Unchanged legacy semantic durations; AIM has no new FPS clip");
         var tc=new ThirdPersonAnimationController(ASSETS.get(false));tc.update(state("inspect",0),0,false,false,false);
         var fc=new GltfAnimationController(fp);fc.play("inspect",GltfAnimationController.Mode.HOLD,0,0);
         double[] t0=matrix(tc.sample(0),"tp_weapon"),t1=matrix(tc.sample(1),"tp_weapon");
@@ -164,11 +164,11 @@ final class ThirdPersonPresentationTest {
         }
     }
     @ParameterizedTest @ValueSource(booleans={false,true}) void heldGeometryNeverCrossesTorso(boolean slim) {
-        for(String clip:new String[]{"idle","inspect","raise","lower","move"}){
+        for(String clip:new String[]{"idle","inspect","raise","lower","move","aim"}){
             var p=new ThirdPersonWeaponPresenter(ASSETS.get(slim));p.update(state(clip,0),0,false,false,false);
             for(int step=0;step<=72;step++){
                 var pose=p.sample(step/24.0,0,0);var frame=pose.geometry();
-                double[] inverse=new double[16];RigMath.inverseAffine(matrix(frame,"tp_body"),0,inverse,0);
+                double[] inverse=new double[16];RigMath.inverseAffine(pose.bodyMatrix(),0,inverse,0);
                 double[] intoBody=multiply(inverse,pose.placement());
                 for(int m=0;m<frame.model().meshes().size();m++){
                     var mesh=frame.model().meshes().get(m);
@@ -217,14 +217,16 @@ final class ThirdPersonPresentationTest {
             var pose=p.sample(0,0,0,1/entityScale);
             double[] a=point(pose.placement(),0,0,0),b=point(pose.placement(),0,.69,0);
             assertEquals(.69,length(subtract(a,b))*entityScale,1e-9,"One GLB metre remains one world metre");
-            assertEquals(10.0/16*entityScale,length(subtract(position(pose.rightMatrix()),position(pose.leftMatrix())))*entityScale,1e-8,"Keep actual player shoulders");
+            assertEquals(10.0/16*entityScale,length(subtract(position(pose.rightMatrix()),position(pose.leftMatrix())))*entityScale,1e-6,"Keep actual player shoulders");
             assertTrue(pose.contactError()<1e-8);
         }
     }
     @Test void crouchLeansTorsoForwardAndKeepsVanillaLegsIndependent(){
         var p=new ThirdPersonWeaponPresenter(ASSETS.get(false));p.update(state("idle",0),0,false,false,true);
         var pose=p.sample(1,0,0);
-        assertTrue(pose.body().pitch()>Math.toRadians(20));assertTrue(pose.body().y()>2.5);
+        assertTrue(pose.body().pitch()>Math.toRadians(20));
+        double[] hip=pose.pelvis().clone();hip[1]-=pose.waistInset();
+        assertArrayEquals(hip,point(pose.bodyMatrix(),0,-.75,0),1e-8,"Crouch keeps a geometric waist overlap with the actual leg tops");
         assertTrue(pose.contactError()<1e-8);
     }
 

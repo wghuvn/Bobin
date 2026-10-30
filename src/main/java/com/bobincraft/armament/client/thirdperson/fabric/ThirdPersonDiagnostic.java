@@ -121,10 +121,12 @@ public final class ThirdPersonDiagnostic {
         try {
             double now=(semantic.bobin$presentationTick()+(MinecraftClient.getInstance().isPaused()?0:delta))/20.0;
             var action=semantic.bobin$presentationAction();
-            double follow=action.action()==PresentationAction.Action.INSPECT||action.action()==PresentationAction.Action.LOWER?0:1;
             var basis=matrices.peek().getPositionMatrix();
             double scale=Math.sqrt(basis.m00()*basis.m00()+basis.m01()*basis.m01()+basis.m02()*basis.m02());
-            session.rendered=session.presenter.sample(now,-Math.toDegrees(model.head.yaw)*follow,-Math.toDegrees(model.head.pitch)*follow,1/scale);
+            double phase=player.limbAnimator.getPos(MinecraftClient.getInstance().isPaused()?0:delta)*.6662/(2*Math.PI);
+            var lower=new ThirdPersonBodyFrame((model.rightLeg.pivotX+model.leftLeg.pivotX)/32.0,
+                    (model.rightLeg.pivotY+model.leftLeg.pivotY)/32.0,(model.rightLeg.pivotZ+model.leftLeg.pivotZ)/32.0,phase);
+            session.rendered=session.presenter.sample(now,-Math.toDegrees(model.head.yaw),-Math.toDegrees(model.head.pitch),1/scale,lower);
             return new ThirdPersonModelAdapter(model,session.rendered);
         }catch(RuntimeException e){disable(e);return null;}
     }
@@ -159,6 +161,7 @@ public final class ThirdPersonDiagnostic {
         var s=c.player==null?null:sessions.get(c.player.getUuid());
         return "tpRequested="+requested+", policy="+policy(c.player,false)+", render="+result+", action="+(action==null?"none":action.action().key())+
                 ", started="+(action==null?0:action.started())+", visualTick="+semantic.bobin$presentationTick()+", instances="+sessions.size()+
+                (s==null?"":", tpClip="+s.presenter.controller().clip()+", tpPhase="+s.presenter.controller().phase(semantic.bobin$presentationTick()/20.0))+
                 ", network=local_only, arms=vanilla_rigid, "+resources.status()+
                 (s==null||s.rendered==null?"":", contactMetres="+s.rendered.contactError()+", blendCorrectionMetres="+s.rendered.correctionMetres());
     }

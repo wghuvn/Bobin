@@ -30,15 +30,19 @@ public final class ThirdPersonPoseMath {
     public static double[] position(double[] m) { return new double[]{m[12],m[13],m[14]}; }
     /** Closest correction keeping both rigid arm endpoints on their sockets through crossfades. */
     public static double[] gripCorrection(double[] right, double[] left, double[] primary, double[] support, double radius) {
+        return gripCorrection(right,left,primary,support,radius,radius);
+    }
+    public static double[] gripCorrection(double[] right,double[] left,double[] primary,double[] support,double rightRadius,double leftRadius) {
         double[] a=subtract(right,primary), b=subtract(left,support), axis=subtract(b,a);
         double distance=length(axis);
-        if(distance<1e-7 || distance>=2*radius) throw new IllegalArgumentException("unreachable rigid-arm attachments");
+        if(distance<1e-7 || distance>=rightRadius+leftRadius||distance<=Math.abs(rightRadius-leftRadius)) throw new IllegalArgumentException("unreachable rigid-arm attachments");
         for(int i=0;i<3;i++) axis[i]/=distance;
         double[] mid=new double[3],direction=new double[3];
-        for(int i=0;i<3;i++) { mid[i]=(a[i]+b[i])*.5; direction[i]=-mid[i]; }
+        for(int i=0;i<3;i++) { mid[i]=a[i]+axis[i]*(rightRadius*rightRadius-leftRadius*leftRadius+distance*distance)/(2*distance); direction[i]=-mid[i]; }
         double projected=dot(direction,axis);
         for(int i=0;i<3;i++) direction[i]-=axis[i]*projected;
-        double norm=length(direction),circle=Math.sqrt(radius*radius-distance*distance*.25);
+        double along=(rightRadius*rightRadius-leftRadius*leftRadius+distance*distance)/(2*distance);
+        double norm=length(direction),circle=Math.sqrt(rightRadius*rightRadius-along*along);
         if(norm<1e-8) throw new IllegalArgumentException("ambiguous rigid-arm attachment circle");
         double[] correction=new double[3];
         for(int i=0;i<3;i++) correction[i]=mid[i]+direction[i]*circle/norm;
@@ -62,10 +66,16 @@ public final class ThirdPersonPoseMath {
     }
     /** Player-relative look, bounded independently of camera perspective. */
     public static double[] aim(double yawDegrees,double pitchDegrees) {
-        double yaw=Math.toRadians(Math.max(-25,Math.min(25,yawDegrees)));
-        double pitch=Math.toRadians(Math.max(-18,Math.min(18,pitchDegrees)));
+        double yaw=Math.toRadians(Math.max(-65,Math.min(65,yawDegrees)));
+        double pitch=Math.toRadians(Math.max(-50,Math.min(50,pitchDegrees)));
         double[] trs={0,0,0,Math.sin(pitch/2)*Math.cos(yaw/2),Math.cos(pitch/2)*Math.sin(yaw/2),-Math.sin(pitch/2)*Math.sin(yaw/2),Math.cos(pitch/2)*Math.cos(yaw/2),1,1,1};
         double[] out=new double[16];RigMath.compose(trs,0,out,0);return out;
     }
     public static double[] multiply(double[] a,double[] b) { double[] out=new double[16];RigMath.multiply(a,0,b,0,out,0);return out; }
+    public static double[] around(double[] pivot,double[] rotation){
+        double[] m=rotation.clone();double[] rotated=point(rotation,pivot[0],pivot[1],pivot[2]);
+        for(int i=0;i<3;i++)m[12+i]+=pivot[i]-rotated[i];return m;
+    }
+    public static void translate(double[] m,double[] offset){for(int i=0;i<3;i++)m[12+i]+=offset[i];}
+
 }

@@ -10,9 +10,15 @@ public final class ThirdPersonModelAdapter implements AutoCloseable {
     private final ModelPart[] parts;
     private final ModelTransform[] saved;
     public ThirdPersonModelAdapter(PlayerEntityModel<?> model,Pose pose){
-        parts=new ModelPart[]{model.body,model.rightArm,model.leftArm,model.jacket,model.rightSleeve,model.leftSleeve};
+        parts=new ModelPart[]{model.body,model.rightArm,model.leftArm,model.jacket,model.rightSleeve,model.leftSleeve,model.head,model.hat};
         saved=new ModelTransform[parts.length];
         for(int i=0;i<parts.length;i++)saved[i]=parts[i].getTransform();
+        var originalBody=model.body.getTransform();
+        model.head.pivotX+=pose.body().x()-originalBody.pivotX;
+        model.head.pivotY+=pose.body().y()-originalBody.pivotY;
+        model.head.pivotZ+=pose.body().z()-originalBody.pivotZ;
+        model.head.pitch+=pose.headAssist().pitch();model.head.yaw+=pose.headAssist().yaw();model.head.roll+=pose.headAssist().roll();
+        model.hat.copyTransform(model.head);
         apply(model.body,pose.body());apply(model.rightArm,pose.right());apply(model.leftArm,pose.left());
         model.jacket.copyTransform(model.body);model.rightSleeve.copyTransform(model.rightArm);model.leftSleeve.copyTransform(model.leftArm);
     }

@@ -1,0 +1,29 @@
+{
+  "fabric": {
+    "tests": 1151,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "cpu": {
+    "tests": 1144,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "java": "Temurin 17.0.16+8",
+  "gradle": "8.8",
+  "blender": "4.3.2",
+  "base_commit": "af03f90",
+  "protected_fps_files_unchanged": 198,
+  "gltf_validator": {
+    "default": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "slim": {
+      "errors": 0,
+      "warnings": 0
+    }
+  }
+}

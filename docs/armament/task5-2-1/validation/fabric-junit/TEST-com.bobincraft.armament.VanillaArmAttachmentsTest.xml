@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.VanillaArmAttachmentsTest" tests="101" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.093">
+  <properties/>
+  <testcase name="vanilla_first_person_fixture idle@0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@1.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@1.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@2.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@2.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@3.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@3.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture idle@4" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture inspect@0.34375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@0.6875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@1.03125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture inspect@1.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@1.71875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@2.0625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture inspect@2.40625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture inspect@2.75" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.078125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.15625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.234375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.3125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture raise@0.390625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture raise@0.46875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture raise@0.546875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture raise@0.625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture lower@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture lower@0.0625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture lower@0.125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture lower@0.1875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture lower@0.25" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture lower@0.3125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture lower@0.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture lower@0.4375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture lower@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0.125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture move@0.25" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture move@0.625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0.75" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@0.875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture move@1" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@1.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@1.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@2.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@2.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@3.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@3.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim idle@4" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@0.34375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@0.6875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@1.03125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@1.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@1.71875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@2.0625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@2.40625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim inspect@2.75" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.078125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.15625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.234375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.3125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.390625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.46875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.546875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim raise@0.625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.0625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.1875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.25" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.3125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.4375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim lower@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.125" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.25" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.375" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.5" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.625" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.75" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@0.875" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture_slim move@1" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="oldSkinnedFixtureIsRejectedByTheNativeArmPath()" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.03"/>
+  <testcase name="vanilla_first_person_fixture" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.001"/>
+  <testcase name="vanilla_first_person_fixture_slim" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.0"/>
+  <testcase name="vanilla_first_person_fixture" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <testcase name="vanilla_first_person_fixture_slim" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.004"/>
+  <testcase name="vanilla_first_person_fixture FOV 70.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.005"/>
+  <testcase name="vanilla_first_person_fixture FOV 90.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <testcase name="vanilla_first_person_fixture FOV 110.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <testcase name="vanilla_first_person_fixture_slim FOV 70.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <testcase name="vanilla_first_person_fixture_slim FOV 90.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <testcase name="vanilla_first_person_fixture_slim FOV 110.0" classname="com.bobincraft.armament.VanillaArmAttachmentsTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

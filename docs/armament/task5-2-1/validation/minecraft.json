@@ -1,0 +1,24 @@
+{
+  "launched": true,
+  "minecraft": "1.20.1",
+  "java": "17",
+  "renderer": "Xorg dummy + Mesa software OpenGL",
+  "world": "Bobin_5_2_1_Smoke",
+  "all_six_actions_rendered": true,
+  "inspect_recovery_rendered": true,
+  "f5_preserves_aim_started": 63.6,
+  "fps_rendered_idle_fallback": true,
+  "skin_model": "slim",
+  "skin_variants_observed": [
+    "Steve",
+    "Kai",
+    "Makena"
+  ],
+  "resource_reload_generation": 2,
+  "ordinary_item_yields": true,
+  "saved_world_and_clean_exit": true,
+  "wide_skin_live_test": false,
+  "wide_skin_cpu_and_blender": true,
+  "screenshots": "../minecraft/",
+  "max_logged_tp_contact_metres": 2.2247786310271853e-16
+}

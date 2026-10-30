@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonBlenderTest" tests="55" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:31" hostname="dfa4b5029fbd" time="2.686">
+  <properties/>
+  <testcase name="successfulReloadUsesIndependentPresentationStorage()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.047"/>
+  <testcase name="idle@0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.013"/>
+  <testcase name="idle@0.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.011"/>
+  <testcase name="idle@1.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.007"/>
+  <testcase name="idle@1.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.005"/>
+  <testcase name="idle@2.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="idle@2.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.005"/>
+  <testcase name="idle@3.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.005"/>
+  <testcase name="idle@3.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.005"/>
+  <testcase name="idle@4" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@0.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@0.34375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@0.6875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@1.03125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@1.375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="inspect@1.71875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@2.0625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@2.40625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="inspect@2.75" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="raise@0.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="raise@0.078125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.005"/>
+  <testcase name="raise@0.15625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="raise@0.234375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="raise@0.3125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="raise@0.390625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="raise@0.46875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="raise@0.546875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="raise@0.625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.0625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.1875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.25" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="lower@0.3125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="lower@0.375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="lower@0.4375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="lower@0.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.125" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.25" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.375" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.5" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="move@0.625" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.75" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@0.875" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.003"/>
+  <testcase name="move@1" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.004"/>
+  <testcase name="presenterReusesPoseAndBuffersAfterWarmup()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="2.127"/>
+  <testcase name="blenderSurfaceChecksFindNoHandObjectIntersections()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.001"/>
+  <testcase name="attachmentRotationMetricDoesNotTreatFloatScaleNoiseAsWristRotation()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.009"/>
+  <testcase name="ergonomicGaugeDimensionsAreAuthoredInAbsoluteMetres()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.001"/>
+  <testcase name="twoRealArmsAndNeutralErgonomicGaugeArePresent()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.0"/>
+  <testcase name="cameraGuardRejectsUnsafeOffsetsInsteadOfMovingIndividualHands()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.002"/>
+  <testcase name="changingFovAspectAndViewBobKeepsContactsAndUsesNewProjection()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.002"/>
+  <testcase name="cameraMovementAndCrossfadesDoNotDetachHands()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.278"/>
+  <testcase name="defaultShowIsAbsolutelyStaticDespiteClockMovementAndInertiaInputs()" classname="com.bobincraft.armament.FirstPersonBlenderTest" time="0.014"/>
+  <system-out><![CDATA[first_person_cpu_benchmark samples=300 stable_zero_windows=2 best_bytes=0 windows=[0, 0, -1, -1, -1, -1] ns_per_sample=218328
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

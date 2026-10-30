@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.PlayerHandSkinTest" tests="60" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:18" hostname="dfa4b5029fbd" time="0.79">
+  <properties/>
+  <testcase name="actualSurfaceGripFramesHaveIndependentPalmPrimaryAndThumbDirections()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="blenderPreviewUsesTheSameMetricPlacementAndPerspectiveAsThePresenter()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="fourDistinctWhiteMaterialsUseLiveSkinRolesAndIndependentSleeveFlags()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.014"/>
+  <testcase name="exportedForearmReallyHasFourOrThreePixelWidthAndFourPixelDepth()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.014"/>
+  <testcase name="wrongAtlasVariantAndHeadUvsAreRejectedBeforeTextureUpload()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <testcase name="neitherHandNorSleevePenetratesTheObjectOrOtherHandInAuthoredHoldingPoses()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="steveAndAlexAreSeparateAuthoredGeometryWithFullJointChains()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="elbowAndWristStressPosesRemainClosedWithoutSelfIntersectionsOrCollapsedEdges()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <testcase name="closedBareHandsAndAuthoredDimensionsAreReportedByBlender()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.0"/>
+  <testcase name="missingOrTintedMaterialsCannotSilentlyRenderFixedColorHands()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <testcase name="gripOriginsAreOnTheIndependentGaugeSurfacesWithOneMillimetreClearance()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <testcase name="appearanceRejectsUnknownFieldsDuplicateKeysAliasedVariantsAndRoles()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex idle@0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex idle@0.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex idle@1.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="Alex idle@1.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex idle@2.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.005"/>
+  <testcase name="Alex idle@2.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="Alex idle@3.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex idle@3.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex idle@4" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@0.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@0.34375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@0.6875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@1.03125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.015"/>
+  <testcase name="Alex inspect@1.375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@1.71875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex inspect@2.0625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@2.40625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex inspect@2.75" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex raise@0.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex raise@0.078125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="Alex raise@0.15625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex raise@0.234375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex raise@0.3125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex raise@0.390625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex raise@0.46875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex raise@0.546875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex raise@0.625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="Alex lower@0.0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex lower@0.0625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex lower@0.125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex lower@0.1875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.002"/>
+  <testcase name="Alex lower@0.25" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex lower@0.3125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex lower@0.375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex lower@0.4375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex lower@0.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.004"/>
+  <testcase name="Alex move@0" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.125" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.25" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.375" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.5" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.625" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.005"/>
+  <testcase name="Alex move@0.75" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@0.875" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="Alex move@1" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.003"/>
+  <testcase name="authoredIdleWristAndElbowAnglesStayWithinNaturalHoldingRanges()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <testcase name="everySkinUvUsesTheCorrect64PixelArmNetIncludingAlexThreePixelFaces()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.008"/>
+  <testcase name="gaugePanelsHaveNoFloatingHandleOrOrientationMarkers()" classname="com.bobincraft.armament.PlayerHandSkinTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

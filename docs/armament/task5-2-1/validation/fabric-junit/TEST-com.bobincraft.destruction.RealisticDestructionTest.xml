@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.destruction.RealisticDestructionTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.019">
+  <properties/>
+  <testcase name="realisticBreachesAndBridgeSupport()" classname="com.bobincraft.destruction.RealisticDestructionTest" time="0.019"/>
+  <system-out><![CDATA[PASS RealisticDestructionContract: 132 checks (tank RPG hole + crude oil retention, transformer coil breach, single-pile vs dual-pile bridge collapse & zero floating iron_bars)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

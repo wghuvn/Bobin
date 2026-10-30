@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonProfileTest" tests="33" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:35" hostname="dfa4b5029fbd" time="0.246">
+  <properties/>
+  <testcase name="bundleRejectsMissingClipsAndUnknownSocketsBeforeAnyGpuWork()" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.173"/>
+  <testcase name="default profile" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="unknown scale is forbidden" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="missing offsets" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="null offsets" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="wrong vector length" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="string offset" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="excessive offset" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="nonunit quaternion" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="quaternion length" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="near-plane clearance" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="unsupported version" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="fractional version" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="uppercase ID" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="external model" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="gltf unsupported" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="wrong rig suffix" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="no idle clip" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="unknown clip key" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="wrong clip name" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="one grip" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="duplicate grip role" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="duplicate target" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="self attachment" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="string boolean" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="unbounded spring" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="unbounded lag" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="large sway" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="large translation" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="string number" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="missing inertia" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.0"/>
+  <testcase name="immutableProfileAndDuplicateJsonKeys()" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.001"/>
+  <testcase name="metadataAndModelStreamsAreClosed()" classname="com.bobincraft.armament.FirstPersonProfileTest" time="0.047"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

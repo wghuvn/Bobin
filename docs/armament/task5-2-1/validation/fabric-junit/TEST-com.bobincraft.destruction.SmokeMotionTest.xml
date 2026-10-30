@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.destruction.SmokeMotionTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2026-10-30T12:57:20" hostname="dfa4b5029fbd" time="0.003">
+  <properties/>
+  <testcase name="boundedMotion()" classname="com.bobincraft.destruction.SmokeMotionTest" time="0.003"/>
+  <system-out><![CDATA[PASS Stage 3: 10000 bounded deterministic wind/turbulence/envelope samples
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

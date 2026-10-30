@@ -1,0 +1,134 @@
+Base: af03f90
+Branch: main
+Workflow preference saved in AGENTS.md
+
+Modified tracked files:
+M	art/armament/third_person_fixture.blend
+M	art/armament/third_person_fixture.crouch.png
+M	art/armament/third_person_fixture.idle.png
+M	art/armament/third_person_fixture.inspect.png
+M	art/armament/third_person_fixture.lower.png
+M	art/armament/third_person_fixture.move.png
+M	art/armament/third_person_fixture.raise.png
+M	art/armament/third_person_fixture_slim.blend
+M	art/armament/third_person_fixture_slim.crouch.png
+M	art/armament/third_person_fixture_slim.idle.png
+M	art/armament/third_person_fixture_slim.inspect.png
+M	art/armament/third_person_fixture_slim.lower.png
+M	art/armament/third_person_fixture_slim.move.png
+M	art/armament/third_person_fixture_slim.raise.png
+M	scripts/armament/export_third_person_fixture.py
+M	scripts/armament/third_person_poses.py
+M	src/main/java/com/bobincraft/armament/client/mixin/PairedPresentationLifecycleMixin.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/PresentationAction.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/ThirdPersonAnimationController.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/ThirdPersonAsset.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/ThirdPersonPoseMath.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/ThirdPersonWeaponPresenter.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/fabric/ThirdPersonDiagnostic.java
+M	src/main/java/com/bobincraft/armament/client/thirdperson/fabric/ThirdPersonModelAdapter.java
+M	src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture.glb
+M	src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture.reference.json
+M	src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture_slim.glb
+M	src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture_slim.reference.json
+M	src/test/java/com/bobincraft/armament/ThirdPersonPresentationTest.java
+
+New files:
+AGENTS.md
+art/armament/third_person_fixture.aim.png
+art/armament/third_person_fixture_slim.aim.png
+docs/armament/TASK5_2_1_CHANGES.txt
+docs/armament/TASK5_2_1_REPORT_RU.md
+docs/armament/task5-2-1/minecraft/front-aim.png
+docs/armament/task5-2-1/minecraft/front-crouch-aim.png
+docs/armament/task5-2-1/minecraft/rear-aim.png
+docs/armament/task5-2-1/minecraft/rear-crouch-aim.png
+docs/armament/task5-2-1/minecraft/rear-jump-aim.png
+docs/armament/task5-2-1/minecraft/rear-run-aim.png
+docs/armament/task5-2-1/previews/default.aim.front.png
+docs/armament/task5-2-1/previews/default.aim.rear.png
+docs/armament/task5-2-1/previews/default.aim.side.png
+docs/armament/task5-2-1/previews/default.idle.front.png
+docs/armament/task5-2-1/previews/default.idle.rear.png
+docs/armament/task5-2-1/previews/default.idle.side.png
+docs/armament/task5-2-1/previews/slim.aim.front.png
+docs/armament/task5-2-1/previews/slim.aim.rear.png
+docs/armament/task5-2-1/previews/slim.aim.side.png
+docs/armament/task5-2-1/previews/slim.idle.front.png
+docs/armament/task5-2-1/previews/slim.idle.rear.png
+docs/armament/task5-2-1/previews/slim.idle.side.png
+docs/armament/task5-2-1/validation/asset-sha256.json
+docs/armament/task5-2-1/validation/blender-default.log
+docs/armament/task5-2-1/validation/blender-slim.log
+docs/armament/task5-2-1/validation/blender-views.log
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.ApiBoundaryTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.ApiContractTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.DefinitionValidationTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonActionPolicyTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonAnimationStabilityTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonAuthoredClipTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonBlenderTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonCompositionTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonMathTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonPoseDiagnosticsTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.FirstPersonProfileTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GlbLoaderTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GlbResourceCacheTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GltfBlenderTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GltfImportTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GltfMathTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GltfRuntimeTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GltfSmoothBlendTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.GripFrameConventionTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.PlayerHandSkinTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.StrictJsonTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.ThirdPersonPolishTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.ThirdPersonPresentationTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.VanillaArmAttachmentsTest.xml
+docs/armament/task5-2-1/validation/cpu-junit/TEST-com.bobincraft.armament.VisualContractTest.xml
+docs/armament/task5-2-1/validation/cpu-tests.log
+docs/armament/task5-2-1/validation/fabric-build.log
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.ApiBoundaryTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.ApiContractTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.DefinitionValidationTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonActionPolicyTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonAnimationStabilityTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonAuthoredClipTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonBlenderTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonCompositionTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonMathTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonPoseDiagnosticsTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.FirstPersonProfileTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GlbLoaderTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GlbResourceCacheTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GltfBlenderTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GltfImportTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GltfMathTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GltfRuntimeTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GltfSmoothBlendTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.GripFrameConventionTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.PlayerHandSkinTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.StrictJsonTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.ThirdPersonPolishTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.ThirdPersonPresentationTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.VanillaArmAttachmentsTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.armament.VisualContractTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.combat.ExplosionVisualProfileTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.destruction.DebrisTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.destruction.RealisticDestructionTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.destruction.RefineryTransitionTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.destruction.SmokeMotionTest.xml
+docs/armament/task5-2-1/validation/fabric-junit/TEST-com.bobincraft.destruction.StabilizationTest.xml
+docs/armament/task5-2-1/validation/fps-unchanged.json
+docs/armament/task5-2-1/validation/jar.json
+docs/armament/task5-2-1/validation/minecraft-client.log
+docs/armament/task5-2-1/validation/minecraft-status.log
+docs/armament/task5-2-1/validation/minecraft.json
+docs/armament/task5-2-1/validation/results.json
+docs/armament/task5-2-1/validation/third_person_fixture.gltf-validator.json
+docs/armament/task5-2-1/validation/third_person_fixture_slim.gltf-validator.json
+docs/armament/task5-2-1/validation/yarn-limb-animator.mapping.txt
+scripts/armament/render_third_person_views.py
+src/main/java/com/bobincraft/armament/client/thirdperson/SharedPresentationActions.java
+src/main/java/com/bobincraft/armament/client/thirdperson/ThirdPersonBodyFrame.java
+src/test/java/com/bobincraft/armament/ThirdPersonPolishTest.java

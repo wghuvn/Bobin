@@ -1,0 +1,13 @@
+{
+  "tests": 1126,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "java": "Temurin 17.0.16+8",
+  "gradle": "8.8",
+  "blender": "4.3.2",
+  "frozen_files": 198,
+  "fabric_build": "blocked before compilation: Fabric Loom resolution",
+  "minecraft": "not run",
+  "fabric_integration_compiled": false
+}

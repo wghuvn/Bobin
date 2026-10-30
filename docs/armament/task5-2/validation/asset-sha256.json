@@ -1,0 +1,20 @@
+{
+  "art/armament/third_person_fixture.blend": "6a39a92deb30bd74b03671c235acc2e412788a9cbded78d2b41d179546763c2b",
+  "art/armament/third_person_fixture.crouch.png": "e9068165a5392a5ad767c2321d30d44d13e6696ef30267a7a3d2c5763d701acd",
+  "art/armament/third_person_fixture.idle.png": "88402a868cce1a0bef47f4b96d9013b5f5de10f295a0f5bb72ce4039960ab2b1",
+  "art/armament/third_person_fixture.inspect.png": "ad1d0e7af1426bc5e56f2f5c21d1ee00532f0b1b5b69a8552d84cc7bf1b63142",
+  "art/armament/third_person_fixture.lower.png": "04b526e599553f252390e8e30949d68677eab76feb3fe8b81c57d6d1261e3e5d",
+  "art/armament/third_person_fixture.move.png": "7ee3b8515d3910a00ae495eee439af31a4a531830cd5c419f1563751354ea1d4",
+  "art/armament/third_person_fixture.raise.png": "7ca4504c360d9252c1d7a9ebe07df3cb99f1ea311813a3d379a0a5a1cef30b88",
+  "art/armament/third_person_fixture_slim.blend": "507b2fd39607f1e371c7c557ba3610b0106a88cfce65b403d795679704d0518b",
+  "art/armament/third_person_fixture_slim.crouch.png": "923d4db252ed8b3637e4b82a4605b4113ca738e5ad021f9b2e1cedfcf83420af",
+  "art/armament/third_person_fixture_slim.idle.png": "03b2236952d2d7b6e320063c0291a85d90486d4482aa9fa83adf46ae9090da63",
+  "art/armament/third_person_fixture_slim.inspect.png": "73b221ca54e792a331a881d2f181e2cfb7ccdfb1be805a860dd5780ac7013598",
+  "art/armament/third_person_fixture_slim.lower.png": "68dc730fb7c204a129a36a9cac354cdf8712f474bdcc5452790bdf428407c722",
+  "art/armament/third_person_fixture_slim.move.png": "3b6bace1a7bf1a4ea05751f93d5d0eb66c5cd36427f93cdb0d66392657cddcc0",
+  "art/armament/third_person_fixture_slim.raise.png": "c17a8a8c3da4f6d679439ebcf77f476b85b6ece79fa5797d89327fd6688cce5f",
+  "src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture.glb": "13f620f6cb71d3c314951b04a7b8ea14382e035145be67affdde19b247bd2223",
+  "src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture.reference.json": "b6ef04a7a3f53babbdf8344834b01a95a996c0ca3595e20129436782c796caa1",
+  "src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture_slim.glb": "b66e1285b1c8f4b375b7e9b87f0999bc482c943356d232cc90213c52896dc084",
+  "src/main/resources/assets/bobin_craft/armament/debug/third_person_fixture_slim.reference.json": "ac06ee91098cbcaed21b967cb3b31391be1200b1d89106e741734e3d9e0eee12"
+}

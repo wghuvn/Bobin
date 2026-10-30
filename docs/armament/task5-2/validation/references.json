@@ -1,0 +1,29 @@
+{
+  "tacz": {
+    "repository": "https://github.com/MCModderAnchor/TACZ",
+    "branch": "1.20.1",
+    "commit": "2d304e39a3ad774095f72b6932308fba99d09e4f",
+    "read": [
+      "src/main/java/com/tacz/guns/client/animation/third/InnerThirdPersonManager.java",
+      "src/main/java/com/tacz/guns/mixin/client/PlayerModelMixin.java"
+    ],
+    "copied_code_or_assets": false
+  },
+  "yarn": {
+    "repository": "https://github.com/FabricMC/yarn",
+    "branch": "1.20.1",
+    "commit": "9672e1ffb4f7c7059e7a0715a971729c54dfb7d2",
+    "descriptors": {
+      "EntityModel.setAngles": "(Lnet/minecraft/entity/Entity;FFFFF)V",
+      "LivingEntityRenderer.model": "Lnet/minecraft/client/render/entity/model/EntityModel;",
+      "ModelTransform.of": "(FFFFFF)Lnet/minecraft/client/model/ModelTransform;",
+      "Vec3d.horizontalLengthSquared": "()D"
+    }
+  },
+  "fabric_feature_callback": {
+    "url": "https://raw.githubusercontent.com/FabricMC/fabric/0.92.2%2B1.20.1/fabric-rendering-v1/src/client/java/net/fabricmc/fabric/api/client/rendering/v1/LivingEntityFeatureRendererRegistrationCallback.java",
+    "sha256": "977c100ba22f5834074dad55d01c1ffa9262b029e96d0e3e1a0481b4aa6eb9da",
+    "parameters": 4
+  },
+  "verification_limit": "Static API/mapping inspection only. Fabric compilation and mixin application blocked by dependency resolution."
+}

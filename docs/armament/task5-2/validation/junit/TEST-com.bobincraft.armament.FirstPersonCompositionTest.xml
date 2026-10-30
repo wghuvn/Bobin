@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonCompositionTest" tests="94" skipped="0" failures="0" errors="0" timestamp="2026-10-30T10:15:05" hostname="737407810d1b" time="0.261">
+  <properties/>
+  <testcase name="first_person_fixture idle 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.006"/>
+  <testcase name="first_person_fixture idle 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture idle 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture inspect 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture raise 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.004"/>
+  <testcase name="first_person_fixture raise 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture raise 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture raise 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture lower 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.004"/>
+  <testcase name="first_person_fixture lower 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture lower 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture lower 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture move 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture move 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture move 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim idle 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim idle 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim idle 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim idle 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim idle 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim idle 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim idle 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim idle 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim idle 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim inspect 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim inspect 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim inspect 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim inspect 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim raise 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim raise 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim raise 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim lower 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim lower 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim lower 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim lower 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 70.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim move 70.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim move 70.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 90.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 90.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 90.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim move 110.0deg @1.3333333333333333" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 110.0deg @1.7777777777777777" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move 110.0deg @2.3333333333333335" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.002"/>
+  <testcase name="first_person_fixture left" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.001"/>
+  <testcase name="first_person_fixture right" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.0"/>
+  <testcase name="first_person_fixture_slim left" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.001"/>
+  <testcase name="first_person_fixture_slim right" classname="com.bobincraft.armament.FirstPersonCompositionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

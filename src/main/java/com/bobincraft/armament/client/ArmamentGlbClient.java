@@ -5,6 +5,9 @@ import com.bobincraft.armament.client.render.fabric.FabricGlbRenderer;
 import com.bobincraft.armament.client.resource.fabric.GlbDebugResources;
 import com.bobincraft.armament.client.presentation.fabric.FirstPersonResources;
 import com.bobincraft.armament.client.presentation.fabric.FirstPersonDiagnostic;
+import com.bobincraft.armament.client.thirdperson.fabric.ThirdPersonResources;
+import com.bobincraft.armament.client.thirdperson.fabric.ThirdPersonDiagnostic;
+import com.bobincraft.armament.client.thirdperson.fabric.ThirdPersonSemanticPort;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.CoreShaderRegistrationCallback;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -28,6 +31,11 @@ public final class ArmamentGlbClient implements ClientModInitializer {
         new GlbDebugPreview(resources,renderer).register();
         var firstPerson=new FirstPersonResources();
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(firstPerson);
-        new FirstPersonDiagnostic(firstPerson,renderer).register();
+        var firstPersonDiagnostic=new FirstPersonDiagnostic(firstPerson,renderer);
+        firstPersonDiagnostic.register();
+        var thirdPerson=new ThirdPersonResources();
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(thirdPerson);
+        new ThirdPersonDiagnostic(thirdPerson,renderer,
+            (ThirdPersonSemanticPort)(Object)firstPersonDiagnostic).register();
     }
 }

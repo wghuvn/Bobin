@@ -16,7 +16,7 @@ def frame(origin, primary, dorsal):
     return Matrix(((x.x,y.x,z.x,origin[0]),(x.y,y.y,z.y,origin[1]),(x.z,y.z,z.z,origin[2]),(0,0,0,1)))
 
 
-def create(root, variant):
+def create_gauge(root, forward_support_y=.34):
     gauge = bpy.data.objects.new('ergonomic_gauge', None);bpy.context.scene.collection.objects.link(gauge);gauge.parent=root
     materials = {}
     for name, color in [('gauge_body',(.075,.15,.18,1)),('gauge_pad',(.13,.15,.16,1)),('gauge_contact',(.13,.42,.38,1)),('axis_primary',(.95,.40,.04,1)),('axis_normal',(.12,.40,.85,1))]:
@@ -36,12 +36,17 @@ def create(root, variant):
     # Join the handle to the body behind the thumb; extending its entire top
     # would fill the thumb clearance. The neck overlaps both solids by >2 mm.
     box('gauge_handle_neck',(0,-.0575,-.0015),(.04,.02,.053),'gauge_contact')
-    box('gauge_forward_support',(0,.34,.0025),(.10,.19,.035),'gauge_contact')
+    box('gauge_forward_support',(0,forward_support_y,.0025),(.10,.19,.035),'gauge_contact')
     box('gauge_forward_axis',(0,.49,.115),(.02,.07,.015),'axis_primary')
     box('gauge_side_axis',(.055,.12,.07),(.015,.04,.025),'axis_normal')
     # Surfaces are specified before the hands exist. 1 mm contact clearance.
     contacts={'right':frame((.03225,-.055,-.115),(0,1,0),(1,0,0)),
-              'left':frame((-.015,.34,-.016),(1,0,0),(0,0,-1))}
+              'left':frame((-.015,forward_support_y,-.016),(1,0,0),(0,0,-1))}
+    return gauge, objects, contacts
+
+
+def create(root, variant):
+    gauge, objects, contacts = create_gauge(root)
     arms={}
     for side,contact in contacts.items():
         sign=1 if side=='right' else -1

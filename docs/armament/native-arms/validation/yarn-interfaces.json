@@ -1,0 +1,17 @@
+{
+  "ModelPart": {
+    "sha256": "6d15fe9714aa96eda6217484c1bc4c0708b3661307e2ba7ff2bf5f6f4201ec55",
+    "branch": "FabricMC/yarn 1.20.1",
+    "interface_check_only": true
+  },
+  "ModelTransform": {
+    "sha256": "186d7729734f936197658702997e20855d6350ebff0765396126ac4731d3697b",
+    "branch": "FabricMC/yarn 1.20.1",
+    "interface_check_only": true
+  },
+  "PlayerEntityModel": {
+    "sha256": "3b6f73796a523ac4dae913312426f065760a1f5921ac4c7dd6a2057d2aeed21f",
+    "branch": "FabricMC/yarn 1.20.1",
+    "interface_check_only": true
+  }
+}

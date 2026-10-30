@@ -80,6 +80,8 @@ public final class FirstPersonWeaponPresenter {
     public double cameraInModel(int axis){if(axis<0||axis>2)throw new IllegalArgumentException("camera axis");return viewInverse[12+axis];}
     /** Last accepted sample; diagnostic copies are requested explicitly, never in the render loop. */
     public void copyModelToView(double[] destination){copyDiagnosticMatrix(modelToView,destination);}
+    /** Model placement before the caller's hand view; native ModelParts append it once. */
+    public void copyModelPlacement(double[] destination){copyDiagnosticMatrix(offsetLag,destination);}
     public void copyViewProjection(double[] destination){copyDiagnosticMatrix(viewProjection,destination);}
     private void copyDiagnosticMatrix(double[] source,double[] destination){
         if(!rejection.equals("ready"))throw new IllegalStateException("first-person diagnostics require an accepted camera sample");

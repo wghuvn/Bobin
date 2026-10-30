@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.GripFrameConventionTest" tests="55" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:15:36" hostname="9fefaaa38e6a" time="0.013">
+  <properties/>
+  <testcase name="reflectionIsRejectedEvenWithUnitOrthogonalAxes()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="component 0=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 0=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 0=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 1=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 1=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 1=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 2=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 2=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 2=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 3=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 3=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 3=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 4=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 4=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 4=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 5=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 5=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="component 5=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 6=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 6=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 6=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 7=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 7=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 7=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 8=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 8=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="component 8=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 9=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 9=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 9=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 10=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 10=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 10=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="component 11=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 11=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 11=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 12=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 12=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 12=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 13=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 13=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 13=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 14=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 14=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 14=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 15=NaN" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 15=Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="component 15=-Infinity" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="scaleAndShearCannotMasqueradeAsGripRotation()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="perspectiveAndMalformedMatricesAreNotGripFrames()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="blenderToGltfConversionPreservesHandednessAndSemanticDirections()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="ordinaryFloatExportNoiseIsAllowedWithoutNormalizingTheInput()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <testcase name="rigidRotationCarriesAllSemanticAxesAndTranslationDoesNotAffectDirections()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.001"/>
+  <testcase name="identityAxesGiveOpposedPalmNormalAndAnatomicallyMirroredThumbs()" classname="com.bobincraft.armament.GripFrameConventionTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

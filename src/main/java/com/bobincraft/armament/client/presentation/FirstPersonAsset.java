@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 /** Atomic CPU bundle: the model and all attachment metadata are validated before GPU upload. */
 public record FirstPersonAsset(FirstPersonProfile profile,GlbModelAsset model,RigSockets sockets){
     public FirstPersonAsset{
-        if(model.rig()==null)throw new IllegalArgumentException("first-person asset requires a skinned/animated rig");
+        if(model.rig()==null)throw new IllegalArgumentException("first-person asset requires an animated rig");
         for(String clip:profile.clips().values())model.rig().clip(clip);
         if(!new GripAttachments(profile,sockets).matches(new RigFrame(model.rig())))throw new IllegalArgumentException("two-hand bind pose does not match object grip sockets");
         var bind=new RigFrame(model.rig());double[] frame=new double[16];

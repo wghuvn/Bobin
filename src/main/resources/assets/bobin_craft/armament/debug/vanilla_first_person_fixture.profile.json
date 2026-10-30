@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "bobin_craft:debug/vanilla_first_person_fixture",
+  "model": "bobin_craft:armament/debug/vanilla_first_person_fixture.glb",
+  "rig": "bobin_craft:armament/debug/vanilla_first_person_fixture.rig.json",
+  "sockets": "bobin_craft:armament/debug/vanilla_first_person_fixture.sockets.json",
+  "camera_offset": [
+    0.24,
+    -0.19,
+    -0.64
+  ],
+  "camera_rotation": [
+    0,
+    0,
+    0,
+    1
+  ],
+  "camera_clearance": 0.075,
+  "transition_seconds": 0.2,
+  "movement_threshold": 0.05,
+  "contact_metres": 0.001,
+  "contact_degrees": 0.2,
+  "clips": {
+    "idle": "idle",
+    "inspect": "inspect",
+    "raise": "raise",
+    "lower": "lower",
+    "move": "move"
+  },
+  "grips": [
+    {
+      "name": "primary",
+      "target": "grip_primary",
+      "hand": "hand_primary"
+    },
+    {
+      "name": "secondary",
+      "target": "grip_secondary",
+      "hand": "hand_secondary"
+    }
+  ],
+  "inertia": {
+    "enabled": false,
+    "frequency_hz": 4,
+    "lag_seconds": 0.016,
+    "max_yaw_degrees": 1.5,
+    "max_pitch_degrees": 1,
+    "metres_per_degree": 0.0015
+  }
+}

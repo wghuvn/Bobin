@@ -18,6 +18,7 @@ import java.util.Objects;
 /** Fabric/Yarn 1.20.1 render adapter. Samples poses; never advances the action state machine. */
 public final class FirstPersonGlbRenderer {
     private final FabricGlbRenderer backend;
+    private final VanillaPlayerArmRenderer arms = new VanillaPlayerArmRenderer();
     private final double[] handView = new double[16], projection = new double[16], cameraToWorld = new double[16];
     private final float[] transfer = new float[16];
     private final Matrix4f viewProjection = new Matrix4f(), cameraMatrix = new Matrix4f(), normalMatrix4 = new Matrix4f();
@@ -36,6 +37,10 @@ public final class FirstPersonGlbRenderer {
         RenderSystem.assertOnRenderThread();
         if (!backend.hasShader() || Tessellator.getInstance().getBuffer().isBuilding()) {
             result = "shader_or_buffer_unavailable";
+            return false;
+        }
+        if (!arms.available(client, player)) {
+            result = "vanilla_player_renderer_unavailable";
             return false;
         }
         var camera = client.gameRenderer.getCamera();
@@ -57,10 +62,11 @@ public final class FirstPersonGlbRenderer {
 
         // Flush the caller's pending immediate vertices before touching the shared GLB buffer.
         consumers.draw();
-        bundle.skin().update(player);
         backend.render(bundle.cpu().model(), presenter.pose(), new GlbRenderContext(viewProjection, light,
                 new Vec3d(presenter.cameraInModel(0), presenter.cameraInModel(1), presenter.cameraInModel(2)),
-                bundle.gpu(), normalMatrix, bundle.skin()));
+                bundle.gpu(), normalMatrix));
+        arms.render(client, player, matrices, consumers, light, presenter, bundle.arms());
+        consumers.draw();
         result = "rendered";
         return true;
     }

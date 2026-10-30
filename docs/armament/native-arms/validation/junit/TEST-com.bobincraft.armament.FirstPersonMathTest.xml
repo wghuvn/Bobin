@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonMathTest" tests="38" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:15:34" hostname="9fefaaa38e6a" time="0.009">
+  <properties/>
+  <testcase name="normalsFollowCameraAndModelRotation()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="invalidProjectionAndClockAreRejected()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.001"/>
+  <testcase name="gate 0" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.001"/>
+  <testcase name="gate 1" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 2" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 3" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 4" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 5" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 6" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 7" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 8" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 9" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 10" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 11" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 12" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 13" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="gate 14" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="renderFrequencyCannotChangeInertiaState()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.001"/>
+  <testcase name="inertiaIsBoundedAndTakesShortestYawDelta()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="inertiaCanBeDisabledAndSettlesWithoutOscillation()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.001"/>
+  <testcase name="attachmentAlignmentPreservesSocketOrientationAndMetres()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="onlyCompatibleEmptyHandsCanEnterDiagnostic()" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="30.0deg@1.3333333333333333" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="30.0deg@1.7777777777777777" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="30.0deg@2.3333333333333335" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="30.0deg@0.5625" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="70.0deg@1.3333333333333333" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="70.0deg@1.7777777777777777" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="70.0deg@2.3333333333333335" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="70.0deg@0.5625" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.001"/>
+  <testcase name="90.0deg@1.3333333333333333" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="90.0deg@1.7777777777777777" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="90.0deg@2.3333333333333335" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="90.0deg@0.5625" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="110.0deg@1.3333333333333333" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="110.0deg@1.7777777777777777" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="110.0deg@2.3333333333333335" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <testcase name="110.0deg@0.5625" classname="com.bobincraft.armament.FirstPersonMathTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

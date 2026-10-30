@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bobincraft.armament.FirstPersonAuthoredClipTest" tests="38" skipped="0" failures="0" errors="0" timestamp="2026-10-30T09:15:29" hostname="9fefaaa38e6a" time="0.156">
+  <properties/>
+  <testcase name="first_person_fixture" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.007"/>
+  <testcase name="first_person_fixture_slim" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture idle @0.548" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.006"/>
+  <testcase name="first_person_fixture idle @1.652" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.005"/>
+  <testcase name="first_person_fixture idle @2.956" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture inspect @0.37675000000000003" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.005"/>
+  <testcase name="first_person_fixture inspect @1.13575" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture inspect @2.03225" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture raise @0.085625" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture raise @0.258125" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture raise @0.461875" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture lower @0.0685" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture lower @0.2065" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture lower @0.3695" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture move @0.137" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture move @0.413" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture move @0.739" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim idle @0.548" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.005"/>
+  <testcase name="first_person_fixture_slim idle @1.652" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim idle @2.956" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim inspect @0.37675000000000003" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim inspect @1.13575" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim inspect @2.03225" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim raise @0.085625" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise @0.258125" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim raise @0.461875" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower @0.0685" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim lower @0.2065" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim lower @0.3695" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move @0.137" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.002"/>
+  <testcase name="first_person_fixture_slim move @0.413" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.003"/>
+  <testcase name="first_person_fixture_slim move @0.739" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.002"/>
+  <testcase name="first_person_fixture" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture idle" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.005"/>
+  <testcase name="first_person_fixture move" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim idle" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <testcase name="first_person_fixture_slim move" classname="com.bobincraft.armament.FirstPersonAuthoredClipTest" time="0.004"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

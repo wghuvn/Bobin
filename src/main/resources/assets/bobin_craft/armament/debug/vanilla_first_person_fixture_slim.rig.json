@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "bobin_craft:debug/vanilla_first_person_fixture_slim_rig",
+  "nodes": [
+    {
+      "name": "gauge_forward_axis",
+      "node_index": 0,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_forward_support",
+      "node_index": 1,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_handle_neck",
+      "node_index": 2,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_long_body",
+      "node_index": 3,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_primary_handle",
+      "node_index": 4,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_rear_support",
+      "node_index": 5,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "gauge_side_axis",
+      "node_index": 6,
+      "parent": "ergonomic_gauge"
+    },
+    {
+      "name": "ergonomic_gauge",
+      "node_index": 7,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "grip_primary",
+      "node_index": 8,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "grip_secondary",
+      "node_index": 9,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "hand_primary",
+      "node_index": 10,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "hand_secondary",
+      "node_index": 11,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "vanilla_arm_left",
+      "node_index": 12,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "vanilla_arm_right",
+      "node_index": 13,
+      "parent": "presentation_root"
+    },
+    {
+      "name": "presentation_root",
+      "node_index": 14
+    }
+  ],
+  "roles": {
+    "weapon_root": "presentation_root"
+  }
+}

@@ -18,7 +18,7 @@ public final class FirstPersonPoseDiagnostics {
         double[] view=new double[16],projection=new double[16];
         presenter.copyModelToView(view);presenter.copyViewProjection(projection);
         var pose=presenter.pose();Map<String,Point> joints=new LinkedHashMap<>();Map<String,Bounds> meshes=new LinkedHashMap<>();
-        for(String side:List.of("right","left"))for(String part:List.of("upper","forearm","hand")){
+        for(String side:List.of("right","left"))for(String part:List.of("upper","forearm","hand","vanilla_arm")){
             String name=part+"_"+side;
             for(int n=0;n<pose.model().nodes().size();n++)if(pose.model().nodes().get(n).name().equals(name))
                 joints.put(name,point(view,pose.global(n,12),pose.global(n,13),pose.global(n,14)));

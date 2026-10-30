@@ -49,7 +49,9 @@ public final class ThirdPersonWeaponPresenter {
         right=attach(right,re,primary);left=attach(left,le,support);
         double error=Math.max(length(subtract(point(right,re[0],re[1],re[2]),primary)),length(subtract(point(left,le[0],le[1],le[2]),support)));
         if(!Double.isFinite(error)||error>.0001)throw new IllegalStateException("3P hand contact rejected: "+error);
-        return new Pose(frame,toPart(body),toPart(right),toPart(left),placement,right,left,error,length(correction),toPart(matrix(frame,"tp_head_assist")),body,lower.gltfPelvis(),waistInset);
+        var torso=ThirdPersonTorsoOrientation.resolve(body,lower.gltfPelvis(),waistInset,frame,placement);
+        body=torso.matrix();
+        return new Pose(frame,toPart(body),toPart(right),toPart(left),placement,right,left,error,length(correction),toPart(matrix(frame,"tp_head_assist")),body,lower.gltfPelvis(),torso.waistInset());
     }
     public ThirdPersonAnimationController controller(){return controller;}
     public ThirdPersonAsset asset(){return asset;}

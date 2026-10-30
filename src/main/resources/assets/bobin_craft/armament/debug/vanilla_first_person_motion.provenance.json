@@ -1,0 +1,22 @@
+{
+  "base_sha256": "87553166c2b19562f42777171fe32564ccc33bf45637aba0ea4d4898fb190a00",
+  "variant": "default",
+  "camera_offset": [
+    0.24,
+    -0.19,
+    -0.64
+  ],
+  "camera_rotation": [
+    0,
+    0,
+    0,
+    1
+  ],
+  "added_clips": [
+    "aim",
+    "sprint"
+  ],
+  "approved_binary_prefix_bytes": 76456,
+  "legacy_animations_unchanged": true,
+  "geometry_metadata_unchanged": true
+}

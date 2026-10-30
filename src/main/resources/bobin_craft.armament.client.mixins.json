@@ -8,7 +8,10 @@
     "GameRendererFovAccess",
     "FirstPersonSemanticStateAccess",
     "PairedPresentationLifecycleMixin",
-    "ThirdPersonPlayerRenderMixin"
+    "ThirdPersonPlayerRenderMixin",
+    "FirstPersonMotionHostAccess",
+    "FirstPersonMotionResourcesMixin",
+    "FirstPersonMotionPresenterMixin"
   ],
   "injectors": {
     "defaultRequire": 1

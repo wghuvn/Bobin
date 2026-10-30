@@ -1,0 +1,1 @@
+8dcfa3bc348f5dcf9bc50e643c3156f6d5d891ad3c7b7b720a902454c6428b48  bobin_craft-task-5.2.2.jar

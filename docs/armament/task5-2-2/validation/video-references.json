@@ -1,0 +1,48 @@
+[
+  {
+    "file": "Bodycam 2026.10.28 - 21.28.47.49.mp4",
+    "sha256": "57d2a47718ae6345c1160c38672aa00750b2d10685f11fc8a1c1cdaf94f4306b",
+    "bytes": 19864568,
+    "reference_for": "lowered rhythmic FPS sprint",
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "60/1"
+        },
+        {
+          "r_frame_rate": "0/0"
+        }
+      ],
+      "format": {
+        "duration": "9.751678"
+      }
+    }
+  },
+  {
+    "file": "Bodycam 2026.10.28 - 21.29.05.50.mp4",
+    "sha256": "566ae8851cc47e1c6d7a5602b795860a661c92a3c47c469c29fbc7aababd9003",
+    "bytes": 27249171,
+    "reference_for": "centred FPS aim (no firing/camera effects)",
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "width": 1920,
+          "height": 1080,
+          "r_frame_rate": "60/1"
+        },
+        {
+          "r_frame_rate": "0/0"
+        }
+      ],
+      "format": {
+        "duration": "12.800389"
+      }
+    }
+  }
+]

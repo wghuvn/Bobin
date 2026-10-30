@@ -1,0 +1,28 @@
+{
+  "minecraft": "1.20.1",
+  "fabric_loader": "0.15.11",
+  "java": 17,
+  "display": "Xorg dummy 1280x720",
+  "opengl": "Mesa software (llvmpipe)",
+  "test_world": "Bobin_5_2_1_Smoke (isolated creative superflat)",
+  "runtime_skin_model": "slim",
+  "runtime_skin": "minecraft:textures/entity/player/slim/kai.png",
+  "checks": [
+    "idle front/rear",
+    "lower hold",
+    "walk/run",
+    "F5 round trip retains AIM",
+    "approved FPS static calibration",
+    "new FPS AIM/SPRINT",
+    "automatic use key aim",
+    "automatic actual sprint",
+    "FPS extension off",
+    "F3+T reload; textures stable at 10"
+  ],
+  "not_repeated": [
+    "default 4px player in Minecraft (covered by CPU/Blender)",
+    "multiplayer",
+    "third-party rendering mods",
+    "ordinary GPU performance"
+  ]
+}

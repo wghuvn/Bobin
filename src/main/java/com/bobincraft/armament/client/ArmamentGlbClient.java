@@ -37,5 +37,6 @@ public final class ArmamentGlbClient implements ClientModInitializer {
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(thirdPerson);
         new ThirdPersonDiagnostic(thirdPerson,renderer,
             (ThirdPersonSemanticPort)(Object)firstPersonDiagnostic).register();
+        com.bobincraft.armament.client.firstpersonmotion.fabric.FirstPersonMotionClient.register(firstPersonDiagnostic);
     }
 }
